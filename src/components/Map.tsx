@@ -3,6 +3,7 @@
 
 import { useEffect, useState, FC } from 'react';
 import Script from 'next/script';
+import axios from 'axios';
 
 interface MapProps {
   lat: number;
@@ -47,8 +48,17 @@ const Map: React.FC<MapProps> = ({ lat, lng, zoom }) => {
       window.H.ui.UI.createDefault(map, defaultLayers);
 
       window.addEventListener('resize', () => map.getViewPort().resize());
+
+
+      testData();
     }
   }, [lat, lng, coreLoaded, serviceLoaded, eventsLoaded, uiLoaded, zoom]);
+
+  const testData = async () => {
+    await axios.get('/map/road-conditions');
+    await axios.get('/map/cameras');
+    await axios.get('/map/emergency-alerts');
+  }
 
   const handleCoreLoad = () => {
     setCoreLoaded(true);

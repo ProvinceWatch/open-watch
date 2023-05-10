@@ -1,4 +1,3 @@
-// components/Map.js
 "use client"
 
 import { useEffect, useState, FC } from 'react';
@@ -20,6 +19,8 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
   const handleEventsLoad = (): void => { setEventsLoaded(true); };
   const handleUILoad = (): void => { setUILoaded(true); };
 
+  let openBubble: any = null;
+
   const initMap = (): void => {
     if (coreLoaded && serviceLoaded && eventsLoaded && uiLoaded && window.H) {
       const platform = new window.H
@@ -34,11 +35,35 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
           document.getElementById('mapContainer'),
           defaultLayers.vector.normal.map,
           {
-            center: { lat, lng },
+            center: { lat: 53.9333, lng: -116.5765 },  // Center of Alberta
             zoom: zoom,
             pixelRatio: window.devicePixelRatio || 1,
           }
         );
+
+      const minZoom = 7;
+      map.addEventListener('mapviewchangeend', function () {
+        if (map.getZoom() < minZoom) {
+          map.setZoom(minZoom, true);
+        }
+      });
+
+      // Define the boundaries for Alberta
+      const albertaBounds = {
+        north: 60.0000,
+        south: 48.9988,
+        east: -110.0000,
+        west: -120.0000
+      };
+
+      // Restrict the map view to Alberta
+      map.addEventListener('mapviewchangeend', function () {
+        const center = map.getCenter();
+        if (center.lat > albertaBounds.north || center.lat < albertaBounds.south ||
+          center.lng > albertaBounds.east || center.lng < albertaBounds.west) {
+          map.setCenter({ lat: 53.9333, lng: -116.5765 }, true);  // Reset to Alberta center
+        }
+      });
 
       new window.H.mapevents.Behavior(new window.H.mapevents.MapEvents(map));
       const ui = window.H.ui.UI.createDefault(map, defaultLayers);
@@ -56,9 +81,13 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
     map.addObject(group);
 
     group.addEventListener('tap', function (evt: any) {
+      if (openBubble) { ui.removeBubble(openBubble); }
+
       const bubble = new window.H.ui.InfoBubble(evt.target.getGeometry(), {
         content: evt.target.getData()
       });
+
+      openBubble  = bubble;
       ui.addBubble(bubble);
     }, false);
 

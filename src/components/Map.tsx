@@ -6,18 +6,19 @@ import axios, { AxiosResponse } from 'axios';
 import Script from 'next/script';
 import ControlBar from './ControlBar';
 import { MapProps, CameraData, CameraResponse } from '@/app/map/defs';
+import polyline from '@mapbox/polyline';
 
 
 const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
-  const [coreLoaded, setCoreLoaded]       = useState<boolean>(false);
+  const [coreLoaded, setCoreLoaded] = useState<boolean>(false);
   const [serviceLoaded, setServiceLoaded] = useState<boolean>(false);
-  const [eventsLoaded, setEventsLoaded]   = useState<boolean>(false);
-  const [uiLoaded, setUILoaded]           = useState<boolean>(false);
+  const [eventsLoaded, setEventsLoaded] = useState<boolean>(false);
+  const [uiLoaded, setUILoaded] = useState<boolean>(false);
 
-  const handleCoreLoad      = (): void => { setCoreLoaded(true); };
+  const handleCoreLoad = (): void => { setCoreLoaded(true); };
   const handleServiceLoaded = (): void => { setServiceLoaded(true); };
-  const handleEventsLoad    = (): void => { setEventsLoaded(true); };
-  const handleUILoad        = (): void => { setUILoaded(true); };
+  const handleEventsLoad = (): void => { setEventsLoaded(true); };
+  const handleUILoad = (): void => { setUILoaded(true); };
 
   const initMap = (): void => {
     if (coreLoaded && serviceLoaded && eventsLoaded && uiLoaded && window.H) {
@@ -43,6 +44,7 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
       const ui = window.H.ui.UI.createDefault(map, defaultLayers);
       window.addEventListener('resize', () => map.getViewPort().resize());
       getCameraMarkers(map, ui);
+      getRoadConditonMarkers(map, ui);
     }
   };
 
@@ -73,6 +75,51 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
       group.addObject(marker);
     });
   };
+
+  const getRoadConditonMarkers = async (map: any, ui: any) => {
+    // Fetch the road conditions data
+    const response = await axios.get('/map/road-conditions');
+    const roadConditions = response.data.data;
+  
+    // Create a list of promises
+    const tasks = roadConditions.map(async (roadCondition: any) => {
+      // Decode the polyline to get the coordinates
+      const decodedPolyline = polyline.decode(roadCondition.EncodedPolyline);
+  
+      // Convert decoded polyline to LineString
+      const lineString = new window.H.geo.LineString();
+      decodedPolyline.forEach((coords: number[]) => {
+        lineString.pushPoint({ lat: coords[0], lng: coords[1] });
+      });
+  
+      // Determine the color based on the primary condition
+      let color;
+      switch (roadCondition['Primary Condition']) {
+        case 'Bare Dry':
+          color = 'green';
+          break;
+        case 'Wet':
+          color = 'blue';
+          break;
+        case 'Snow Covered':
+          color = 'white';
+          break;
+        case 'Ice Covered':
+          color = 'red';
+          break;
+        default:
+          color = 'black'; // Use black for other conditions
+      }
+  
+      // Create a polyline on the map
+      const line = new window.H.map.Polyline(lineString, { style: { strokeColor: color, lineWidth: 3 } });
+      map.addObject(line);
+    });
+  
+    // Wait for all tasks to complete
+    await Promise.all(tasks);
+  };
+
 
   useEffect(() => {
     initMap();

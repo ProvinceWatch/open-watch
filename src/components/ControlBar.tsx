@@ -9,6 +9,11 @@ interface ControlBarProps {
 
 }
 
+interface Alert {
+  Message: string,
+  Notes: string,
+}
+
 const ControlBar: FC<ControlBarProps> = () => {
   const [weatherAlerts, setWeatherAlerts] = useState([]);
 
@@ -21,7 +26,7 @@ const ControlBar: FC<ControlBarProps> = () => {
     await axios.get('/map/emergency-alerts')
       .then((res) => {
         const alertsResp = res.data.data;
-        const alerts = alertsResp.map((alert) => {
+        const alerts = alertsResp.map((alert: Alert) => {
           return <WeatherAlert title={alert.Message} infoStr={alert.Notes} url={"yes"} />
         });
         setWeatherAlerts(alerts);

@@ -4,6 +4,7 @@ import React, { FC, useEffect, useState } from "react";
 import WeatherAlert from "./WeatherAlert";
 import ControlCard from "./ControlCard";
 import axios from "axios";
+import { Button, Label, TextInput, Checkbox } from "flowbite-react";
 
 interface ControlBarProps {
 
@@ -34,9 +35,19 @@ const ControlBar: FC<ControlBarProps> = () => {
   };
 
   return (
-    <div id='control-bar' className="max-w-sm" style={{ position: 'fixed', top: '8%', margin: '1%' }}>
-      <ControlCard />
-      {weatherAlerts}
+    <div id='control-bar' style={{ position: 'fixed', top: '5%', margin: '1%', width: '550px' }}>
+      <form className="flex flex-col">
+        <div style={{marginBottom: '2%'}}>
+          <TextInput
+            id="text"
+            type="text"
+            placeholder="Search for city in Alberta"
+            required={true}
+            style={{width: '100%'}}
+          />
+        </div>
+      </form>
+      <ControlCard WeatherAlerts={weatherAlerts}/>
     </div>);
 }
 

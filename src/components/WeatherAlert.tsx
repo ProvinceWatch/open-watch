@@ -1,5 +1,5 @@
 import { FC } from 'react';
-import { Alert, } from "flowbite-react";
+import { Alert, Accordion } from "flowbite-react";
 import React from "react";
 
 interface WeatherAlertProps {
@@ -10,18 +10,20 @@ interface WeatherAlertProps {
 
 const WeatherAlert: FC<WeatherAlertProps> = ({ title, infoStr, url }) => {
   return (
-    <Alert
-      style={{ width: '100%', marginTop: '2%' }}
-      color="failure"
-      rounded={true}
-      additionalContent={
-        <React.Fragment>
-          <div className="mt-2 mb-4 text-xs text-red-700 dark:text-red-200" dangerouslySetInnerHTML={{ __html: infoStr }} />
-        </React.Fragment>}>
-      <h3 className="text-lg font-medium text-red-700 dark:text-red-800">
-        {title}
-      </h3>
-    </Alert>
+    <Accordion style={{ width: '100%'}}>
+      <Accordion.Panel color="failure">
+        <Accordion.Title style={{ height: '20px', lineHeight: '20px' }}>
+          <h3 className="text-md font-medium text-red-700 dark:text-red-800">
+            {title}
+          </h3>
+        </Accordion.Title>
+        <Accordion.Content style={{margin: '0', padding: '0'}}>
+          <Alert color="failure" rounded={true}>
+            <div className=" text-xs text-red-700 dark:text-red-200" dangerouslySetInnerHTML={{ __html: infoStr }} />
+          </Alert>
+        </Accordion.Content>
+      </Accordion.Panel>
+    </Accordion>
   );
 };
 

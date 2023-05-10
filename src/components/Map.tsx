@@ -9,15 +9,15 @@ import { MapProps, CameraData, CameraResponse } from '@/app/map/defs';
 
 
 const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
-  const [coreLoaded, setCoreLoaded] = useState<boolean>(false);
+  const [coreLoaded, setCoreLoaded]       = useState<boolean>(false);
   const [serviceLoaded, setServiceLoaded] = useState<boolean>(false);
-  const [eventsLoaded, setEventsLoaded] = useState<boolean>(false);
-  const [uiLoaded, setUILoaded] = useState<boolean>(false);
+  const [eventsLoaded, setEventsLoaded]   = useState<boolean>(false);
+  const [uiLoaded, setUILoaded]           = useState<boolean>(false);
 
-  const handleCoreLoad = (): void => { setCoreLoaded(true); };
+  const handleCoreLoad      = (): void => { setCoreLoaded(true); };
   const handleServiceLoaded = (): void => { setServiceLoaded(true); };
-  const handleEventsLoad = (): void => { setEventsLoaded(true); };
-  const handleUILoad = (): void => { setUILoaded(true); };
+  const handleEventsLoad    = (): void => { setEventsLoaded(true); };
+  const handleUILoad        = (): void => { setUILoaded(true); };
 
   const initMap = (): void => {
     if (coreLoaded && serviceLoaded && eventsLoaded && uiLoaded && window.H) {

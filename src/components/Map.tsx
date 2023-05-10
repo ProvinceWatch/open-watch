@@ -80,24 +80,26 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
     // Fetch the road conditions data
     const response = await axios.get('/map/road-conditions');
     const roadConditions = response.data.data;
-  
+
     // Create a list of promises
     const tasks = roadConditions.map(async (roadCondition: any) => {
       // Decode the polyline to get the coordinates
       const decodedPolyline = polyline.decode(roadCondition.EncodedPolyline);
-  
+
       // Convert decoded polyline to LineString
       const lineString = new window.H.geo.LineString();
       decodedPolyline.forEach((coords: number[]) => {
         lineString.pushPoint({ lat: coords[0], lng: coords[1] });
       });
-  
+
       // Determine the color based on the primary condition
       let color;
       switch (roadCondition['Primary Condition']) {
         case 'Bare Dry':
           color = 'green';
           break;
+        case 'Closed':
+          color = 'red';
         case 'Wet':
           color = 'blue';
           break;
@@ -110,12 +112,12 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
         default:
           color = 'black'; // Use black for other conditions
       }
-  
+
       // Create a polyline on the map
       const line = new window.H.map.Polyline(lineString, { style: { strokeColor: color, lineWidth: 3 } });
       map.addObject(line);
     });
-  
+
     // Wait for all tasks to complete
     await Promise.all(tasks);
   };

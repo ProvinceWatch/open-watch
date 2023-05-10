@@ -11,7 +11,7 @@ interface WeatherAlertProps {
 const WeatherAlert: FC<WeatherAlertProps> = ({ title, infoStr, url }) => {
   return (
     <Alert
-      style={{ width: '500px', marginTop: '2%' }}
+      style={{ width: '100%', marginTop: '2%' }}
       color="failure"
       rounded={true}
       additionalContent={

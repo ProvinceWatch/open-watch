@@ -1,8 +1,11 @@
-// components/Layout.js
-
+import { FC } from 'react';
 import NavBar from './NavBar';
 
-const Layout = ({ children }) => (
+interface LayoutProps {
+  children: any
+}
+
+const Layout: FC<LayoutProps> = ({ children }) => (
   <div style={{ position: 'relative', height: '100vh' }}>
     <NavBar />
     {children}

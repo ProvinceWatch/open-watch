@@ -1,13 +1,12 @@
 "use client"
 
-import NavBar from '@/components/NavBar';
 import Map from '@/components/Map';
+import Layout from '@/components/Layout';
 
 export default function Home() {
   return (
-    <div style={{ position: 'relative', height: '100vh' }}>
-      <NavBar />
+    <Layout>
       <Map lat={53.52904} lng={-113.48899} zoom={10} />
-  </div>
+    </Layout>
   )
 }

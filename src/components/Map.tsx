@@ -6,6 +6,7 @@ import Script from 'next/script';
 import ControlBar from './ControlBar';
 import { MapProps, CameraData, CameraResponse } from '@/app/map/defs';
 import polyline from '@mapbox/polyline';
+import MapSideBar from './MapSideBar';
 
 
 const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
@@ -171,8 +172,8 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
 
   return (
     <>
+      <MapSideBar />
       <div id="mapContainer" style={{ width: '100%', height: '95%', position: 'relative' }} />
-      <ControlBar />
       <Script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" onLoad={handleCoreLoad} />
       <Script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" onLoad={handleServiceLoaded} />
       <Script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js" onLoad={handleEventsLoad} />

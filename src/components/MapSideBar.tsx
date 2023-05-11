@@ -1,21 +1,19 @@
-"use client"
-
-import React, { FC, useEffect, useState } from "react";
+import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'react';
+import { TextInput } from "flowbite-react";
 import WeatherAlert from "./WeatherAlert";
 import ControlCard from "./ControlCard";
-import axios from "axios";
-import { Button, Label, TextInput, Checkbox } from "flowbite-react";
+import axios from 'axios';
 
-interface ControlBarProps {
-
+interface MapSideBarProps {
 }
 
 interface Alert {
-  Message: string,
-  Notes: string,
-}
+    Message: string,
+    Notes: string,
+  }
 
-const ControlBar: FC<ControlBarProps> = () => {
+const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref) => {
+  const [isOpen, setIsOpen] = useState(true);
   const [weatherAlerts, setWeatherAlerts] = useState([]);
 
   useEffect(() => {
@@ -34,8 +32,17 @@ const ControlBar: FC<ControlBarProps> = () => {
       });
   };
 
+  const handleToggleSidebar = () => {
+    setIsOpen(!isOpen);
+  };
+
+  useImperativeHandle(ref, () => ({
+    handleToggleSidebar,
+  }));
+
   return (
-    <div id='control-bar' style={{ position: 'fixed', top: '5%', margin: '1%', width: '550px' }}>
+    <div className={`w-85 min-h-screen bg-white p-4 fixed transform transition-transform duration-300`} style={{zIndex: 1000}}>
+      <div id='control-bar' style={{ width: '100%' }}>
       <form className="flex flex-col">
         <div style={{marginBottom: '2%'}}>
           <TextInput
@@ -48,7 +55,9 @@ const ControlBar: FC<ControlBarProps> = () => {
         </div>
       </form>
       <ControlCard WeatherAlerts={weatherAlerts}/>
-    </div>);
-}
+    </div>
+    </div>
+  );
+});
 
-export default ControlBar;
+export default MapSideBar;

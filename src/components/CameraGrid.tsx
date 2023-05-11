@@ -14,9 +14,10 @@ const BOUNDARIES = {
 
 interface CameraGridProps {
   section: Section;
+  gridSize: string;
 }
 
-const CameraGrid: React.FC<CameraGridProps> = ({ section }) => {
+const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
   const [cameras, setCameras] = useState<{
     [key in Section]: CameraData[];
   }>({
@@ -42,7 +43,12 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section }) => {
         for (const camera of cameraData) {
           for (const section in BOUNDARIES) {
             const { latMin, latMax, lonMin, lonMax } = BOUNDARIES[section];
-            if (camera.Latitude >= latMin && camera.Latitude <= latMax && camera.Longitude >= lonMin && camera.Longitude <= lonMax) {
+            if (
+              camera.Latitude >= latMin &&
+              camera.Latitude <= latMax &&
+              camera.Longitude >= lonMin &&
+              camera.Longitude <= lonMax
+            ) {
               categorizedCameras[section as Section].push(camera);
               break;
             }
@@ -58,18 +64,26 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section }) => {
     fetchCameras();
   }, []);
 
+  const cameraName = (camera: CameraData) => {
+    if (camera.Name) {
+      return camera.Name;
+    } else if (camera.RoadwayName) {
+      return camera.RoadwayName;
+    } else {
+      return `Camera at Latitude: ${camera.Latitude}, Longitude: ${camera.Longitude}`;
+    }
+  };
+
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 text-black">
+    <div className={`grid ${gridSize} gap-4 text-black`}>
       {cameras[section].map((camera, index) => (
         <div key={index} className="border border-gray-300 rounded p-4">
-          <h3 className="text-lg font-semibold mb-2">
-            Camera at Latitude: {camera.Latitude}, Longitude: {camera.Longitude}
-          </h3>
+          <h3 className="text-lg font-semibold mb-2">{cameraName(camera)}</h3>
           <img src={camera.Url} alt="Camera Snapshot" className="w-full h-auto" />
         </div>
       ))}
     </div>
   );
-};
+}  
 
 export default CameraGrid;

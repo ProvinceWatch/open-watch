@@ -1,8 +1,10 @@
-import React, { useState, useCallback } from 'react';
+import React, { useState, useCallback, FC } from 'react';
 import CameraSidebar from '@/components/CameraSidebar';
 import CameraGrid from '@/components/CameraGrid';
 
-export default function Cameras() {
+interface CamerasProps {}
+
+const Cameras: FC<CamerasProps> = ({}) => {
   const [selectedSection, setSelectedSection] = useState('alberta-highways');
   const [gridSize, setGridSize] = useState('grid-cols-3');
 
@@ -39,3 +41,5 @@ export default function Cameras() {
     </div>
   );
 }
+
+export default Cameras;

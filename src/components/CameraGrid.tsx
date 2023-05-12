@@ -75,7 +75,7 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
   };
 
   return (
-    <div className={`grid ${gridSize} gap-4 text-black`}>
+    <div className={`grid ${gridSize} gap-4 text-black overflow-auto max-h-screen`}>
       {cameras[section].map((camera, index) => (
         <div key={index} className="border border-gray-300 rounded p-4">
           <h3 className="text-lg font-semibold mb-2">{cameraName(camera)}</h3>

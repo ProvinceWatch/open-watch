@@ -2,7 +2,7 @@ import { Navbar } from "flowbite-react";
 
 export default function NavBar() {
   return (
-    <Navbar fluid={true} >
+    <Navbar fluid={true} className="sticky top-0 z-50">
       <Navbar.Brand href="/">
         <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
           <p style={{ color: 'black' }}>

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { CameraData, CameraResponse } from '@/app/map/defs';
+import { Section } from '@/components/CameraGrid';
+
 
 const BOUNDARIES = {
   'calgary-cameras': { latMin: 50.8345, latMax: 51.19477, lonMin: -114.2705, lonMax: -113.79533 },
@@ -21,40 +23,38 @@ export function useSortedCameras() {
 
   useEffect(() => {
     const fetchAndSortCameras = async () => {
-        try {
-          const cameraResponse: AxiosResponse<CameraResponse> = await axios.get('/map/cameras');
-          let cameraData: CameraData[] = (cameraResponse.data.data as any) as CameraData[];
-      
-          // Sort cameras, moving those with Status 'Disabled' to the end
-          cameraData.sort((a, b) => (a.Status === 'Disabled' ? 1 : b.Status === 'Disabled' ? -1 : 0));
-      
-          const categorizedCameras = {
+      try {
+        const cameraResponse: AxiosResponse<CameraResponse> = await axios.get('/map/cameras');
+        const cameraData: CameraData[] = (cameraResponse.data.data as any) as CameraData[];
+
+        const categorizedCameras: Record<Section, CameraData[]> = {
             'calgary-cameras': [],
             'edmonton-cameras': [],
             'banff-cameras': [],
             'alberta-highways': [],
           };
-      
-          for (const camera of cameraData) {
-            for (const section in BOUNDARIES) {
-              const { latMin, latMax, lonMin, lonMax } = BOUNDARIES[section];
-              if (
-                camera.Latitude >= latMin &&
-                camera.Latitude <= latMax &&
-                camera.Longitude >= lonMin &&
-                camera.Longitude <= lonMax
-              ) {
-                categorizedCameras[section as 'calgary-cameras' | 'edmonton-cameras' | 'banff-cameras' | 'alberta-highways'].push(camera);
+          
+
+        for (const camera of cameraData) {
+          for (const section in BOUNDARIES) {
+            const { latMin, latMax, lonMin, lonMax } = BOUNDARIES[section as Section];
+            if (
+              camera.Latitude >= latMin &&
+              camera.Latitude <= latMax &&
+              camera.Longitude >= lonMin &&
+              camera.Longitude <= lonMax
+            ) {
+                categorizedCameras[section as Section].push(camera);
                 break;
-              }
             }
           }
-      
-          setCameras(categorizedCameras);
-        } catch (error) {
-          console.error('Failed to fetch and sort camera data:', error);
         }
-      };
+
+        setCameras(categorizedCameras);
+      } catch (error) {
+        console.error('Failed to fetch and sort camera data:', error);
+      }
+    };
 
     fetchAndSortCameras();
     const intervalId = setInterval(fetchAndSortCameras, 5 * 60 * 1000); // Fetch new data every 5 minutes

@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { CameraData, CameraResponse } from '@/app/map/defs';
+import { Section } from '@/components/CameraGrid';
+
 
 const BOUNDARIES = {
   'calgary-cameras': { latMin: 50.8345, latMax: 51.19477, lonMin: -114.2705, lonMax: -113.79533 },
@@ -25,24 +27,25 @@ export function useSortedCameras() {
         const cameraResponse: AxiosResponse<CameraResponse> = await axios.get('/map/cameras');
         const cameraData: CameraData[] = (cameraResponse.data.data as any) as CameraData[];
 
-        const categorizedCameras = {
-          'calgary-cameras': [],
-          'edmonton-cameras': [],
-          'banff-cameras': [],
-          'alberta-highways': [],
-        };
+        const categorizedCameras: Record<Section, CameraData[]> = {
+            'calgary-cameras': [],
+            'edmonton-cameras': [],
+            'banff-cameras': [],
+            'alberta-highways': [],
+          };
+          
 
         for (const camera of cameraData) {
           for (const section in BOUNDARIES) {
-            const { latMin, latMax, lonMin, lonMax } = BOUNDARIES[section];
+            const { latMin, latMax, lonMin, lonMax } = BOUNDARIES[section as Section];
             if (
               camera.Latitude >= latMin &&
               camera.Latitude <= latMax &&
               camera.Longitude >= lonMin &&
               camera.Longitude <= lonMax
             ) {
-              categorizedCameras[section as 'calgary-cameras' | 'edmonton-cameras' | 'banff-cameras' | 'alberta-highways'].push(camera);
-              break;
+                categorizedCameras[section as Section].push(camera);
+                break;
             }
           }
         }

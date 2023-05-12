@@ -2,7 +2,7 @@ import React from 'react';
 import { CameraData } from '@/app/map/defs';
 import { useSortedCameras } from '@/app/cameras/sort';
 
-type Section = 'alberta-highways' | 'calgary-cameras' | 'edmonton-cameras' | 'banff-cameras';
+export type Section = 'alberta-highways' | 'calgary-cameras' | 'edmonton-cameras' | 'banff-cameras';
 
 interface CameraGridProps {
   section: Section;

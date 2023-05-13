@@ -13,19 +13,11 @@ const Cameras: FC<CamerasProps> = ({}) => {
       setGridSize('grid-cols-4');
     } else if (gridSize === 'grid-cols-4') {
       setGridSize('grid-cols-3');
-    } else if (gridSize === 'grid-cols-3') {
-      setGridSize('grid-cols-2');
-    } else if (gridSize === 'grid-cols-2') {
-      setGridSize('grid-cols-1');
     }
   }, [gridSize, setGridSize]);
 
   const decreaseGridSize = useCallback(() => {
-    if (gridSize === 'grid-cols-1') {
-      setGridSize('grid-cols-2');
-    } else if (gridSize === 'grid-cols-2') {
-      setGridSize('grid-cols-3');
-    } else if (gridSize === 'grid-cols-3') {
+    if (gridSize === 'grid-cols-3') {
       setGridSize('grid-cols-4');
     } else if (gridSize === 'grid-cols-4') {
       setGridSize('grid-cols-5');

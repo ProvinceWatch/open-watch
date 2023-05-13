@@ -27,27 +27,32 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
   return (
     <div className={`grid ${gridSize} gap-4 text-black overflow-auto max-h-screen`}>
       {cameras[section].map((camera, index) => (
-        <div key={index} className="border border-gray-300 rounded p-4" onClick={() => setSelectedCamera(camera)}>
-          <h3 className="text-lg font-semibold mb-2">{cameraName(camera)}</h3>
-          <img src={camera.Url} alt="Camera Snapshot" className="w-full h-auto" />
+        <div key={index} className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700" onClick={() => setSelectedCamera(camera)}>
+          <a href="#">
+            <img className="rounded-t-lg w-full h-auto" src={camera.Url} alt="Camera Snapshot" />
+          </a>
+          <div className="p-5">
+            <a href="#">
+              <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{cameraName(camera)}</h5>
+            </a>
+            <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Camera details...</p>
+          </div>
         </div>
       ))}
       {selectedCamera && (
         <Modal open={!!selectedCamera} onClose={() => setSelectedCamera(null)}>
-          <h3>{cameraName(selectedCamera)}</h3>
-          <img src={selectedCamera.Url} alt="Camera Snapshot" />
-          {selectedCamera.Name && <p>Name: {selectedCamera.Name}</p>}
-          {selectedCamera.Latitude && <p>Latitude: {selectedCamera.Latitude}</p>}
-          {selectedCamera.Longitude && <p>Longitude: {selectedCamera.Longitude}</p>}
-          {selectedCamera.RoadwayName && <p>Roadway Name: {selectedCamera.RoadwayName}</p>}
-          {selectedCamera.AirTemperature && <p>Air Temperature: {selectedCamera.AirTemperature}</p>}
-          {selectedCamera.PavementTemperature && <p>Pavement Temperature: {selectedCamera.PavementTemperature}</p>}
-          {selectedCamera.RelativeHumidity && <p>Relative Humidity: {selectedCamera.RelativeHumidity}</p>}
-          {selectedCamera.WindDirection && <p>Wind Direction: {selectedCamera.WindDirection}</p>}
-          {selectedCamera.WindSpeed && <p>Wind Speed: {selectedCamera.WindSpeed}</p>}
+          <img src={selectedCamera.Url} alt="Camera Snapshot" className="w-full h-auto" />
+          {selectedCamera.Name && <p><strong>Name:</strong> {selectedCamera.Name}</p>}
+          {selectedCamera.Description && <p><strong>Description:</strong> {selectedCamera.Description}</p>}
+          {selectedCamera.DirectionOfTravel && <p><strong>Direction of Travel:</strong> {selectedCamera.DirectionOfTravel}</p>}
+          {selectedCamera.RoadwayName && <p><strong>Roadway Name:</strong> {selectedCamera.RoadwayName}</p>}
+          {selectedCamera.WindDirection && <p><strong>Wind Direction:</strong> {selectedCamera.WindDirection}</p>}
+          {selectedCamera.AirTemperature && <p><strong>Air Temperature:</strong> {selectedCamera.AirTemperature}</p>}
+          {selectedCamera.PavementTemperature && <p><strong>Pavement Temperature:</strong> {selectedCamera.PavementTemperature}</p>}
+          {selectedCamera.RelativeHumidity && <p><strong>Relative Humidity:</strong> {selectedCamera.RelativeHumidity}</p>}
+          {selectedCamera.WindSpeed && <p><strong>Wind Speed:</strong> {selectedCamera.WindSpeed}</p>}
         </Modal>
       )}
-
     </div>
   );
 }

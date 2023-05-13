@@ -3,7 +3,6 @@ import axios, { AxiosResponse } from 'axios';
 import { CameraData, CameraResponse } from '@/app/map/defs';
 import { Section } from '@/components/CameraGrid';
 
-
 const BOUNDARIES = {
   'calgary-cameras': { latMin: 50.8345, latMax: 51.19477, lonMin: -114.2705, lonMax: -113.79533 },
   'edmonton-cameras': { latMin: 53.39612, latMax: 53.66752, lonMin: -113.7123, lonMax: -113.2454 },
@@ -25,7 +24,10 @@ export function useSortedCameras() {
     const fetchAndSortCameras = async () => {
       try {
         const cameraResponse: AxiosResponse<CameraResponse> = await axios.get('/map/cameras');
-        const cameraData: CameraData[] = (cameraResponse.data.data as any) as CameraData[];
+        let cameraData: CameraData[] = (cameraResponse.data.data as any) as CameraData[];
+
+        // Sort the cameras so the ones with Status "Disabled" are at the end
+        cameraData = cameraData.sort((a, b) => (a.Status === "Disabled" ? 1 : -1));
 
         const categorizedCameras: Record<Section, CameraData[]> = {
             'calgary-cameras': [],
@@ -33,7 +35,6 @@ export function useSortedCameras() {
             'banff-cameras': [],
             'alberta-highways': [],
           };
-          
 
         for (const camera of cameraData) {
           for (const section in BOUNDARIES) {

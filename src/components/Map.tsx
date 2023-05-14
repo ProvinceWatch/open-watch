@@ -2,13 +2,15 @@
 
 import { useEffect, useState, FC } from 'react';
 import axios, { AxiosResponse } from 'axios';
+import Script from 'next/script';
+
 import { MapProps, CameraData, CameraResponse } from '@/app/map/defs';
 import polyline from '@mapbox/polyline';
 import MapSideBar from './MapSideBar';
 
-
 const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
   let openBubble: any = null;
+  const [scriptsLoaded, setScriptsLoaded] = useState({ core: false, service: false, mapevents: false, ui: false, clustering: false });
 
   const initMap = (): void => {
     const platform = new window.H
@@ -148,25 +150,33 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
     await Promise.all(tasks);
   };
 
-
+  let intervalId: NodeJS.Timeout;
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (window.H && window.H.service) {
-        clearInterval(interval);
-        console.log('useeffffeeecftt');
+    intervalId = setInterval(() => {
+      console.log(Object.values(scriptsLoaded).every(Boolean));
+      if (Object.values(scriptsLoaded).every(Boolean) || (window.H && window.H.service && window.H.service.Platform)) {
         initMap();
-        console.log('donnee init');
+        clearInterval(intervalId);
       }
-    }, 100); // Check every 100 ms
+    }, 100);  // Check every 100 ms
 
-    return () => clearInterval(interval); // Clear interval on unmount
-  }, [lat, lng, zoom]);
+    return () => {
+      if (intervalId) {
+        clearInterval(intervalId);  // Clear interval on unmount
+      }
+    };
+  }, [scriptsLoaded, lat, lng, zoom]);
 
   return (
     <>
       <MapSideBar />
       <div id="mapContainer" style={{ width: '100%', height: '95%', position: 'fixed' }} />
       <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
+      <Script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" onLoad={() => { console.log('loaded core'); setScriptsLoaded(prev => ({ ...prev, core: true }))}} />
+      <Script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" onLoad={() => setScriptsLoaded(prev => ({ ...prev, service: true }))} />
+      <Script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js" onLoad={() => setScriptsLoaded(prev => ({ ...prev, mapevents: true }))} />
+      <Script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" onLoad={() => setScriptsLoaded(prev => ({ ...prev, ui: true }))} />
+      <Script src="https://js.api.here.com/v3/3.1/mapsjs-clustering.js" onLoad={() => setScriptsLoaded(prev => ({ ...prev, clustering: true }))} />
     </>
   );
 };

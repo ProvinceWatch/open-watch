@@ -8,7 +8,7 @@ import Cameras from '@/components/Cameras';
 
 export default function NavBar() {
   const [selectedTab, setSelectedTab] = useState("map");
-
+ const map = <Map lat={53.52904} lng={-113.48899} zoom={7} />;
   return (
     <Router>
       <div>
@@ -35,10 +35,10 @@ export default function NavBar() {
         </Navbar>
 
         <Routes>
-          <Route path="/map" element={<Map lat={53.52904} lng={-113.48899} zoom={7} />} />
           <Route path="/cameras" element={<Cameras />} />
           <Route path="/parks" element={<h1>Home</h1>} />
-          <Route path="/" element={<Map lat={53.52904} lng={-113.48899} zoom={7} />} />
+          <Route path="/map" element={map} />
+          <Route path="/" element={map} />
         </Routes>
 
       </div>

@@ -27,7 +27,7 @@ const Cameras: FC<CamerasProps> = ({}) => {
   return (
     <div className="flex min-h-screen">
       <CameraSidebar onSectionSelect={setSelectedSection} onIncreaseGridSize={increaseGridSize} onDecreaseGridSize={decreaseGridSize} />
-      <div className="flex-1 overflow-auto bg-white min-h-screen ml-64">
+      <div className="flex-1 overflow-auto bg-white min-h-screen ml-80">
         <CameraGrid section={selectedSection} gridSize={gridSize} />
       </div>
     </div>

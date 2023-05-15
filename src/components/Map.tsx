@@ -149,34 +149,44 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
     // Wait for all tasks to complete
     await Promise.all(tasks);
   };
-
-  let intervalId: NodeJS.Timeout;
   useEffect(() => {
-    intervalId = setInterval(() => {
-      console.log(Object.values(scriptsLoaded).every(Boolean));
-      if (Object.values(scriptsLoaded).every(Boolean) || (window.H && window.H.service && window.H.service.Platform)) {
-        initMap();
-        clearInterval(intervalId);
-      }
-    }, 100);  // Check every 100 ms
+    const loadScript = (src) => {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = () => {
+          console.log(`Loaded ${src}`);
+          resolve();
+        };
+        script.onerror = () => {
+          console.error(`Failed to load ${src}`);
+          reject();
+        };
+        document.body.appendChild(script);
+      });
+    };
 
-    return () => {
-      if (intervalId) {
-        clearInterval(intervalId);  // Clear interval on unmount
+    const loadScriptsInOrder = async () => {
+      try {
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-core.js");
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-service.js");
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-mapevents.js");
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-ui.js");
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-clustering.js");
+        console.log("All scripts loaded");
+      } catch (err) {
+        console.error("Failed to load scripts", err);
       }
     };
-  }, [scriptsLoaded, lat, lng, zoom]);
+
+    loadScriptsInOrder().then(() => initMap())
+  }, []);
 
   return (
     <>
       <MapSideBar />
       <div id="mapContainer" style={{ width: '100%', height: '95%', position: 'fixed' }} />
       <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
-      <Script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" onLoad={() => { console.log('loaded core'); setScriptsLoaded(prev => ({ ...prev, core: true }))}} />
-      <Script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" onLoad={() => setScriptsLoaded(prev => ({ ...prev, service: true }))} />
-      <Script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js" onLoad={() => setScriptsLoaded(prev => ({ ...prev, mapevents: true }))} />
-      <Script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" onLoad={() => setScriptsLoaded(prev => ({ ...prev, ui: true }))} />
-      <Script src="https://js.api.here.com/v3/3.1/mapsjs-clustering.js" onLoad={() => setScriptsLoaded(prev => ({ ...prev, clustering: true }))} />
     </>
   );
 };

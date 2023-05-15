@@ -1,16 +1,15 @@
 import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'react';
-import { TextInput } from "flowbite-react";
+import { TextInput, ListGroup } from "flowbite-react";
 import WeatherAlert from "./WeatherAlert";
-import ControlCard from "./ControlCard";
 import axios from 'axios';
 
 interface MapSideBarProps {
 }
 
 interface Alert {
-    Message: string,
-    Notes: string,
-  }
+  Message: string,
+  Notes: string,
+}
 
 const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -41,21 +40,37 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
   }));
 
   return (
-    <div className={`w-85 min-h-screen bg-white p-4 fixed transform transition-transform duration-300`} style={{zIndex: 1000}}>
+    <div className={`w-80 min-h-screen bg-white p-4 fixed transform transition-transform duration-300`} style={{ zIndex: 1000 }}>
       <div id='control-bar' style={{ width: '100%' }}>
-      <form className="flex flex-col">
-        <div style={{marginBottom: '2%'}}>
-          <TextInput
-            id="text"
-            type="text"
-            placeholder="Search for city in Alberta"
-            required={true}
-            style={{width: '100%'}}
-          />
+        <form className="flex flex-col">
+          <div style={{ marginBottom: '2%' }}>
+            <TextInput
+              id="text"
+              type="text"
+              placeholder="Search for city in Alberta"
+              required={true}
+              style={{ width: '100%' }}
+            />
+          </div>
+        </form>
+        <div>
+          <ListGroup>
+            <ListGroup.Item>
+              Road Conditions
+            </ListGroup.Item>
+            <ListGroup.Item>
+              Traffic
+            </ListGroup.Item>
+            <ListGroup.Item>
+              Cameras
+            </ListGroup.Item>
+            <ListGroup.Item>
+              Weather
+            </ListGroup.Item>
+          </ListGroup>
+          {weatherAlerts}
         </div>
-      </form>
-      <ControlCard WeatherAlerts={weatherAlerts}/>
-    </div>
+      </div>
     </div>
   );
 });

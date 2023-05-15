@@ -1,12 +1,17 @@
 "use client"
 
-import Map from '@/components/Map';
-import Layout from '@/components/Layout';
+import NavBar from '@/components/NavBar';
+import Script from 'next/script';
 
 export default function Home() {
   return (
-    <Layout>
-      <Map lat={53.52904} lng={-113.48899} zoom={7} />
-    </Layout>
+    <>
+      <NavBar />
+      <Script strategy="afterInteractive" src="https://js.api.here.com/v3/3.1/mapsjs-core.js" />
+      {/* <Script strategy="afterInteractive" src="https://js.api.here.com/v3/3.1/mapsjs-service.js" />
+      <Script strategy="afterInteractive" src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js" />
+      <Script strategy="afterInteractive" src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" />
+      <Script strategy="afterInteractive" src="https://js.api.here.com/v3/3.1/mapsjs-clustering.js" /> */}
+    </>
   )
 }

@@ -20,7 +20,7 @@ const CameraSidebar = ({ onSectionSelect, onIncreaseGridSize, onDecreaseGridSize
   };
 
   return (
-    <div className="w-64 min-h-screen bg-gray-100 p-4 fixed left-0">
+    <div className="w-80 min-h-screen bg-gray-100 p-4 fixed left-0">
       <ListGroup>
         {sections.map((section, index) => (
           <ListGroup.Item 

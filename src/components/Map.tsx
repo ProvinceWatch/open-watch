@@ -3,78 +3,63 @@
 import { useEffect, useState, FC } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import Script from 'next/script';
-import ControlBar from './ControlBar';
+
 import { MapProps, CameraData, CameraResponse } from '@/app/map/defs';
 import polyline from '@mapbox/polyline';
 import MapSideBar from './MapSideBar';
 
-
 const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
-  const [coreLoaded, setCoreLoaded] = useState<boolean>(false);
-  const [serviceLoaded, setServiceLoaded] = useState<boolean>(false);
-  const [eventsLoaded, setEventsLoaded] = useState<boolean>(false);
-  const [uiLoaded, setUILoaded] = useState<boolean>(false);
-  const [clusterLoaded, setClusterLoaded] = useState<boolean>(false);
-  
-
-  const handleCoreLoad = (): void => { setCoreLoaded(true); };
-  const handleServiceLoaded = (): void => { setServiceLoaded(true); };
-  const handleEventsLoad = (): void => { setEventsLoaded(true); };
-  const handleUILoad = (): void => { setUILoaded(true); };
-  const handleClusterLoad = (): void => {setClusterLoaded(true); }
-
   let openBubble: any = null;
+  const [scriptsLoaded, setScriptsLoaded] = useState({ core: false, service: false, mapevents: false, ui: false, clustering: false });
 
   const initMap = (): void => {
-    if (coreLoaded && serviceLoaded && eventsLoaded && uiLoaded && clusterLoaded &&  window.H) {
-      const platform = new window.H
-        .service
-        .Platform({
-          apikey: 'MlRC40I9PYNyBKflT02gYpBt0Yxb2qcSUq1cXmNw3MQ',
-        });
-
-      const defaultLayers = platform.createDefaultLayers();
-      const map = new window.H
-        .Map(
-          document.getElementById('mapContainer'),
-          defaultLayers.vector.normal.map,
-          {
-            center: { lat: 53.9333, lng: -116.5765 },  // Center of Alberta
-            zoom: zoom,
-            pixelRatio: window.devicePixelRatio || 1,
-          }
-        );
-
-      const minZoom = 7;
-      map.addEventListener('mapviewchangeend', function () {
-        if (map.getZoom() < minZoom) {
-          map.setZoom(minZoom, true);
-        }
+    const platform = new window.H
+      .service
+      .Platform({
+        apikey: 'MlRC40I9PYNyBKflT02gYpBt0Yxb2qcSUq1cXmNw3MQ',
       });
 
-      // Define the boundaries for Alberta
-      const albertaBounds = {
-        north: 60.0000,
-        south: 48.9988,
-        east: -110.0000,
-        west: -120.0000
-      };
-
-      // Restrict the map view to Alberta
-      map.addEventListener('mapviewchangeend', function () {
-        const center = map.getCenter();
-        if (center.lat > albertaBounds.north || center.lat < albertaBounds.south ||
-          center.lng > albertaBounds.east || center.lng < albertaBounds.west) {
-          map.setCenter({ lat: 53.9333, lng: -116.5765 }, true);  // Reset to Alberta center
+    const defaultLayers = platform.createDefaultLayers();
+    const map = new window.H
+      .Map(
+        document.getElementById('mapContainer'),
+        defaultLayers.vector.normal.map,
+        {
+          center: { lat: 53.9333, lng: -116.5765 },  // Center of Alberta
+          zoom: zoom,
+          pixelRatio: window.devicePixelRatio || 1,
         }
-      });
+      );
 
-      new window.H.mapevents.Behavior(new window.H.mapevents.MapEvents(map));
-      const ui = window.H.ui.UI.createDefault(map, defaultLayers);
-      window.addEventListener('resize', () => map.getViewPort().resize());
-      getCameraMarkers(map, ui);
-      getRoadConditonMarkers(map, ui);
-    }
+    const minZoom = 7;
+    map.addEventListener('mapviewchangeend', function () {
+      if (map.getZoom() < minZoom) {
+        map.setZoom(minZoom, true);
+      }
+    });
+
+    // Define the boundaries for Alberta
+    const albertaBounds = {
+      north: 60.0000,
+      south: 48.9988,
+      east: -110.0000,
+      west: -120.0000
+    };
+
+    // Restrict the map view to Alberta
+    map.addEventListener('mapviewchangeend', function () {
+      const center = map.getCenter();
+      if (center.lat > albertaBounds.north || center.lat < albertaBounds.south ||
+        center.lng > albertaBounds.east || center.lng < albertaBounds.west) {
+        map.setCenter({ lat: 53.9333, lng: -116.5765 }, true);  // Reset to Alberta center
+      }
+    });
+
+    new window.H.mapevents.Behavior(new window.H.mapevents.MapEvents(map));
+    const ui = window.H.ui.UI.createDefault(map, defaultLayers);
+    window.addEventListener('resize', () => map.getViewPort().resize());
+    getCameraMarkers(map, ui);
+    getRoadConditonMarkers(map, ui);
   };
 
   const getCameraMarkers = async (map: any, ui: any) => {
@@ -92,13 +77,13 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
         content: evt.target.getData()
       });
 
-      openBubble  = bubble;
+      openBubble = bubble;
       ui.addBubble(bubble);
     }, false);
 
     cameras.forEach((camera: CameraData) => {
       const cameraLatLng = { lat: camera.Latitude, lng: camera.Longitude };
-      const marker = new window.H.map.Marker(cameraLatLng, {icon: cameraIcon});
+      const marker = new window.H.map.Marker(cameraLatLng);
       const html = `
       <div style="background: white; padding: 5px; width: 400px;">
         <img src="${camera.Url}" alt="Camera Snapshot" style="width: 100%; height: auto;" />
@@ -164,21 +149,43 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
     // Wait for all tasks to complete
     await Promise.all(tasks);
   };
-
-
   useEffect(() => {
-    initMap();
-  }, [lat, lng, coreLoaded, serviceLoaded, eventsLoaded, uiLoaded, zoom]);
+    const loadScript = (src) => {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = () => {
+          console.log(`Loaded ${src}`);
+          resolve();
+        };
+        script.onerror = () => {
+          console.error(`Failed to load ${src}`);
+          reject();
+        };
+        document.body.appendChild(script);
+      });
+    };
+
+    const loadScriptsInOrder = async () => {
+      try {
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-core.js");
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-service.js");
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-mapevents.js");
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-ui.js");
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-clustering.js");
+        console.log("All scripts loaded");
+      } catch (err) {
+        console.error("Failed to load scripts", err);
+      }
+    };
+
+    loadScriptsInOrder().then(() => initMap())
+  }, []);
 
   return (
     <>
       <MapSideBar />
-      <div id="mapContainer" style={{ width: '100%', height: '95%', position: 'relative' }} />
-      <Script src="https://js.api.here.com/v3/3.1/mapsjs-core.js" onLoad={handleCoreLoad} />
-      <Script src="https://js.api.here.com/v3/3.1/mapsjs-service.js" onLoad={handleServiceLoaded} />
-      <Script src="https://js.api.here.com/v3/3.1/mapsjs-mapevents.js" onLoad={handleEventsLoad} />
-      <Script src="https://js.api.here.com/v3/3.1/mapsjs-ui.js" onLoad={handleUILoad} />
-      <Script src="https://js.api.here.com/v3/3.1/mapsjs-clustering.js" onLoad={handleClusterLoad} />
+      <div id="mapContainer" style={{ width: '100%', height: '95%', position: 'fixed' }} />
       <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
     </>
   );

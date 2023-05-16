@@ -28,6 +28,9 @@ export default function NavBar() {
             <Link to="/cameras" onClick={() => setSelectedTab("cameras")} style={{ color: 'black' }}>
               Traffic Cameras
             </Link>
+            <Link to="/cameras" onClick={() => setSelectedTab("cameras")} style={{ color: 'black' }}>
+              Open Data Portal
+            </Link>
             <Link to="/parks" onClick={() => setSelectedTab("parks")} style={{ color: 'black' }}>
               Parks
             </Link>

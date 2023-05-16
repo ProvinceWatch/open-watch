@@ -1,16 +1,23 @@
 "use client"
 
-import { useEffect, FC } from 'react';
+import { useEffect, FC, useState } from 'react';
 import axios, { AxiosResponse } from 'axios';
-
 import { MapProps, CameraData, CameraResponse } from '@/app/map/defs';
 import polyline from '@mapbox/polyline';
 import MapSideBar from './MapSideBar';
+import Modal from './Modal';
 
 const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
+  const [showModal, setShowModal] = useState(false);
+  const [modalChildren, setModalChildren] = useState(null);
+  const [selectedCamera, setSelectedCamera] = useState({
+    Url: '',
+    Name: '',
+  });
+
   let openBubble: any = null;
 
-  const initMap = (): void => {
+  const initMap = async () => {
     const platform = new window.H
       .service
       .Platform({
@@ -34,6 +41,11 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
     window.addEventListener('resize', () => map.getViewPort().resize());
     getRoadConditonMarkers(map, ui);
     getCameraMarkers(map, ui);
+
+    // Add border to alberta
+    let reader = new window.H.data.geojson.Reader('https://gist.githubusercontent.com/oscj/4b1fdf0369692586968582e0fb218960/raw/3061793c473f94c573c7141e1a68f3cd1fa52ab4/alberta.json');
+    reader.parse();
+    map.addLayer(reader.getLayer());
   };
 
 
@@ -53,7 +65,7 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
   function startClustering(map, data, ui) {
     const clusteredDataProvider = new window.H.clustering.Provider(data, {
       clusteringOptions: {
-        eps: 40,
+        eps: 4,
         minWeight: 10
       }
     });
@@ -68,24 +80,8 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
 
         const camera = target.getData().a.data;
         if (camera) {
-          const html = `
-        <div style="background: white; padding: 5px; width: 400px;">
-          <img src="${camera.Url}" alt="Camera Snapshot" style="width: 100%; height: auto;" />
-          <p><strong>Name:</strong> ${camera.Name}</p>
-          <p><strong>Description:</strong> ${camera.Description}</p>
-          <p><strong>Direction of Travel:</strong> ${camera.DirectionOfTravel}</p>
-          <p><strong>Roadway Name:</strong> ${camera.RoadwayName}</p>
-          <p><strong>Wind Direction:</strong> ${camera.WindDirection}</p>
-          <p><strong>Air Temperature:</strong> ${camera.AirTemperature}</p>
-          <p><strong>Pavement Temperature:</strong> ${camera.PavementTemperature}</p>
-          <p><strong>Relative Humidity:</strong> ${camera.RelativeHumidity}</p>
-          <p><strong>Wind Speed:</strong> ${camera.WindSpeed}</p>
-        </div>
-      `;
-
-          const bubble = new window.H.ui.InfoBubble(target.getGeometry(), { content: html });
-          openBubble = bubble;
-          ui.addBubble(bubble);
+          setSelectedCamera(camera);
+          setShowModal(true);
         }
       }
 
@@ -169,7 +165,7 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
         await loadScript("https://js.api.here.com/v3/3.1/mapsjs-mapevents.js");
         await loadScript("https://js.api.here.com/v3/3.1/mapsjs-ui.js");
         await loadScript("https://js.api.here.com/v3/3.1/mapsjs-clustering.js");
-        console.log("All scripts loaded");
+        await loadScript("https://js.api.here.com/v3/3.1/mapsjs-data.js");
       } catch (err) {
         console.error("Failed to load scripts", err);
       }
@@ -180,6 +176,20 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
 
   return (
     <>
+      <Modal open={showModal} onClose={() => { setShowModal(false); setSelectedCamera(null); }}>
+        {selectedCamera && <div style={{color: 'black'}}>
+          <img src={selectedCamera.Url} alt="Camera Snapshot" className="w-full h-auto" />
+          {selectedCamera.Name && <p><strong>Name:</strong> {selectedCamera.Name}</p>}
+          {selectedCamera.Description && <p><strong>Description:</strong> {selectedCamera.Description}</p>}
+          {selectedCamera.DirectionOfTravel && <p><strong>Direction of Travel:</strong> {selectedCamera.DirectionOfTravel}</p>}
+          {selectedCamera.RoadwayName && <p><strong>Roadway Name:</strong> {selectedCamera.RoadwayName}</p>}
+          {selectedCamera.WindDirection && <p><strong>Wind Direction:</strong> {selectedCamera.WindDirection}</p>}
+          {selectedCamera.AirTemperature && <p><strong>Air Temperature:</strong> {selectedCamera.AirTemperature}</p>}
+          {selectedCamera.PavementTemperature && <p><strong>Pavement Temperature:</strong> {selectedCamera.PavementTemperature}</p>}
+          {selectedCamera.RelativeHumidity && <p><strong>Relative Humidity:</strong> {selectedCamera.RelativeHumidity}</p>}
+          {selectedCamera.WindSpeed && <p><strong>Wind Speed:</strong> {selectedCamera.WindSpeed}</p>}
+        </div>}
+      </Modal>
       <MapSideBar />
       <div id="mapContainer" style={{ width: '100%', height: '95%', position: 'fixed' }} />
       <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />

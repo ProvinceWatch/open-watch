@@ -26,7 +26,6 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
       .then((res) => {
         const alertsResp = res.data.data;
         const alerts = alertsResp.map((alert: Alert) => {
-          console.log(alert);
           return <WeatherAlert title={alert.Message} infoStr={alert.Notes} url={"yes"} />
         });
         setWeatherAlerts(alerts);
@@ -54,7 +53,7 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
   }));
 
   return (
-    <div className={`w-80 min-h-screen bg-white p-4 fixed transform transition-transform duration-300`} style={{ zIndex: 1000, display: 'flex', flexDirection: 'column',  height: '100%' }}>
+    <div className={`w-80 min-h-screen bg-white p-4 fixed transform transition-transform duration-300`} style={{ zIndex: 1, display: 'flex', flexDirection: 'column',  height: '100%' }}>
       <div id='control-bar' style={{ width: '100%', display: 'flex', flexDirection: 'column', height: '100%' }}>
         <form className="flex flex-col">
           <div style={{ marginBottom: '2%' }}>
@@ -83,10 +82,10 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
             </ListGroup.Item>
           </ListGroup>
         </div>
+        <h5 style={{color: 'black', fontWeight: 'bold', margin: '5px', textAlign: 'center'}}>Emergency & Weather Alerts </h5>
         <div style={{ overflowY: 'auto', flex: 1 }}>
           {weatherAlerts}
           {moreAlerts}
-          <WeatherAlert title="yes" infoStr="no" url={"yes"} />
         </div>
       </div>
     </div>

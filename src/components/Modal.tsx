@@ -30,6 +30,8 @@ const Modal: React.FC<ModalProps> = ({ open, onClose, children }) => {
         >
           X
         </button>
+        <div dangerouslySetInnerHTML={{__html: children}}>
+        </div>
         {children}
       </div>
     </div>

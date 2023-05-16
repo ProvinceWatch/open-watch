@@ -1,8 +1,7 @@
 "use client"
 
-import { useEffect, useState, FC } from 'react';
+import { useEffect, FC } from 'react';
 import axios, { AxiosResponse } from 'axios';
-import Script from 'next/script';
 
 import { MapProps, CameraData, CameraResponse } from '@/app/map/defs';
 import polyline from '@mapbox/polyline';
@@ -10,7 +9,6 @@ import MapSideBar from './MapSideBar';
 
 const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
   let openBubble: any = null;
-  const [scriptsLoaded, setScriptsLoaded] = useState({ core: false, service: false, mapevents: false, ui: false, clustering: false });
 
   const initMap = (): void => {
     const platform = new window.H
@@ -31,77 +29,75 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
         }
       );
 
-    const minZoom = 7;
-    map.addEventListener('mapviewchangeend', function () {
-      if (map.getZoom() < minZoom) {
-        map.setZoom(minZoom, true);
-      }
-    });
-
-    // Define the boundaries for Alberta
-    const albertaBounds = {
-      north: 60.0000,
-      south: 48.9988,
-      east: -110.0000,
-      west: -120.0000
-    };
-
-    // Restrict the map view to Alberta
-    map.addEventListener('mapviewchangeend', function () {
-      const center = map.getCenter();
-      if (center.lat > albertaBounds.north || center.lat < albertaBounds.south ||
-        center.lng > albertaBounds.east || center.lng < albertaBounds.west) {
-        map.setCenter({ lat: 53.9333, lng: -116.5765 }, true);  // Reset to Alberta center
-      }
-    });
-
     new window.H.mapevents.Behavior(new window.H.mapevents.MapEvents(map));
     const ui = window.H.ui.UI.createDefault(map, defaultLayers);
     window.addEventListener('resize', () => map.getViewPort().resize());
-    getCameraMarkers(map, ui);
     getRoadConditonMarkers(map, ui);
+    getCameraMarkers(map, ui);
   };
 
+
   const getCameraMarkers = async (map: any, ui: any) => {
-    const cameraIcon = new window.H.map.Icon('/camera.png', { size: { w: 75, h: 75 } });
     const cameraResponse: AxiosResponse<CameraResponse> = await axios.get('/map/cameras');
     const cameras: CameraData[] = (cameraResponse.data.data as any) as CameraData[];
-
-    const group = new window.H.map.Group();
-    map.addObject(group);
-
-    group.addEventListener('tap', function (evt: any) {
-      if (openBubble) { ui.removeBubble(openBubble); }
-
-      const bubble = new window.H.ui.InfoBubble(evt.target.getGeometry(), {
-        content: evt.target.getData()
-      });
-
-      openBubble = bubble;
-      ui.addBubble(bubble);
-    }, false);
+    const dataPoints: any[] = [];
 
     cameras.forEach((camera: CameraData) => {
       const cameraLatLng = { lat: camera.Latitude, lng: camera.Longitude };
-      const marker = new window.H.map.Marker(cameraLatLng);
-      const html = `
-      <div style="background: white; padding: 5px; width: 400px;">
-        <img src="${camera.Url}" alt="Camera Snapshot" style="width: 100%; height: auto;" />
-        <p><strong>Name:</strong> ${camera.Name}</p>
-        <p><strong>Description:</strong> ${camera.Description}</p>
-        <p><strong>Direction of Travel:</strong> ${camera.DirectionOfTravel}</p>
-        <p><strong>Roadway Name:</strong> ${camera.RoadwayName}</p>
-        <p><strong>Wind Direction:</strong> ${camera.WindDirection}</p>
-        <p><strong>Air Temperature:</strong> ${camera.AirTemperature}</p>
-        <p><strong>Pavement Temperature:</strong> ${camera.PavementTemperature}</p>
-        <p><strong>Relative Humidity:</strong> ${camera.RelativeHumidity}</p>
-        <p><strong>Wind Speed:</strong> ${camera.WindSpeed}</p>
-      </div>
-    `;
-
-      marker.setData(html);
-      group.addObject(marker);
+      dataPoints.push(new window.H.clustering.DataPoint(cameraLatLng.lat, cameraLatLng.lng, null, camera));
     });
+
+    startClustering(map, dataPoints, ui);
+  };
+
+  function startClustering(map, data, ui) {
+    const clusteredDataProvider = new window.H.clustering.Provider(data, {
+      clusteringOptions: {
+        eps: 40,
+        minWeight: 10
+      }
+    });
+
+    var clusteringLayer = new window.H.map.layer.ObjectLayer(clusteredDataProvider);
+    map.addLayer(clusteringLayer);
+
+    map.addEventListener('tap', function (evt: any) {
+      const target = evt.target;
+      if (target instanceof window.H.map.Marker) {
+        if (openBubble) { ui.removeBubble(openBubble); }
+
+        const camera = target.getData().a.data;
+        if (camera) {
+          const html = `
+        <div style="background: white; padding: 5px; width: 400px;">
+          <img src="${camera.Url}" alt="Camera Snapshot" style="width: 100%; height: auto;" />
+          <p><strong>Name:</strong> ${camera.Name}</p>
+          <p><strong>Description:</strong> ${camera.Description}</p>
+          <p><strong>Direction of Travel:</strong> ${camera.DirectionOfTravel}</p>
+          <p><strong>Roadway Name:</strong> ${camera.RoadwayName}</p>
+          <p><strong>Wind Direction:</strong> ${camera.WindDirection}</p>
+          <p><strong>Air Temperature:</strong> ${camera.AirTemperature}</p>
+          <p><strong>Pavement Temperature:</strong> ${camera.PavementTemperature}</p>
+          <p><strong>Relative Humidity:</strong> ${camera.RelativeHumidity}</p>
+          <p><strong>Wind Speed:</strong> ${camera.WindSpeed}</p>
+        </div>
+      `;
+
+          const bubble = new window.H.ui.InfoBubble(target.getGeometry(), { content: html });
+          openBubble = bubble;
+          ui.addBubble(bubble);
+        }
+      }
+
+      if (target.getClusteringId !== undefined) {
+        // Get the bounding rectangle of the cluster
+        var bounds = target.getBounds();
+        // Zoom the map to fit the cluster
+        map.getViewModel().setLookAtData({
+          bounds: bounds
+        });
+      }
+    }, false);
   };
 
   const getRoadConditonMarkers = async (map: any, ui: any) => {

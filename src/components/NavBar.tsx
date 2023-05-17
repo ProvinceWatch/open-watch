@@ -3,20 +3,20 @@ import { Navbar } from "flowbite-react";
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
-import Map from '@/components/Map';
-import Cameras from '@/components/Cameras';
+import Map from '@/components/map/Map';
+import Cameras from '@/components/cameras/Cameras';
 
 export default function NavBar() {
   const [selectedTab, setSelectedTab] = useState("map");
- const map = <Map lat={53.52904} lng={-113.48899} zoom={7} />;
+ const map = <Map zoom={7} />;
   return (
     <Router>
       <div>
-        <Navbar fluid={true} className="sticky top-0 z-50">
+        <Navbar fluid={true} className="sticky top-0 z-50" style={{overflow: 'hidden'}}>
           <Navbar.Brand href="/">
             <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
               <p style={{ color: 'black' }}>
-                ProvinceWatch
+                OpenWatch
               </p>
             </span>
           </Navbar.Brand>
@@ -29,7 +29,7 @@ export default function NavBar() {
               Traffic Cameras
             </Link>
             <Link to="/cameras" onClick={() => setSelectedTab("cameras")} style={{ color: 'black' }}>
-              Open Data Portal
+              Open Data
             </Link>
             <Link to="/parks" onClick={() => setSelectedTab("parks")} style={{ color: 'black' }}>
               Parks

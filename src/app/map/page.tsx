@@ -1,11 +1,8 @@
 "use client"
-import Map from '@/components/Map';
-import Layout from '@/components/Layout';
+import Map from '@/components/map/Map';
 
 export default function MapPage() {
     return (
-        <Layout>
-            <Map lat={53.52904} lng={-113.48899} zoom={7} />
-        </Layout>
+        <Map zoom={7} />
     )
 }

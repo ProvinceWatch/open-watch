@@ -4,8 +4,8 @@ import { Inter } from 'next/font/google'
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata = {
-  title: 'ProvinceWatcher',
-  description: 'Alberta Province Watcher',
+  title: 'OpenWatch',
+  description: 'Alberta Open Data Portal',
 }
 
 export default function RootLayout({

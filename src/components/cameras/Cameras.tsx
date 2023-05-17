@@ -1,6 +1,6 @@
 import React, { useState, useCallback, FC } from 'react';
-import CameraSidebar from '@/components/CameraSidebar';
-import CameraGrid from '@/components/CameraGrid';
+import CameraSidebar from '@/components/cameras/CameraSidebar';
+import CameraGrid, { Section } from '@/components/cameras/CameraGrid';
 
 interface CamerasProps {}
 
@@ -28,7 +28,7 @@ const Cameras: FC<CamerasProps> = ({}) => {
     <div className="flex min-h-screen">
       <CameraSidebar onSectionSelect={setSelectedSection} onIncreaseGridSize={increaseGridSize} onDecreaseGridSize={decreaseGridSize} />
       <div className="flex-1 overflow-auto bg-white min-h-screen ml-80">
-        <CameraGrid section={selectedSection} gridSize={gridSize} />
+        <CameraGrid section={selectedSection as Section} gridSize={gridSize} />
       </div>
     </div>
   );

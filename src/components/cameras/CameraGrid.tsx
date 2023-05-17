@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CameraData } from '@/app/map/defs';
 import { useSortedCameras } from '@/app/cameras/sort';
-import Modal from '@/components/Modal';
+import CameraModal from '@/components/cameras/CameraModal';
 
 export type Section = 'alberta-highways' | 'calgary-cameras' | 'edmonton-cameras' | 'banff-cameras';
 
@@ -40,18 +40,7 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
         </div>
       ))}
       {selectedCamera && (
-        <Modal open={!!selectedCamera} onClose={() => setSelectedCamera(null)}>
-          <img src={selectedCamera.Url} alt="Camera Snapshot" className="w-full h-auto" />
-          {selectedCamera.Name && <p><strong>Name:</strong> {selectedCamera.Name}</p>}
-          {selectedCamera.Description && <p><strong>Description:</strong> {selectedCamera.Description}</p>}
-          {selectedCamera.DirectionOfTravel && <p><strong>Direction of Travel:</strong> {selectedCamera.DirectionOfTravel}</p>}
-          {selectedCamera.RoadwayName && <p><strong>Roadway Name:</strong> {selectedCamera.RoadwayName}</p>}
-          {selectedCamera.WindDirection && <p><strong>Wind Direction:</strong> {selectedCamera.WindDirection}</p>}
-          {selectedCamera.AirTemperature && <p><strong>Air Temperature:</strong> {selectedCamera.AirTemperature}</p>}
-          {selectedCamera.PavementTemperature && <p><strong>Pavement Temperature:</strong> {selectedCamera.PavementTemperature}</p>}
-          {selectedCamera.RelativeHumidity && <p><strong>Relative Humidity:</strong> {selectedCamera.RelativeHumidity}</p>}
-          {selectedCamera.WindSpeed && <p><strong>Wind Speed:</strong> {selectedCamera.WindSpeed}</p>}
-        </Modal>
+        <CameraModal open={!!selectedCamera} onClose={() => setSelectedCamera(null)} selectedCamera={selectedCamera}/>
       )}
     </div>
   );

@@ -1,21 +1,14 @@
 "use client"
 
 import { useEffect, FC, useState } from 'react';
-import axios, { AxiosResponse } from 'axios';
-import { MapProps, CameraData, CameraResponse } from '@/app/map/defs';
+import { MapProps, CameraData } from '@/app/map/defs';
 import polyline from '@mapbox/polyline';
-import MapSideBar from './MapSideBar';
-import Modal from './Modal';
+import MapSideBar from '@/components/map/MapSideBar';
+import CameraModal from '@/components/cameras/CameraModal';
 
-const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
-  const [showModal, setShowModal] = useState(false);
-  const [modalChildren, setModalChildren] = useState(null);
-  const [selectedCamera, setSelectedCamera] = useState({
-    Url: '',
-    Name: '',
-  });
-
-  let openBubble: any = null;
+const Map: FC<MapProps> = ({ zoom }) => {
+  const [showCameraModal, setShowCameraModal] = useState(false);
+  const [selectedCamera, setSelectedCamera] = useState({} as CameraData);
 
   const initMap = async () => {
     const platform = new window.H
@@ -50,8 +43,10 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
 
 
   const getCameraMarkers = async (map: any, ui: any) => {
-    const cameraResponse: AxiosResponse<CameraResponse> = await axios.get('/map/cameras');
-    const cameras: CameraData[] = (cameraResponse.data.data as any) as CameraData[];
+    const res: any = await fetch('/map/cameras');
+    const cameraResponse = await res.json();
+    console.log(cameraResponse);
+    const cameras: CameraData[] = (cameraResponse.data as any) as CameraData[];
     const dataPoints: any[] = [];
 
     cameras.forEach((camera: CameraData) => {
@@ -62,7 +57,7 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
     startClustering(map, dataPoints, ui);
   };
 
-  function startClustering(map, data, ui) {
+  const startClustering = (map: any, data: any, ui: any) => {
     const clusteredDataProvider = new window.H.clustering.Provider(data, {
       clusteringOptions: {
         eps: 4,
@@ -70,49 +65,33 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
       }
     });
 
-    var clusteringLayer = new window.H.map.layer.ObjectLayer(clusteredDataProvider);
+    const clusteringLayer = new window.H.map.layer.ObjectLayer(clusteredDataProvider);
     map.addLayer(clusteringLayer);
 
     map.addEventListener('tap', function (evt: any) {
       const target = evt.target;
       if (target instanceof window.H.map.Marker) {
-        if (openBubble) { ui.removeBubble(openBubble); }
-
         const camera = target.getData().a.data;
         if (camera) {
           setSelectedCamera(camera);
-          setShowModal(true);
+          setShowCameraModal(true);
         }
-      }
-
-      if (target.getClusteringId !== undefined) {
-        // Get the bounding rectangle of the cluster
-        var bounds = target.getBounds();
-        // Zoom the map to fit the cluster
-        map.getViewModel().setLookAtData({
-          bounds: bounds
-        });
       }
     }, false);
   };
 
   const getRoadConditonMarkers = async (map: any, ui: any) => {
-    // Fetch the road conditions data
-    const response = await axios.get('/map/road-conditions');
-    const roadConditions = response.data.data;
+    const response = await fetch('/map/road-conditions');
+    const roadConditions = await response.json();
 
-    // Create a list of promises
-    const tasks = roadConditions.map(async (roadCondition: any) => {
-      // Decode the polyline to get the coordinates
+    const tasks = roadConditions.data.map(async (roadCondition: any) => {
       const decodedPolyline = polyline.decode(roadCondition.EncodedPolyline);
 
-      // Convert decoded polyline to LineString
       const lineString = new window.H.geo.LineString();
       decodedPolyline.forEach((coords: number[]) => {
         lineString.pushPoint({ lat: coords[0], lng: coords[1] });
       });
 
-      // Determine the color based on the primary condition
       let color;
       switch (roadCondition['Primary Condition']) {
         case 'Bare Dry':
@@ -130,34 +109,34 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
           color = 'red';
           break;
         default:
-          color = 'black'; // Use black for other conditions
+          color = 'black';
       }
 
-      // Create a polyline on the map
       const line = new window.H.map.Polyline(lineString, { style: { strokeColor: color, lineWidth: 3 } });
       map.addObject(line);
     });
 
-    // Wait for all tasks to complete
     await Promise.all(tasks);
   };
-  useEffect(() => {
-    const loadScript = (src) => {
-      return new Promise((resolve, reject) => {
-        const script = document.createElement('script');
-        script.src = src;
-        script.onload = () => {
-          console.log(`Loaded ${src}`);
-          resolve();
-        };
-        script.onerror = () => {
-          console.error(`Failed to load ${src}`);
-          reject();
-        };
-        document.body.appendChild(script);
-      });
-    };
 
+  // For loading HERE js scripts into the DOM
+  const loadScript = (src: string): Promise<void> => {
+    return new Promise((resolve, reject) => {
+      const script = document.createElement('script');
+      script.src = src;
+      script.onload = () => {
+        console.log(`Loaded ${src}`);
+        resolve();
+      };
+      script.onerror = () => {
+        console.error(`Failed to load ${src}`);
+        reject();
+      };
+      document.body.appendChild(script);
+    });
+  };
+
+  useEffect(() => {
     const loadScriptsInOrder = async () => {
       try {
         await loadScript("https://js.api.here.com/v3/3.1/mapsjs-core.js");
@@ -175,25 +154,12 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
   }, []);
 
   return (
-    <>
-      <Modal open={showModal} onClose={() => { setShowModal(false); setSelectedCamera(null); }}>
-        {selectedCamera && <div style={{color: 'black'}}>
-          <img src={selectedCamera.Url} alt="Camera Snapshot" className="w-full h-auto" />
-          {selectedCamera.Name && <p><strong>Name:</strong> {selectedCamera.Name}</p>}
-          {selectedCamera.Description && <p><strong>Description:</strong> {selectedCamera.Description}</p>}
-          {selectedCamera.DirectionOfTravel && <p><strong>Direction of Travel:</strong> {selectedCamera.DirectionOfTravel}</p>}
-          {selectedCamera.RoadwayName && <p><strong>Roadway Name:</strong> {selectedCamera.RoadwayName}</p>}
-          {selectedCamera.WindDirection && <p><strong>Wind Direction:</strong> {selectedCamera.WindDirection}</p>}
-          {selectedCamera.AirTemperature && <p><strong>Air Temperature:</strong> {selectedCamera.AirTemperature}</p>}
-          {selectedCamera.PavementTemperature && <p><strong>Pavement Temperature:</strong> {selectedCamera.PavementTemperature}</p>}
-          {selectedCamera.RelativeHumidity && <p><strong>Relative Humidity:</strong> {selectedCamera.RelativeHumidity}</p>}
-          {selectedCamera.WindSpeed && <p><strong>Wind Speed:</strong> {selectedCamera.WindSpeed}</p>}
-        </div>}
-      </Modal>
+    <div style={{overflow: 'hidden'}}>
+      <CameraModal open={showCameraModal} selectedCamera={selectedCamera} onClose={() => { setShowCameraModal(false); setSelectedCamera({} as CameraData); }} />
       <MapSideBar />
       <div id="mapContainer" style={{ width: '100%', height: '95%', position: 'fixed' }} />
       <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
-    </>
+    </div>
   );
 };
 

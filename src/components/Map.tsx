@@ -5,15 +5,11 @@ import axios, { AxiosResponse } from 'axios';
 import { MapProps, CameraData, CameraResponse } from '@/app/map/defs';
 import polyline from '@mapbox/polyline';
 import MapSideBar from './MapSideBar';
-import Modal from './Modal';
+import CameraModal from './CameraModal';
 
 const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
-  const [showModal, setShowModal] = useState(false);
-  const [modalChildren, setModalChildren] = useState(null);
-  const [selectedCamera, setSelectedCamera] = useState({
-    Url: '',
-    Name: '',
-  });
+  const [showCameraModal, setShowCameraModal] = useState(false);
+  const [selectedCamera, setSelectedCamera] = useState({} as CameraData);
 
   let openBubble: any = null;
 
@@ -81,7 +77,7 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
         const camera = target.getData().a.data;
         if (camera) {
           setSelectedCamera(camera);
-          setShowModal(true);
+          setShowCameraModal(true);
         }
       }
 
@@ -176,20 +172,7 @@ const Map: FC<MapProps> = ({ lat, lng, zoom }) => {
 
   return (
     <>
-      <Modal open={showModal} onClose={() => { setShowModal(false); setSelectedCamera(null); }}>
-        {selectedCamera && <div style={{color: 'black'}}>
-          <img src={selectedCamera.Url} alt="Camera Snapshot" className="w-full h-auto" />
-          {selectedCamera.Name && <p><strong>Name:</strong> {selectedCamera.Name}</p>}
-          {selectedCamera.Description && <p><strong>Description:</strong> {selectedCamera.Description}</p>}
-          {selectedCamera.DirectionOfTravel && <p><strong>Direction of Travel:</strong> {selectedCamera.DirectionOfTravel}</p>}
-          {selectedCamera.RoadwayName && <p><strong>Roadway Name:</strong> {selectedCamera.RoadwayName}</p>}
-          {selectedCamera.WindDirection && <p><strong>Wind Direction:</strong> {selectedCamera.WindDirection}</p>}
-          {selectedCamera.AirTemperature && <p><strong>Air Temperature:</strong> {selectedCamera.AirTemperature}</p>}
-          {selectedCamera.PavementTemperature && <p><strong>Pavement Temperature:</strong> {selectedCamera.PavementTemperature}</p>}
-          {selectedCamera.RelativeHumidity && <p><strong>Relative Humidity:</strong> {selectedCamera.RelativeHumidity}</p>}
-          {selectedCamera.WindSpeed && <p><strong>Wind Speed:</strong> {selectedCamera.WindSpeed}</p>}
-        </div>}
-      </Modal>
+      <CameraModal open={showCameraModal} selectedCamera={selectedCamera} onClose={() => { setShowCameraModal(false); setSelectedCamera({} as CameraData); }} />
       <MapSideBar />
       <div id="mapContainer" style={{ width: '100%', height: '95%', position: 'fixed' }} />
       <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />

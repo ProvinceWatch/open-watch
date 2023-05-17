@@ -16,7 +16,7 @@ export default function NavBar() {
           <Navbar.Brand href="/">
             <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
               <p style={{ color: 'black' }}>
-                ProvinceWatch
+                OpenWatch
               </p>
             </span>
           </Navbar.Brand>

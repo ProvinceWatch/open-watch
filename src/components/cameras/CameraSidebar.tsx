@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import { ListGroup } from 'flowbite-react';
-
-type Section = 'alberta-highways' | 'calgary-cameras' | 'edmonton-cameras' | 'banff-cameras';
+import { Section } from '@/app/cameras/defs'
 
 interface CameraSidebarProps {
   onSectionSelect: (section: Section) => void;

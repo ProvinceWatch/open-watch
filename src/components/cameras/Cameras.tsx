@@ -1,7 +1,8 @@
 import React, { useState, useCallback, FC } from 'react';
 import CameraSidebar from '@/components/cameras/CameraSidebar';
-import CameraGrid, { Section } from '@/components/cameras/CameraGrid';
+import CameraGrid from '@/components/cameras/CameraGrid';
 import CameraGridSize from '@/components/cameras/CameraGridSize';
+import { Section } from '@/app/cameras/defs'
 
 interface CamerasProps {}
 

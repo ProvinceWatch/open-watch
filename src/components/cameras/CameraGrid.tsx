@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { CameraData } from '@/app/map/defs';
-import { useSortedCameras } from '@/app/cameras/sort';
+import { sortCameras } from '@/app/cameras/sort';
+import { Section } from '@/app/cameras/defs';
 import CameraModal from '@/components/cameras/CameraModal';
-
-export type Section = 'alberta-highways' | 'calgary-cameras' | 'edmonton-cameras' | 'banff-cameras';
 
 interface CameraGridProps {
   section: Section;
@@ -11,8 +10,38 @@ interface CameraGridProps {
 }
 
 const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
-  const cameras = useSortedCameras();
+  const [cameras, setCameras] = useState<Record<Section, CameraData[]>>({
+    'calgary-cameras': [],
+    'edmonton-cameras': [],
+    'banff-cameras': [],
+    'alberta-highways': [],
+  });
   const [selectedCamera, setSelectedCamera] = useState<CameraData | null>(null); // null when no camera is selected
+
+  useEffect(() => {
+    const fetchAndSortCameras = async () => {
+      try {
+        const res: any = await fetch('/map/cameras');
+        const cameraResponse = await res.json();
+        let cameraData: CameraData[] = (cameraResponse.data as any) as CameraData[];
+    
+        // Sort the cameras so the ones with Status "Disabled" are at the end
+        const sortedCameras = sortCameras(cameraData);
+    
+        setCameras(sortedCameras);
+      } catch (error) {
+        console.error('Failed to fetch and sort camera data:', error);
+      }
+    };
+    
+
+    fetchAndSortCameras();
+    const intervalId = setInterval(fetchAndSortCameras, 5 * 60 * 1000); // Fetch new data every 5 minutes
+
+    return () => {
+      clearInterval(intervalId); // Clear the interval when the component is unmounted
+    };
+  }, []);
 
   const cameraName = (camera: CameraData) => {
     if (camera.Name && camera.Name !== "N/A") {
@@ -25,7 +54,7 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
   };
 
   return (
-    <div className={`grid ${gridSize} gap-4 text-black overflow-auto max-h-screen`}>
+    <div className={`grid ${gridSize} gap-4 px-3 text-black overflow-auto max-h-screen`}>
       {cameras[section].map((camera, index) => (
         <div key={index} className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700" onClick={() => setSelectedCamera(camera)}>
           <a href="#">

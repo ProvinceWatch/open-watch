@@ -1,11 +1,10 @@
 "use client"
 
 import { useEffect, FC, useState } from 'react';
-import axios, { AxiosResponse } from 'axios';
-import { MapProps, CameraData, CameraResponse } from '@/app/map/defs';
+import { MapProps, CameraData } from '@/app/map/defs';
 import polyline from '@mapbox/polyline';
 import MapSideBar from './MapSideBar';
-import CameraModal from './CameraModal';
+import CameraModal from '@/components/cameras/CameraModal';
 
 const Map: FC<MapProps> = ({ zoom }) => {
   const [showCameraModal, setShowCameraModal] = useState(false);
@@ -44,8 +43,10 @@ const Map: FC<MapProps> = ({ zoom }) => {
 
 
   const getCameraMarkers = async (map: any, ui: any) => {
-    const cameraResponse: AxiosResponse<CameraResponse> = await axios.get('/map/cameras');
-    const cameras: CameraData[] = (cameraResponse.data.data as any) as CameraData[];
+    const res: any = await fetch('/map/cameras');
+    const cameraResponse = await res.json();
+    console.log(cameraResponse);
+    const cameras: CameraData[] = (cameraResponse.data as any) as CameraData[];
     const dataPoints: any[] = [];
 
     cameras.forEach((camera: CameraData) => {
@@ -80,10 +81,10 @@ const Map: FC<MapProps> = ({ zoom }) => {
   };
 
   const getRoadConditonMarkers = async (map: any, ui: any) => {
-    const response = await axios.get('/map/road-conditions');
-    const roadConditions = response.data.data;
+    const response = await fetch('/map/road-conditions');
+    const roadConditions = await response.json();
 
-    const tasks = roadConditions.map(async (roadCondition: any) => {
+    const tasks = roadConditions.data.map(async (roadCondition: any) => {
       const decodedPolyline = polyline.decode(roadCondition.EncodedPolyline);
 
       const lineString = new window.H.geo.LineString();
@@ -153,12 +154,12 @@ const Map: FC<MapProps> = ({ zoom }) => {
   }, []);
 
   return (
-    <>
+    <div style={{overflow: 'hidden'}}>
       <CameraModal open={showCameraModal} selectedCamera={selectedCamera} onClose={() => { setShowCameraModal(false); setSelectedCamera({} as CameraData); }} />
       <MapSideBar />
       <div id="mapContainer" style={{ width: '100%', height: '95%', position: 'fixed' }} />
       <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
-    </>
+    </div>
   );
 };
 

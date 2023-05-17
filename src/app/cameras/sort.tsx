@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import axios, { AxiosResponse } from 'axios';
 import { CameraData, CameraResponse } from '@/app/map/defs';
-import { Section } from '@/components/CameraGrid';
+import { Section } from '@/components/cameras/CameraGrid';
 
 const BOUNDARIES = {
   'calgary-cameras': { latMin: 50.8345, latMax: 51.19477, lonMin: -114.2705, lonMax: -113.79533 },
@@ -23,8 +23,9 @@ export function useSortedCameras() {
   useEffect(() => {
     const fetchAndSortCameras = async () => {
       try {
-        const cameraResponse: AxiosResponse<CameraResponse> = await axios.get('/map/cameras');
-        let cameraData: CameraData[] = (cameraResponse.data.data as any) as CameraData[];
+        const res: any = await fetch('/map/cameras');
+        const cameraResponse = await res.json();
+        let cameraData: CameraData[] = (cameraResponse.data as any) as CameraData[];
 
         // Sort the cameras so the ones with Status "Disabled" are at the end
         cameraData = cameraData.sort((a, b) => (a.Status === "Disabled" ? 1 : -1));

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { CameraData } from '@/app/map/defs';
 import { useSortedCameras } from '@/app/cameras/sort';
-import CameraModal from '@/components/CameraModal';
+import CameraModal from '@/components/cameras/CameraModal';
 
 export type Section = 'alberta-highways' | 'calgary-cameras' | 'edmonton-cameras' | 'banff-cameras';
 

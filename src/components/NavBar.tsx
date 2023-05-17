@@ -4,7 +4,7 @@ import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 import Map from '@/components/Map';
-import Cameras from '@/components/Cameras';
+import Cameras from '@/components/cameras/Cameras';
 
 export default function NavBar() {
   const [selectedTab, setSelectedTab] = useState("map");
@@ -12,7 +12,7 @@ export default function NavBar() {
   return (
     <Router>
       <div>
-        <Navbar fluid={true} className="sticky top-0 z-50">
+        <Navbar fluid={true} className="sticky top-0 z-50" style={{overflow: 'hidden'}}>
           <Navbar.Brand href="/">
             <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
               <p style={{ color: 'black' }}>

@@ -1,7 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'react';
 import { TextInput, ListGroup } from "flowbite-react";
 import WeatherAlert from "./WeatherAlert";
-import axios from 'axios';
 
 interface MapSideBarProps {
 }
@@ -22,9 +21,10 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
   }, []);
 
   const getWeatherAlerts = async () => {
-    await axios.get('/map/emergency-alerts')
-      .then((res) => {
-        const alertsResp = res.data.data;
+    await fetch('/map/emergency-alerts')
+      .then(async (res) => {
+        const json = await res.json();
+        const alertsResp = json.data;
         const alerts = alertsResp.map((alert: Alert) => {
           return <WeatherAlert title={alert.Message} infoStr={alert.Notes} url={"yes"} />
         });
@@ -33,9 +33,10 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
   };
 
   const getWeatherWarnings = async () => {
-    await axios.get('/map/weather-alerts')
-      .then((res) => {
-        const alertsResp = res.data.data.features;
+    await fetch('/map/weather-alerts')
+      .then(async (res) => {
+        const json = await res.json();
+        const alertsResp = json.data.features;
         const alerts = alertsResp.map((alert: any) => {
           return <WeatherAlert title={alert.properties.name + " - " + alert.properties.alerts[0].alertBannerText} infoStr={alert.properties.alerts[0].zoneName} url={"https://weather.gc.ca/airquality/pages/provincial_summary/ab_e.html"} />
         });

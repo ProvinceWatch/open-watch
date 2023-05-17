@@ -31,7 +31,7 @@ const Cameras: FC<CamerasProps> = ({}) => {
       <div className="flex-1 overflow-auto bg-white min-h-screen ml-80">
         <CameraGrid section={selectedSection as Section} gridSize={gridSize} />
       </div>
-      <CameraGridSize onReduceColumns={reduceColumns} onAddColumns={addColumns} />
+      <CameraGridSize onReduceColumns={reduceColumns} onAddColumns={addColumns} gridSize={gridSize} />
     </div>
   );
 }

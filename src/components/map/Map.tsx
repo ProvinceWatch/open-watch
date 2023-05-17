@@ -121,19 +121,22 @@ const Map: FC<MapProps> = ({ zoom }) => {
 
   // For loading HERE js scripts into the DOM
   const loadScript = (src: string): Promise<void> => {
-    return new Promise((resolve, reject) => {
-      const script = document.createElement('script');
-      script.src = src;
-      script.onload = () => {
-        console.log(`Loaded ${src}`);
-        resolve();
-      };
-      script.onerror = () => {
-        console.error(`Failed to load ${src}`);
-        reject();
-      };
-      document.body.appendChild(script);
-    });
+    if (typeof window !== "undefined") {
+      return new Promise((resolve, reject) => {
+        const script = document.createElement('script');
+        script.src = src;
+        script.onload = () => {
+          console.log(`Loaded ${src}`);
+          resolve();
+        };
+        script.onerror = () => {
+          console.error(`Failed to load ${src}`);
+          reject();
+        };
+        document.body.appendChild(script);
+      });
+    }
+    return new Promise((res, rej) => { });
   };
 
   useEffect(() => {
@@ -154,7 +157,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
   }, []);
 
   return (
-    <div style={{overflow: 'hidden'}}>
+    <div style={{ overflow: 'hidden' }}>
       <CameraModal open={showCameraModal} selectedCamera={selectedCamera} onClose={() => { setShowCameraModal(false); setSelectedCamera({} as CameraData); }} />
       <MapSideBar />
       <div id="mapContainer" style={{ width: '100%', height: '95%', position: 'fixed' }} />

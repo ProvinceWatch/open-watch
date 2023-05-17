@@ -1,7 +1,12 @@
 "use client"
 
+import NavBar from "@/components/NavBar"
+
 export default function Parks() {
-    return (
-        <div>Parks</div>
-    )
+  return (
+    <>
+      <NavBar  selectedTab="parks"/>
+      <div>Parks</div>
+    </>
+  )
 }

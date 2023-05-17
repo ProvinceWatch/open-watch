@@ -26,8 +26,8 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
       .then(async (res) => {
         const json = await res.json();
         const alertsResp = json.data;
-        const alerts = alertsResp.map((alert: Alert) => {
-          return <WeatherAlert title={alert.Message} infoStr={alert.Notes} url={"yes"} />
+        const alerts = alertsResp.map((alert: Alert, i: Number) => {
+          return <WeatherAlert title={alert.Message} infoStr={alert.Notes} url={"yes"} key={`e-${i}`} />
         });
         setWeatherAlerts(alerts);
       });
@@ -38,8 +38,8 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
       .then(async (res) => {
         const json = await res.json();
         const alertsResp = json.data.features;
-        const alerts = alertsResp.map((alert: any) => {
-          return <WeatherAlert title={alert.properties.name + " - " + alert.properties.alerts[0].alertBannerText} infoStr={alert.properties.alerts[0].zoneName} url={"https://weather.gc.ca/airquality/pages/provincial_summary/ab_e.html"} />
+        const alerts = alertsResp.map((alert: any, i: Number) => {
+          return <WeatherAlert title={alert.properties.name + " - " + alert.properties.alerts[0].alertBannerText}  key={`w-${i}`} infoStr={alert.properties.alerts[0].zoneName} url={"https://weather.gc.ca/airquality/pages/provincial_summary/ab_e.html"} />
         });
 
         setMoreAlerts(alerts);
@@ -99,4 +99,5 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
   );
 });
 
+MapSideBar.displayName = "Map Sidebar";
 export default MapSideBar;

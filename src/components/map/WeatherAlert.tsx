@@ -1,7 +1,7 @@
-import { FC } from 'react';
-import { Alert, Accordion } from "flowbite-react";
 import React from "react";
-import { HiInformationCircle, HiEye } from 'react-icons/hi'
+import { FC } from 'react';
+import { Alert } from "flowbite-react";
+import { HiEye } from 'react-icons/hi'
 import {GoAlert} from 'react-icons/go';
 
 interface WeatherAlertProps {

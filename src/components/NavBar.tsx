@@ -3,7 +3,7 @@ import { Navbar } from "flowbite-react";
 import { useState } from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
-import Map from '@/components/Map';
+import Map from '@/components/map/Map';
 import Cameras from '@/components/cameras/Cameras';
 
 export default function NavBar() {

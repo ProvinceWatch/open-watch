@@ -3,7 +3,7 @@
 import { useEffect, FC, useState } from 'react';
 import { MapProps, CameraData } from '@/app/map/defs';
 import polyline from '@mapbox/polyline';
-import MapSideBar from './MapSideBar';
+import MapSideBar from '@/components/map/MapSideBar';
 import CameraModal from '@/components/cameras/CameraModal';
 
 const Map: FC<MapProps> = ({ zoom }) => {

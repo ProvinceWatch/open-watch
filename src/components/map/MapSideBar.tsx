@@ -1,6 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'react';
-import { TextInput, ListGroup } from "flowbite-react";
-import WeatherAlert from "./WeatherAlert";
+import { TextInput, ListGroup, Toast } from "flowbite-react";
+import {FiAlertCircle} from "react-icons/fi";
+import WeatherAlert from "@/components/map/WeatherAlert";
 
 interface MapSideBarProps {
 }
@@ -54,7 +55,7 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
   }));
 
   return (
-    <div className={`w-80 min-h-screen bg-white p-4 fixed transform transition-transform duration-300`} style={{ zIndex: 1, display: 'flex', flexDirection: 'column',  height: '100%' }}>
+    <div className={`w-80 min-h-screen bg-white p-4 fixed transform transition-transform duration-300`} style={{ zIndex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
       <div id='control-bar' style={{ width: '100%', display: 'flex', flexDirection: 'column', height: '100%' }}>
         <form className="flex flex-col">
           <div style={{ marginBottom: '2%' }}>
@@ -83,7 +84,12 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
             </ListGroup.Item>
           </ListGroup>
         </div>
-        <h5 style={{color: 'black', fontWeight: 'bold', margin: '5px', textAlign: 'center'}}>Emergency & Weather Alerts </h5>
+        <Toast className="mt-2">
+          <FiAlertCircle className="h-5 w-5 text-red-600 dark:text-red-500" />
+          <div className="pl-4 text-sm font-bold">
+            Emergency & Weather Alerts
+          </div>
+        </Toast>
         <div style={{ overflowY: 'auto', flex: 1 }}>
           {weatherAlerts}
           {moreAlerts}

@@ -15,12 +15,12 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
   const [selectedCamera, setSelectedCamera] = useState<CameraData | null>(null); // null when no camera is selected
 
   const cameraName = (camera: CameraData) => {
-    if (camera.Name) {
+    if (camera.Name && camera.Name !== "N/A") {
       return camera.Name;
     } else if (camera.RoadwayName) {
       return camera.RoadwayName;
     } else {
-      return `Camera at Latitude: ${camera.Latitude}, Longitude: ${camera.Longitude}`;
+      return `Latitude: ${camera.Latitude}, Longitude: ${camera.Longitude}`;
     }
   };
 
@@ -40,7 +40,7 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
         </div>
       ))}
       {selectedCamera && (
-        <CameraModal open={!!selectedCamera} onClose={() => setSelectedCamera(null)} selectedCamera={selectedCamera}/>
+        <CameraModal open={!!selectedCamera} onClose={() => setSelectedCamera(null)} selectedCamera={selectedCamera} />
       )}
     </div>
   );

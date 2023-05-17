@@ -1,6 +1,7 @@
 import React, { useState, useCallback, FC } from 'react';
 import CameraSidebar from '@/components/cameras/CameraSidebar';
 import CameraGrid, { Section } from '@/components/cameras/CameraGrid';
+import CameraGridSize from '@/components/cameras/CameraGridSize';
 
 interface CamerasProps {}
 
@@ -8,7 +9,7 @@ const Cameras: FC<CamerasProps> = ({}) => {
   const [selectedSection, setSelectedSection] = useState('alberta-highways');
   const [gridSize, setGridSize] = useState('grid-cols-3');
 
-  const increaseGridSize = useCallback(() => {
+  const reduceColumns = useCallback(() => {
     if (gridSize === 'grid-cols-5') {
       setGridSize('grid-cols-4');
     } else if (gridSize === 'grid-cols-4') {
@@ -16,7 +17,7 @@ const Cameras: FC<CamerasProps> = ({}) => {
     }
   }, [gridSize, setGridSize]);
 
-  const decreaseGridSize = useCallback(() => {
+  const addColumns = useCallback(() => {
     if (gridSize === 'grid-cols-3') {
       setGridSize('grid-cols-4');
     } else if (gridSize === 'grid-cols-4') {
@@ -26,10 +27,11 @@ const Cameras: FC<CamerasProps> = ({}) => {
 
   return (
     <div className="flex min-h-screen">
-      <CameraSidebar onSectionSelect={setSelectedSection} onIncreaseGridSize={increaseGridSize} onDecreaseGridSize={decreaseGridSize} />
+      <CameraSidebar onSectionSelect={setSelectedSection}/>
       <div className="flex-1 overflow-auto bg-white min-h-screen ml-80">
         <CameraGrid section={selectedSection as Section} gridSize={gridSize} />
       </div>
+      <CameraGridSize onReduceColumns={reduceColumns} onAddColumns={addColumns} gridSize={gridSize} />
     </div>
   );
 }

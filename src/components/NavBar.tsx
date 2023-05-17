@@ -8,7 +8,7 @@ import Cameras from '@/components/Cameras';
 
 export default function NavBar() {
   const [selectedTab, setSelectedTab] = useState("map");
- const map = <Map lat={53.52904} lng={-113.48899} zoom={7} />;
+ const map = <Map zoom={7} />;
   return (
     <Router>
       <div>
@@ -29,7 +29,7 @@ export default function NavBar() {
               Traffic Cameras
             </Link>
             <Link to="/cameras" onClick={() => setSelectedTab("cameras")} style={{ color: 'black' }}>
-              Open Data Portal
+              Open Data
             </Link>
             <Link to="/parks" onClick={() => setSelectedTab("parks")} style={{ color: 'black' }}>
               Parks

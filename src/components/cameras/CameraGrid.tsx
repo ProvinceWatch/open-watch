@@ -20,8 +20,12 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
   const [selectedCamera, setSelectedCamera] = useState<CameraData | null>(null);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
   
+  const gridRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     setLoadedImages({});
+    if (gridRef.current) {
+      gridRef.current.scrollTo(0, 0);
+    }
   }, [section]);
 
   useEffect(() => {
@@ -44,13 +48,6 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
       clearInterval(intervalId); 
     };
   }, []);
-
-  const gridRef = useRef<HTMLDivElement | null>(null);
-  useEffect(() => {
-    if (gridRef.current) {
-      gridRef.current.scrollTo(0, 0);
-    }
-  }, [section]);
 
   const cameraName = (camera: CameraData) => {
     if (camera.Name && camera.Name !== "N/A") {

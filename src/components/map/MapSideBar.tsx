@@ -3,7 +3,6 @@ import { TextInput, ListGroup, Toast, Button } from "flowbite-react";
 import { FiAlertCircle } from "react-icons/fi";
 import { TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand } from "react-icons/tb";
 import WeatherAlert from "@/components/map/WeatherAlert";
-import "./MapSidebar.css";
 
 interface MapSideBarProps {
 }
@@ -58,11 +57,17 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
 
   return (
     <>
+      <style jsx>{
+        `.translate-x-80 {
+          transform: translateX(-100%);
+       }`
+       }
+      </style>
       <div>
         {
           isOpen ?
-            <TbLayoutSidebarLeftCollapse onClick={handleToggleSidebar} size={35} style={{ position: 'fixed', zIndex: 2, marginLeft: `${isOpen ? '1%' : '0%'}`, color: 'black' }}/> :
-            <TbLayoutSidebarLeftExpand onClick={handleToggleSidebar} size={35} style={{ position: 'fixed', zIndex: 2, marginLeft: `${isOpen ? '1%' : '0%'}`,  color: 'black' }} />
+            <TbLayoutSidebarLeftCollapse onClick={handleToggleSidebar} size={35} style={{ position: 'fixed', zIndex: 2, marginLeft: `${isOpen ? '1%' : '0%'}`, color: 'black' }} /> :
+            <TbLayoutSidebarLeftExpand onClick={handleToggleSidebar} size={35} style={{ position: 'fixed', zIndex: 2, marginLeft: `${isOpen ? '1%' : '0%'}`, color: 'black' }} />
         }
 
       </div>

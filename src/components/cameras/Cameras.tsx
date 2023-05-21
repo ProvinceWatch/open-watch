@@ -26,19 +26,24 @@ const Cameras: FC<CamerasProps> = ({}) => {
   }, [gridSize]);
 
   useEffect(() => {
-    const handleResize = () => {
-      setGridSize(getInitialGridSize());
-    };
+    if (typeof window !== 'undefined') {
+      const handleResize = () => {
+        setGridSize(getInitialGridSize());
+      };
 
-    window.addEventListener('resize', handleResize);
-    return () => {
-      window.removeEventListener('resize', handleResize);
-    };
+      window.addEventListener('resize', handleResize);
+      return () => {
+        window.removeEventListener('resize', handleResize);
+      };
+    }
   }, []);
 
   function getInitialGridSize() {
-    const viewportWidth = window.innerWidth;
-    return viewportWidth < 768 ? 'grid-cols-1' : 'grid-cols-3';
+    if (typeof window !== 'undefined') {
+      const viewportWidth = window.innerWidth;
+      return viewportWidth < 768 ? 'grid-cols-1' : 'grid-cols-3';
+    }
+    return 'grid-cols-3'; 
   }
 
   return (

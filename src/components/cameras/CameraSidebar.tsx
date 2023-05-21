@@ -7,7 +7,7 @@ interface CameraSidebarProps {
   onSectionSelect: (section: Section) => void;
 }
 
-const CameraSidebar = forwardRef(({ onSectionSelect}: CameraSidebarProps, ref) => {
+const CameraSidebar = forwardRef(({ onSectionSelect }: CameraSidebarProps, ref) => {
   const sections: Section[] = ['alberta-highways', 'calgary-cameras', 'edmonton-cameras', 'banff-cameras'];
   const [isOpen, setIsOpen] = useState(true);
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
@@ -35,17 +35,17 @@ const CameraSidebar = forwardRef(({ onSectionSelect}: CameraSidebarProps, ref) =
       <div>
         {
           isOpen ?
-            <TbLayoutSidebarLeftCollapse onClick={handleToggleSidebar} size={35} style={{ position: 'fixed', zIndex: 2, marginLeft: `${isOpen ? '0%' : '0%'}`, color: 'black' }} /> :
-            <TbLayoutSidebarLeftExpand onClick={handleToggleSidebar} size={35} style={{ position: 'fixed', zIndex: 2, marginLeft: `${isOpen ? '1%' : '0%'}`, color: 'black' }} />
+            <TbLayoutSidebarLeftCollapse onClick={handleToggleSidebar} size={35} style={{ position: 'fixed', zIndex: 5, marginLeft: `${isOpen ? '0%' : '0%'}`, color: 'black' }} /> :
+            <TbLayoutSidebarLeftExpand onClick={handleToggleSidebar} size={35} style={{ position: 'fixed', zIndex: 5, marginLeft: `${isOpen ? '1%' : '0%'}`, color: 'black' }} />
         }
       </div>
-      <div className={`w-80 min-h-screen bg-gray-100 p-4 py-10 fixed z-index-2000 transform transition-transform duration-300 ${isOpen ? '' : 'translate-x-80'}`}>
+      <div className={`w-80 min-h-screen bg-gray-100 p-4 py-10 fixed transform transition-transform duration-300 ${isOpen ? '' : 'translate-x-80'}`} style={{ zIndex: 4 }}>
         <ListGroup>
           {sections.map((section, index) => (
-            <ListGroup.Item 
+            <ListGroup.Item
               key={section}
               onClick={() => handleSelect(index)}
-              active={index === activeSectionIndex} // Highlight if this section is selected
+              active={index === activeSectionIndex}
             >
               {section.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
             </ListGroup.Item>

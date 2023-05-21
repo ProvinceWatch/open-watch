@@ -8,7 +8,7 @@ interface CamerasProps {}
 
 const Cameras: FC<CamerasProps> = ({}) => {
   const [selectedSection, setSelectedSection] = useState('alberta-highways');
-  const [gridSize, setGridSize] = useState('grid-cols-3');
+  const [gridSize, setGridSize] = useState(window.innerWidth <= 768 ? 'grid-cols-1' : 'grid-cols-3');
 
   const sidebarRef = useRef();
   const reduceColumns = useCallback(() => {
@@ -16,6 +16,10 @@ const Cameras: FC<CamerasProps> = ({}) => {
       setGridSize('grid-cols-4');
     } else if (gridSize === 'grid-cols-4') {
       setGridSize('grid-cols-3');
+    } else if (gridSize == 'grid-cols-3') {
+      setGridSize('grid-cols-2');
+    } else if (gridSize == 'grid-cols-2') {
+      setGridSize('grid-cols-1')
     }
   }, [gridSize, setGridSize]);
 
@@ -24,6 +28,10 @@ const Cameras: FC<CamerasProps> = ({}) => {
       setGridSize('grid-cols-4');
     } else if (gridSize === 'grid-cols-4') {
       setGridSize('grid-cols-5');
+    } else if (gridSize == 'grid-cols-1'){
+      setGridSize('grid-cols-2');
+    } else if (gridSize == 'grid-cols-2') {
+      setGridSize('grid-cols-3');
     }
   }, [gridSize, setGridSize]);
 

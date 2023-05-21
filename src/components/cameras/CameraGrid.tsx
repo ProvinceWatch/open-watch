@@ -62,7 +62,7 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
   return (
     <div ref={gridRef} className={`grid ${gridSize} gap-4 px-3 text-black overflow-auto max-h-screen`}>
       {cameras[section].map((camera, index) => (
-        <div key={index} className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700" onClick={() => setSelectedCamera(camera)}>
+        <div key={index} className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700" onClick={() => setSelectedCamera(camera)}>
           {!loadedImages[camera.Url] ? (
             <div role="status" className="relative w-full aspect-[1/1]">
               <div className="absolute inset-0 flex items-center justify-center">

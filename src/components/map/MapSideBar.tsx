@@ -1,8 +1,8 @@
 import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'react';
 import { TextInput, ListGroup, Toast, Button } from "flowbite-react";
 import { FiAlertCircle } from "react-icons/fi";
-import { TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand } from "react-icons/tb";
 import WeatherAlert from "@/components/map/WeatherAlert";
+import { SideBar } from '@/components/SideBar';
 
 interface MapSideBarProps {
 }
@@ -56,63 +56,47 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
   }));
 
   return (
-    <>
-      <style jsx>{
-        `.translate-x-80 {
-          transform: translateX(-100%);
-       }`
-       }
-      </style>
-      <div>
-        {
-          isOpen ?
-            <TbLayoutSidebarLeftCollapse onClick={handleToggleSidebar} size={35} style={{ position: 'fixed', zIndex: 2, marginLeft: `${isOpen ? '1%' : '0%'}`, color: 'black' }} /> :
-            <TbLayoutSidebarLeftExpand onClick={handleToggleSidebar} size={35} style={{ position: 'fixed', zIndex: 2, marginLeft: `${isOpen ? '1%' : '0%'}`, color: 'black' }} />
-        }
-
-      </div>
-      <div className={`w-80 min-h-screen bg-white p-4 fixed transform transition-transform duration-300 ${isOpen ? '' : 'translate-x-80'}`} style={{ zIndex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
-        <div id='control-bar' className='mt-8' style={{ width: '100%', display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <form className="flex flex-col">
-            <div style={{ marginBottom: '2%' }}>
-              <TextInput
-                id="text"
-                type="text"
-                placeholder="Search for city in Alberta"
-                required={true}
-                style={{ width: '100%' }}
-              />
-            </div>
-          </form>
-          <div>
-            <ListGroup>
-              <ListGroup.Item>
-                Road Conditions
-              </ListGroup.Item>
-              <ListGroup.Item>
-                Traffic
-              </ListGroup.Item>
-              <ListGroup.Item>
-                Cameras
-              </ListGroup.Item>
-              <ListGroup.Item>
-                Weather
-              </ListGroup.Item>
-            </ListGroup>
+    <SideBar handleToggleSidebar={handleToggleSidebar} isOpen={isOpen} pt={1}>
+      <div id='control-bar' className='mt-8' style={{ width: '100%', display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <form className="flex flex-col">
+          <div style={{ marginBottom: '2%' }}>
+            <TextInput
+              id="text"
+              type="text"
+              placeholder="Search for city in Alberta"
+              required={true}
+              style={{ width: '100%' }}
+            />
           </div>
-          <Toast className="mt-2">
-            <FiAlertCircle className="h-5 w-5 text-red-600 dark:text-red-500" />
-            <div className="pl-4 text-sm font-bold">
-              Emergency & Weather Alerts
-            </div>
-          </Toast>
-          <div style={{ overflowY: 'auto', flex: 1 }}>
-            {weatherAlerts}
-            {moreAlerts}
+        </form>
+        <div>
+          <ListGroup>
+            <ListGroup.Item>
+              Road Conditions
+            </ListGroup.Item>
+            <ListGroup.Item>
+              Traffic
+            </ListGroup.Item>
+            <ListGroup.Item>
+              Cameras
+            </ListGroup.Item>
+            <ListGroup.Item>
+              Weather
+            </ListGroup.Item>
+          </ListGroup>
+        </div>
+        <Toast className="mt-2">
+          <FiAlertCircle className="h-5 w-5 text-red-600 dark:text-red-500" />
+          <div className="pl-4 text-sm font-bold">
+            Emergency & Weather Alerts
           </div>
+        </Toast>
+        <div style={{ overflowY: 'auto', flex: 1 }}>
+          {weatherAlerts}
+          {moreAlerts}
         </div>
       </div>
-    </>
+    </SideBar>
   );
 });
 

@@ -56,47 +56,47 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
   }));
 
   return (
-      <SideBar handleToggleSidebar={handleToggleSidebar} isOpen={isOpen} pt={1}>
-        <div id='control-bar' className='mt-8' style={{ width: '100%', display: 'flex', flexDirection: 'column', height: '100%' }}>
-          <form className="flex flex-col">
-            <div style={{ marginBottom: '2%' }}>
-              <TextInput
-                id="text"
-                type="text"
-                placeholder="Search for city in Alberta"
-                required={true}
-                style={{ width: '100%' }}
-              />
-            </div>
-          </form>
-          <div>
-            <ListGroup>
-              <ListGroup.Item>
-                Road Conditions
-              </ListGroup.Item>
-              <ListGroup.Item>
-                Traffic
-              </ListGroup.Item>
-              <ListGroup.Item>
-                Cameras
-              </ListGroup.Item>
-              <ListGroup.Item>
-                Weather
-              </ListGroup.Item>
-            </ListGroup>
+    <SideBar handleToggleSidebar={handleToggleSidebar} isOpen={isOpen} pt={1}>
+      <div id='control-bar' className='mt-8' style={{ width: '100%', display: 'flex', flexDirection: 'column', height: '100%' }}>
+        <form className="flex flex-col">
+          <div style={{ marginBottom: '2%' }}>
+            <TextInput
+              id="text"
+              type="text"
+              placeholder="Search for city in Alberta"
+              required={true}
+              style={{ width: '100%' }}
+            />
           </div>
-          <Toast className="mt-2">
-            <FiAlertCircle className="h-5 w-5 text-red-600 dark:text-red-500" />
-            <div className="pl-4 text-sm font-bold">
-              Emergency & Weather Alerts
-            </div>
-          </Toast>
-          <div style={{ overflowY: 'auto', flex: 1 }}>
-            {weatherAlerts}
-            {moreAlerts}
-          </div>
+        </form>
+        <div>
+          <ListGroup>
+            <ListGroup.Item>
+              Road Conditions
+            </ListGroup.Item>
+            <ListGroup.Item>
+              Traffic
+            </ListGroup.Item>
+            <ListGroup.Item>
+              Cameras
+            </ListGroup.Item>
+            <ListGroup.Item>
+              Weather
+            </ListGroup.Item>
+          </ListGroup>
         </div>
-      </SideBar>
+        <Toast className="mt-2">
+          <FiAlertCircle className="h-5 w-5 text-red-600 dark:text-red-500" />
+          <div className="pl-4 text-sm font-bold">
+            Emergency & Weather Alerts
+          </div>
+        </Toast>
+        <div style={{ overflowY: 'auto', flex: 1 }}>
+          {weatherAlerts}
+          {moreAlerts}
+        </div>
+      </div>
+    </SideBar>
   );
 });
 

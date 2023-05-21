@@ -18,7 +18,7 @@ export const SideBar = ({ handleToggleSidebar, isOpen, children, pt }: SideBarPr
          }`
       }
       </style>
-      <div>
+      <div style={{ width: '35px', height: '35px', backgroundColor: 'white', zIndex: 2, position: 'fixed', borderRadius: '8px', textAlign: 'center' }}>
         {
           isOpen ?
             <TbLayoutSidebarLeftCollapse onClick={handleToggleSidebar} size={35} style={{ position: 'fixed', zIndex: 2, marginLeft: `${isOpen ? '1%' : '0%'}`, color: 'black' }} /> :

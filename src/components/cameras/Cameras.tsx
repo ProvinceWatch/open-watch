@@ -8,48 +8,38 @@ interface CamerasProps {}
 
 const Cameras: FC<CamerasProps> = ({}) => {
   const [selectedSection, setSelectedSection] = useState('alberta-highways');
-  const [gridSize, setGridSize] = useState('grid-cols-3');
+  const [gridSize, setGridSize] = useState(getInitialGridSize());
+  const sidebarRef = useRef();
 
-  const sidebarRef = useRef(null);
   const reduceColumns = useCallback(() => {
-    if (gridSize === 'grid-cols-5') {
-      setGridSize('grid-cols-4');
-    } else if (gridSize === 'grid-cols-4') {
-      setGridSize('grid-cols-3');
-    } else if (gridSize === 'grid-cols-3') {
-      setGridSize('grid-cols-2');
-    } else if (gridSize === 'grid-cols-2') {
-      setGridSize('grid-cols-1');
-    }
-  }, [gridSize, setGridSize]);
+    if (gridSize === 'grid-cols-5') setGridSize('grid-cols-4');
+    else if (gridSize === 'grid-cols-4') setGridSize('grid-cols-3');
+    else if (gridSize === 'grid-cols-3') setGridSize('grid-cols-2');
+    else if (gridSize === 'grid-cols-2') setGridSize('grid-cols-1');
+  }, [gridSize]);
 
   const addColumns = useCallback(() => {
-    if (gridSize === 'grid-cols-3') {
-      setGridSize('grid-cols-4');
-    } else if (gridSize === 'grid-cols-4') {
-      setGridSize('grid-cols-5');
-    } else if (gridSize === 'grid-cols-1') {
-      setGridSize('grid-cols-2');
-    } else if (gridSize === 'grid-cols-2') {
-      setGridSize('grid-cols-3');
-    }
-  }, [gridSize, setGridSize]);
+    if (gridSize === 'grid-cols-3') setGridSize('grid-cols-4');
+    else if (gridSize === 'grid-cols-4') setGridSize('grid-cols-5');
+    else if (gridSize === 'grid-cols-1') setGridSize('grid-cols-2');
+    else if (gridSize === 'grid-cols-2') setGridSize('grid-cols-3');
+  }, [gridSize]);
 
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth <= 768) {
-        setGridSize('grid-cols-1');
-      } else {
-        setGridSize('grid-cols-3');
-      }
+      setGridSize(getInitialGridSize());
     };
 
     window.addEventListener('resize', handleResize);
-
     return () => {
       window.removeEventListener('resize', handleResize);
     };
   }, []);
+
+  function getInitialGridSize() {
+    const viewportWidth = window.innerWidth;
+    return viewportWidth < 768 ? 'grid-cols-1' : 'grid-cols-3';
+  }
 
   return (
     <div className="flex min-h-screen bg-white">

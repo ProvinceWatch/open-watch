@@ -34,18 +34,6 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
       const cameraResponse = await res.json();
       let cameraData: CameraData[] = (cameraResponse.data as any) as CameraData[];
       let sortedCameras = sortCameras(cameraData);
-
-      // Now sort the cameras with "N/A" name to the back of each list.
-      for (let section in sortedCameras) {
-        sortedCameras[section].sort((a: CameraData, b: CameraData) => {
-          const aName = a.Name || a.RoadwayName || 'N/A';
-          const bName = b.Name || b.RoadwayName || 'N/A';
-          if (aName === 'N/A' && bName !== 'N/A') return 1;
-          if (aName !== 'N/A' && bName === 'N/A') return -1;
-          return 0;
-        });
-      }
-
       setCameras(sortedCameras);
     } catch (error) {
       console.error('Failed to fetch and sort camera data:', error);

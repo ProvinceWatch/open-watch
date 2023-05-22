@@ -9,6 +9,7 @@ interface CamerasProps {}
 const Cameras: React.FC<CamerasProps> = ({}) => {
   const [selectedSection, setSelectedSection] = useState('alberta-highways');
   const [gridSize, setGridSize] = useState(getInitialGridSize());
+  const [showSidebar, setShowSidebar] = useState(true);
   const sidebarRef = useRef();
 
   const reduceColumns = useCallback(() => {
@@ -49,9 +50,9 @@ const Cameras: React.FC<CamerasProps> = ({}) => {
   return (
     <div className="flex min-h-screen bg-white">
       <div className="flex">
-        <CameraSidebar ref={sidebarRef} onSectionSelect={setSelectedSection} />
+        <CameraSidebar ref={sidebarRef} onSectionSelect={setSelectedSection} showSideBar={showSidebar} setShowSideBar={setShowSidebar}/>
       </div>
-      <div className="flex-1 overflow-auto min-h-screen p-1">
+      <div className="flex-1 overflow-auto min-h-screen p-1" onClick={() => setShowSidebar(false)}>
         <CameraGrid section={selectedSection as Section} gridSize={gridSize} />
       </div>
       <CameraGridSize onReduceColumns={reduceColumns} onAddColumns={addColumns} gridSize={gridSize} />

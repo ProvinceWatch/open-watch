@@ -6,9 +6,11 @@ import { SideBar } from '@/components/SideBar';
 
 interface CameraSidebarProps {
   onSectionSelect: (section: Section) => void;
+  showSideBar: boolean
+  setShowSideBar: Function
 }
 
-const CameraSidebar = forwardRef(({ onSectionSelect }: CameraSidebarProps, ref) => {
+const CameraSidebar = forwardRef(({ onSectionSelect, showSideBar, setShowSideBar }: CameraSidebarProps, ref) => {
   const sections: Section[] = ['alberta-highways', 'calgary-cameras', 'edmonton-cameras', 'banff-cameras'];
   const icons: any[] = [TbLetterA, TbLetterC, TbLetterE, TbLetterB  ];
   const [isOpen, setIsOpen] = useState(true);
@@ -20,6 +22,7 @@ const CameraSidebar = forwardRef(({ onSectionSelect }: CameraSidebarProps, ref) 
   };
 
   const handleToggleSidebar = () => {
+    setShowSideBar(true);
     setIsOpen(!isOpen);
   };
 
@@ -28,7 +31,7 @@ const CameraSidebar = forwardRef(({ onSectionSelect }: CameraSidebarProps, ref) 
   }));
 
   return (
-    <SideBar handleToggleSidebar={handleToggleSidebar} isOpen={isOpen} pt={0}>
+    <SideBar handleToggleSidebar={handleToggleSidebar} isOpen={showSideBar && isOpen} pt={0}>
       <Sidebar>
         <Sidebar.Items>
           <Sidebar.ItemGroup>

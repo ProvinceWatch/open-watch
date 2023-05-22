@@ -8,8 +8,8 @@ const HomePage = ({ }) => {
 
   const CardT = ({ url, text, href }: { url: string, text: string, href: string }) => {
     return (
-      <Card style={{ backgroundColor: 'white', maxWidth: '300px' }}>
-        <div className="flex flex-col items-center mt-5">
+      <Card style={{ backgroundColor: 'white' }} className='m-5 mt-0'>
+        <div className="flex flex-col items-center mt-2">
           <img
             className="h-40 w-68 rounded shadow-md"
             src={`${url}`}
@@ -30,17 +30,15 @@ const HomePage = ({ }) => {
       <NavBar selectedTab='home' />
       <div className="bg-white flex flex-col justify-between" style={{ height: '100%' }}>
 
-        <div className="flex flex-row">
-          <Card className='m-5 w-1/2'>
-            <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+        <div className="flex flex-row justify-between flex-wrap">
+          <Card className='m-5'>
+            <h5 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
               Open Data For Albertans
             </h5>
             <p className="font-normal text-gray-700 dark:text-gray-400">
               Welcome to OpenWatchAB, your essential open data portal for Albertans. We provide real-time road conditions, live traffic cameras, weather updates, and emergency alerts, ensuring your safety and convenience. Further, we provide access to search for government documents, reinforcing our commitment to transparency. With OpenWatchAB, we equip you with reliable, up-to-the-minute information, fostering informed communities throughout Alberta. Explore our site today.
             </p>
-          </Card>
-          <Card className='m-5 w-1/2'>
-            <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
+            <h5 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
               Features
             </h5>
             <div>
@@ -75,7 +73,7 @@ const HomePage = ({ }) => {
         </div>
 
 
-        <div className="flex flex-row flex-wrap justify-between ml-10 mr-10">
+        <div className="flex flex-row justify-between flex-wrap text-center" style={{ overflowX: 'scroll' }}>
           <CardT url="/mapex.png" text="Go To Map View" href="/map" />
           <CardT url="/data.png" text="Go To Open Data Portal" href="/open-data" />
           <CardT url="/cameras.png" text="Go To Camera Dashboard" href="/cameras" />

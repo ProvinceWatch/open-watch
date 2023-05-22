@@ -19,7 +19,7 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
   });
   const [selectedCamera, setSelectedCamera] = useState<CameraData | null>(null);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
-  
+
   const gridRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     setLoadedImages({});
@@ -28,24 +28,35 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
     }
   }, [section]);
 
-  useEffect(() => {
-    const fetchAndSortCameras = async () => {
-      try {
-        setLoadedImages({});
+  const fetchAndSortCameras = async () => {
+    try {
+      const res: any = await fetch('/map/cameras');
+      const cameraResponse = await res.json();
+      let cameraData: CameraData[] = (cameraResponse.data as any) as CameraData[];
+      let sortedCameras = sortCameras(cameraData);
 
-        const res: any = await fetch('/map/cameras');
-        const cameraResponse = await res.json();
-        let cameraData: CameraData[] = (cameraResponse.data as any) as CameraData[];
-        const sortedCameras = sortCameras(cameraData);
-        setCameras(sortedCameras);
-      } catch (error) {
-        console.error('Failed to fetch and sort camera data:', error);
+      // Now sort the cameras with "N/A" name to the back of each list.
+      for (let section in sortedCameras) {
+        sortedCameras[section].sort((a: CameraData, b: CameraData) => {
+          const aName = a.Name || a.RoadwayName || 'N/A';
+          const bName = b.Name || b.RoadwayName || 'N/A';
+          if (aName === 'N/A' && bName !== 'N/A') return 1;
+          if (aName !== 'N/A' && bName === 'N/A') return -1;
+          return 0;
+        });
       }
-    };
+
+      setCameras(sortedCameras);
+    } catch (error) {
+      console.error('Failed to fetch and sort camera data:', error);
+    }
+  };
+
+  useEffect(() => {
     fetchAndSortCameras();
-    const intervalId = setInterval(fetchAndSortCameras, 5 * 60 * 1000); 
+    const intervalId = setInterval(fetchAndSortCameras, 10000);
     return () => {
-      clearInterval(intervalId); 
+      clearInterval(intervalId);
     };
   }, []);
 
@@ -55,18 +66,18 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
     } else if (camera.RoadwayName) {
       return camera.RoadwayName;
     } else {
-      return `Latitude: ${camera.Latitude}, Longitude: ${camera.Longitude}`;
+      return 'N/A';
     }
   };
 
   return (
-    <div ref={gridRef} className={`grid ${gridSize} gap-4 px-3 text-black overflow-auto max-h-screen`}>
+    <div ref={gridRef} className={`grid ${gridSize} gap-4 pl-10 text-black overflow-auto max-h-screen`}>
       {cameras[section].map((camera, index) => (
         <div key={index} className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700" onClick={() => setSelectedCamera(camera)}>
           {!loadedImages[camera.Url] ? (
             <div role="status" className="relative w-full aspect-[1/1]">
               <div className="absolute inset-0 flex items-center justify-center">
-                <Spinner size="xl"/>
+                <Spinner size="xl" />
               </div>
             </div>
           ) : null}
@@ -75,6 +86,7 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
             className="rounded-t-lg w-full h-auto"
             src={camera.Url}
             alt="Camera Snapshot"
+            height="100"
             onLoad={() => setLoadedImages((prev) => ({ ...prev, [camera.Url]: true }))}
           />
           {loadedImages[camera.Url] && (

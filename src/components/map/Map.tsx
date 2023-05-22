@@ -102,14 +102,21 @@ const Map: FC<MapProps> = ({ zoom }) => {
         case 'Wet':
           color = 'blue';
           break;
+        case 'Bare Wet':
+          color = 'blue';
+          break;
         case 'Snow Covered':
           color = 'white';
           break;
         case 'Ice Covered':
-          color = 'red';
+          color = 'light blue';
           break;
+        case 'Travel Not Recommended':
+          color = 'orange';
+        case 'No Report':
+          color = 'grey';
         default:
-          color = 'black';
+          color = 'grey';
       }
 
       const line = new window.H.map.Polyline(lineString, { style: { strokeColor: color, lineWidth: 3 } });

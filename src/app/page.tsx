@@ -7,7 +7,7 @@ export default function Home() {
   return (
     <>
       <NavBar selectedTab='map' />
-      <Map zoom={7}/>
+      <Map zoom={7} />
     </>
   )
 }

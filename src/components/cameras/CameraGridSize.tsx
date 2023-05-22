@@ -23,7 +23,7 @@ const CameraGridSize = ({ onAddColumns, onReduceColumns, gridSize }: CameraGridS
   }
 
   const handleReduce = () => {
-    if (columns > 3) {
+    if (columns > 1) {
       setColumns(columns - 1);
       onReduceColumns();
     }
@@ -34,7 +34,7 @@ const CameraGridSize = ({ onAddColumns, onReduceColumns, gridSize }: CameraGridS
       <Button onClick={handleAdd} disabled={columns >= 5}>
         -
       </Button>
-      <Button onClick={handleReduce} disabled={columns <= 3}>
+      <Button onClick={handleReduce} disabled={columns <= 1}>
         +
       </Button>
     </div>

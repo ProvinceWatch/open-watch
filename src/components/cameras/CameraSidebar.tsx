@@ -27,7 +27,7 @@ const CameraSidebar = forwardRef(({ onSectionSelect }: CameraSidebarProps, ref) 
 
   return (
     <SideBar handleToggleSidebar={handleToggleSidebar} isOpen={isOpen} pt={10}>
-      <ListGroup>
+      <ListGroup className='my-6'>
         {sections.map((section, index) => (
           <ListGroup.Item
             key={section}

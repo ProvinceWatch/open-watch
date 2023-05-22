@@ -19,7 +19,7 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
   });
   const [selectedCamera, setSelectedCamera] = useState<CameraData | null>(null);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
-  
+
   const gridRef = useRef<HTMLDivElement | null>(null);
   useEffect(() => {
     setLoadedImages({});
@@ -31,26 +31,25 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
   useEffect(() => {
     const fetchAndSortCameras = async () => {
       try {
-        setLoadedImages({});
-
         const res: any = await fetch('/map/cameras');
         const cameraResponse = await res.json();
         let cameraData: CameraData[] = (cameraResponse.data as any) as CameraData[];
         const sortedCameras = sortCameras(cameraData);
+        setLoadedImages({});
         setCameras(sortedCameras);
       } catch (error) {
         console.error('Failed to fetch and sort camera data:', error);
       }
     };
     fetchAndSortCameras();
-    const intervalId = setInterval(fetchAndSortCameras, 5 * 60 * 1000); 
+    const intervalId = setInterval(fetchAndSortCameras, 10 * 60 * 1000);
     return () => {
-      clearInterval(intervalId); 
+      clearInterval(intervalId);
     };
   }, []);
 
   const cameraName = (camera: CameraData) => {
-    if (camera.Name && camera.Name !== "N/A") {
+    if (camera.Name && camera.Name !== 'N/A') {
       return camera.Name;
     } else if (camera.RoadwayName) {
       return camera.RoadwayName;
@@ -59,14 +58,40 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
     }
   };
 
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (selectedCamera) {
+        if (event.key === 'ArrowLeft') {
+          const currentIndex = cameras[section].indexOf(selectedCamera);
+          const newIndex = currentIndex > 0 ? currentIndex - 1 : cameras[section].length - 1;
+          setSelectedCamera(cameras[section][newIndex]);
+        } else if (event.key === 'ArrowRight') {
+          const currentIndex = cameras[section].indexOf(selectedCamera);
+          const newIndex = currentIndex < cameras[section].length - 1 ? currentIndex + 1 : 0;
+          setSelectedCamera(cameras[section][newIndex]);
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [selectedCamera, cameras, section]);
+
   return (
     <div ref={gridRef} className={`grid ${gridSize} gap-4 px-3 text-black overflow-auto max-h-screen`}>
       {cameras[section].map((camera, index) => (
-        <div key={index} className="max-w-sm bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700" onClick={() => setSelectedCamera(camera)}>
+        <div
+          key={index}
+          className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+          onClick={() => setSelectedCamera(camera)}
+        >
           {!loadedImages[camera.Url] ? (
             <div role="status" className="relative w-full aspect-[1/1]">
               <div className="absolute inset-0 flex items-center justify-center">
-                <Spinner size="xl"/>
+                <Spinner size="xl" />
               </div>
             </div>
           ) : null}
@@ -80,20 +105,16 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
           {loadedImages[camera.Url] && (
             <div className="p-5">
               <a href="#">
-                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-                  {cameraName(camera)}
-                </h5>
+                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{cameraName(camera)}</h5>
               </a>
               <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Click for details...</p>
             </div>
           )}
         </div>
       ))}
-      {selectedCamera && (
-        <CameraModal open={!!selectedCamera} onClose={() => setSelectedCamera(null)} selectedCamera={selectedCamera} />
-      )}
+      {selectedCamera && <CameraModal open={!!selectedCamera} onClose={() => setSelectedCamera(null)} selectedCamera={selectedCamera} />}
     </div>
   );
-}
+};
 
 export default CameraGrid;

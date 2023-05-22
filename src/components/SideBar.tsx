@@ -1,5 +1,5 @@
 import React, { MouseEventHandler } from 'react';
-import { TbLayoutSidebarLeftCollapse, TbLayoutSidebarLeftExpand } from "react-icons/tb";
+import { TbLayoutSidebar } from "react-icons/tb";
 
 interface SideBarProps {
   handleToggleSidebar: MouseEventHandler,
@@ -18,14 +18,10 @@ export const SideBar = ({ handleToggleSidebar, isOpen, children, pt }: SideBarPr
          }`
       }
       </style>
-       <div style={{ width: '35px', height: '35px', backgroundColor: 'white', zIndex: 2, position: 'fixed', borderRadius: '8px', textAlign: 'center' }}>
-        {
-          isOpen ?
-            <TbLayoutSidebarLeftCollapse onClick={handleToggleSidebar} size={35} style={{ position: 'fixed', zIndex: 2, marginLeft: `${isOpen ? '1%' : '0%'}`, color: 'black' }} /> :
-            <TbLayoutSidebarLeftExpand onClick={handleToggleSidebar} size={35} style={{ position: 'fixed', zIndex: 2, marginLeft: `${isOpen ? '1%' : '0%'}`, color: 'black' }} />
-        }
+      <div style={{ width: '35px', height: '35px', backgroundColor: 'white', zIndex: 4, position: 'fixed', borderRadius: '8px', textAlign: 'center' }}>
+        <TbLayoutSidebar onClick={handleToggleSidebar} size={35} style={{ position: 'fixed', zIndex: 4, marginLeft: `${isOpen ? '1%' : '0%'}`, color: 'black' }} />
       </div>
-      <div className={`w-70 min-h-screen bg-white p-3 pt-10 fixed transform transition-transform duration-300 ${isOpen ? '' : 'translate-x-80'}`} style={{ zIndex: 1, display: 'flex', flexDirection: 'column', height: '100%' }}>
+      <div className={`w-70 min-h-screen bg-white p-3 pt-10 fixed transform transition-transform duration-300 ${isOpen ? '' : 'translate-x-80'}`} style={{ zIndex: 3, display: 'flex', flexDirection: 'column', height: '100%' }}>
         {children}
       </div>
     </>

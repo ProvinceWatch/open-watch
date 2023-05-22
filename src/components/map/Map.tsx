@@ -5,6 +5,7 @@ import { MapProps, CameraData } from '@/app/map/defs';
 import polyline from '@mapbox/polyline';
 import MapSideBar from '@/components/map/MapSideBar';
 import CameraModal from '@/components/cameras/CameraModal';
+import RoadConditionsLegend from '@/components/map/RoadConditionsLegend';
 
 const Map: FC<MapProps> = ({ zoom }) => {
   const [showCameraModal, setShowCameraModal] = useState(false);
@@ -106,17 +107,19 @@ const Map: FC<MapProps> = ({ zoom }) => {
           color = 'blue';
           break;
         case 'Snow Covered':
-          color = 'white';
+          color = '#ADD8E6';
           break;
         case 'Ice Covered':
-          color = 'light blue';
+          color = 'aqua';
           break;
         case 'Travel Not Recommended':
           color = 'orange';
+          break;
         case 'No Report':
-          color = 'grey';
+          color = 'black';
+          break;
         default:
-          color = 'grey';
+          color = 'black';
       }
 
       const line = new window.H.map.Polyline(lineString, { style: { strokeColor: color, lineWidth: 3 } });
@@ -124,6 +127,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
     });
 
     await Promise.all(tasks);
+
   };
 
   // For loading HERE js scripts into the DOM
@@ -133,11 +137,9 @@ const Map: FC<MapProps> = ({ zoom }) => {
         const script = document.createElement('script');
         script.src = src;
         script.onload = () => {
-          console.log(`Loaded ${src}`);
           resolve();
         };
         script.onerror = () => {
-          console.error(`Failed to load ${src}`);
           reject();
         };
         document.body.appendChild(script);
@@ -160,7 +162,11 @@ const Map: FC<MapProps> = ({ zoom }) => {
       }
     };
 
-    loadScriptsInOrder().then(() => initMap())
+    if (!window.H) {
+      loadScriptsInOrder().then(() => initMap())
+    } else {
+      initMap();
+    }
   }, []);
 
   return (
@@ -168,6 +174,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
       <CameraModal open={showCameraModal} selectedCamera={selectedCamera} onClose={() => { setShowCameraModal(false); setSelectedCamera({} as CameraData); }} />
       <MapSideBar />
       <div id="mapContainer" style={{ width: '100%', height: '95%', position: 'fixed' }} />
+      <RoadConditionsLegend />
       <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />
     </div>
   );

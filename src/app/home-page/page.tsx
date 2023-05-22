@@ -28,7 +28,7 @@ const HomePage = ({ }) => {
   return (
     <>
       <NavBar selectedTab='home' />
-      <div className="bg-white flex flex-col justify-between" style={{ height: '100%' }}>
+      <div className="bg-white flex flex-col justify-center" style={{ height: '100%' }}>
 
         <div className="flex flex-row justify-between flex-wrap">
           <Card className='m-5'>
@@ -73,7 +73,7 @@ const HomePage = ({ }) => {
         </div>
 
 
-        <div className="flex flex-row justify-between flex-wrap text-center" style={{ overflowX: 'scroll' }}>
+        <div className="flex flex-row justify-center flex-wrap center" style={{ overflowX: 'scroll' }}>
           <CardT url="/mapex.png" text="Go To Map View" href="/map" />
           <CardT url="/data.png" text="Go To Open Data Portal" href="/open-data" />
           <CardT url="/cameras.png" text="Go To Camera Dashboard" href="/cameras" />

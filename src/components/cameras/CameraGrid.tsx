@@ -54,7 +54,7 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
     } else if (camera.RoadwayName) {
       return camera.RoadwayName;
     } else {
-      return `Latitude: ${camera.Latitude}, Longitude: ${camera.Longitude}`;
+      return 'N/A';
     }
   };
 
@@ -81,7 +81,7 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
   }, [selectedCamera, cameras, section]);
 
   return (
-    <div ref={gridRef} className={`grid ${gridSize} gap-4 px-3 text-black overflow-auto max-h-screen`}>
+    <div ref={gridRef} className={`grid ${gridSize} gap-4 pl-10 text-black overflow-auto max-h-screen`}>
       {cameras[section].map((camera, index) => (
         <div
           key={index}
@@ -100,6 +100,7 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
             className="rounded-t-lg w-full h-auto"
             src={camera.Url}
             alt="Camera Snapshot"
+            height="100"
             onLoad={() => setLoadedImages((prev) => ({ ...prev, [camera.Url]: true }))}
           />
           {loadedImages[camera.Url] && (

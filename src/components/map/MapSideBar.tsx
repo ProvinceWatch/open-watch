@@ -1,6 +1,7 @@
 import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'react';
-import { TextInput, ListGroup, Toast, Button } from "flowbite-react";
+import { TextInput, ListGroup, Toast, Button, Sidebar } from "flowbite-react";
 import { FiAlertCircle } from "react-icons/fi";
+import { TbRoad, TbTrafficLights, TbCamera, TbTemperatureCelsius } from "react-icons/tb";
 import WeatherAlert from "@/components/map/WeatherAlert";
 import { SideBar } from '@/components/SideBar';
 
@@ -13,7 +14,7 @@ interface Alert {
 }
 
 const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref) => {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
   const [weatherAlerts, setWeatherAlerts] = useState([]);
   const [moreAlerts, setMoreAlerts] = useState([]);
 
@@ -56,8 +57,51 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
   }));
 
   return (
-    <SideBar handleToggleSidebar={handleToggleSidebar} isOpen={isOpen} pt={1}>
-      <div id='control-bar' className='mt-8' style={{ width: '100%', display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <SideBar handleToggleSidebar={handleToggleSidebar} isOpen={isOpen} pt={0}>
+      <Sidebar aria-label="Default sidebar example">
+        <Sidebar.Items>
+          <Sidebar.ItemGroup>
+            <Sidebar.Item
+              href="#"
+              icon={TbRoad}
+              active
+            >
+              Road Conditions
+            </Sidebar.Item>
+            <Sidebar.Item
+              href="#"
+              icon={TbTrafficLights}
+              active
+              labelColor="alternative"
+            >
+              Traffic
+            </Sidebar.Item>
+            <Sidebar.Item
+              active
+              href="#"
+              icon={TbCamera}
+            >
+              Cameras
+            </Sidebar.Item>
+            <Sidebar.Item
+              href="#"
+              active
+              icon={TbTemperatureCelsius}
+            >
+              Weather
+            </Sidebar.Item>
+            <Sidebar.Item
+              href="#"
+              icon={FiAlertCircle}
+              label={moreAlerts.length}
+            >
+              Emergency Alerts
+            </Sidebar.Item>
+          </Sidebar.ItemGroup>
+        </Sidebar.Items>
+      </Sidebar>
+
+      {/* <div id='control-bar' className='mt-8' style={{ width: '100%', display: 'flex', flexDirection: 'column', height: '100%' }}>
         <form className="flex flex-col">
           <div style={{ marginBottom: '2%' }}>
             <TextInput
@@ -95,7 +139,7 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
           {weatherAlerts}
           {moreAlerts}
         </div>
-      </div>
+      </div> */}
     </SideBar>
   );
 });

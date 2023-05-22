@@ -33,43 +33,39 @@ const CameraModal: React.FC<ModalProps> = ({ open, onClose, selectedCamera }) =>
   } else {
     return (
       <Modal
-        dismissible={true}
+        dismissible
         show={open}
-        onClose={onClose}>
+        onClose={onClose}
+        style={{ color: 'black' }}
+      >
+        <Modal.Header className='text-center'>
+          {selectedCamera.Name || "N/A"}
+        </Modal.Header>
         <Modal.Body style={{ color: 'black' }}>
           <img src={selectedCamera.Url} alt="Camera Snapshot" style={{ borderRadius: '10px', boxShadow: '2px 2px 2px 2px lightgrey' }} />
           <div className="flex">
-            <Toast className='mr-2 mt-2'>
-              <FaCamera className="h-7 w-7 text-blue-600 dark:text-blue-100" />
-              <div className="pl-4 text-sm font-bold">
-                {selectedCamera.Name || "N/A"}
-              </div>
-            </Toast>
             <Toast className='ml-2 mt-2'>
               <FaLocationArrow className="h-5 w-5 text-blue-600 dark:text-blue-500" />
               <div className="pl-4 text-sm font-bold">
                 {selectedCamera.Description || "N/A"}
               </div>
             </Toast>
-          </div>
-
-
-          <div className="flex">
             <Toast className='mr-2 mt-2'>
               <FaDirections className="h-7 w-7 text-blue-600 dark:text-blue-500" />
               <div className="pl-4 text-sm font-bold">
                 {selectedCamera.DirectionOfTravel || "N/A"}
               </div>
             </Toast>
+          </div>
+
+
+          <div className="flex">
             <Toast className='ml-2 mt-2'>
               <FaRoad className="h-7 w-7 text-blue-600 dark:text-blue-500" />
               <div className="pl-4 text-sm font-bold">
                 {selectedCamera.RoadwayName || "N/A"}
               </div>
             </Toast>
-          </div>
-
-          <div className="flex">
             <Toast className='mr-2 mt-2'>
               <FaWind className="h-6 w-6 text-blue-600 dark:text-blue-500" />
               <div className="pl-4 text-sm font-bold">
@@ -80,22 +76,21 @@ const CameraModal: React.FC<ModalProps> = ({ open, onClose, selectedCamera }) =>
                 }
               </div>
             </Toast>
+          </div>
+
+          <div className="flex">
             <Toast className='ml-2 mt-2'>
               <FaTemperatureHigh className="h-6 w-6 text-blue-600 dark:text-blue-500" />
               <div className="pl-4 text-sm font-bold">
                 {selectedCamera.AirTemperature || "N/A"}
               </div>
             </Toast>
-          </div>
-
-          <div className="flex">
             <Toast className='mr-2 mt-2'>
-              <WiHumidity className="h-6 w-6 text-blue-600 dark:text-blue-500" />
+              <WiHumidity className="h-7 w-7 text-blue-600 dark:text-blue-500" />
               <div className="pl-4 text-sm font-bold">
                 {selectedCamera.RelativeHumidity || "N/A"}
               </div>
             </Toast>
-
           </div>
         </Modal.Body>
       </Modal>

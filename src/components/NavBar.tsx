@@ -14,24 +14,27 @@ const NavBar: FC<NavBarProps> = ({ selectedTab }) => {
         <Navbar.Brand href="/">
           <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
             <p style={{ color: 'black' }}>
-              OpenWatch
+              OpenWatchAB
             </p>
           </span>
         </Navbar.Brand>
         <Navbar.Toggle />
         <Navbar.Collapse>
+        <Link href="/home-page" style={{ color: selectedTab === 'home' ? 'blue' : 'black' }}>
+            Home
+          </Link>
           <Link href="/map" style={{ color: selectedTab === 'map' ? 'blue' : 'black' }}>
             Map
+          </Link>
+          <Link href="/open-data" style={{ color: selectedTab === 'open-data' ? 'blue' : 'black' }}>
+            Open Data
           </Link>
           <Link href="/cameras" style={{ color: selectedTab === 'cameras' ? 'blue' : 'black' }}>
             Traffic Cameras
           </Link>
-          <Link href="/cameras" style={{ color: selectedTab === 'open-data' ? 'blue' : 'black' }}>
-            Open Data
-          </Link>
-          <Link href="/parks" style={{ color: selectedTab === 'parks' ? 'blue' : 'black' }}>
+          {/* <Link href="/parks" style={{ color: selectedTab === 'parks' ? 'blue' : 'black' }}>
             Parks
-          </Link>
+          </Link> */}
         </Navbar.Collapse>
       </Navbar>
 

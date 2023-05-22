@@ -6,7 +6,7 @@ import { Section } from '@/app/cameras/defs';
 
 interface CamerasProps {}
 
-const Cameras: FC<CamerasProps> = ({}) => {
+const Cameras: React.FC<CamerasProps> = ({}) => {
   const [selectedSection, setSelectedSection] = useState('alberta-highways');
   const [gridSize, setGridSize] = useState(getInitialGridSize());
   const sidebarRef = useRef();
@@ -48,8 +48,10 @@ const Cameras: FC<CamerasProps> = ({}) => {
 
   return (
     <div className="flex min-h-screen bg-white">
-      <CameraSidebar ref={sidebarRef} onSectionSelect={setSelectedSection} />
-      <div className="flex-1 overflow-auto min-h-screen">
+      <div className="w-64">
+        <CameraSidebar ref={sidebarRef} onSectionSelect={setSelectedSection} />
+      </div>
+      <div className="flex-1 overflow-auto min-h-screen p-1">
         <CameraGrid section={selectedSection as Section} gridSize={gridSize} />
       </div>
       <CameraGridSize onReduceColumns={reduceColumns} onAddColumns={addColumns} gridSize={gridSize} />

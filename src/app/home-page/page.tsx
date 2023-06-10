@@ -28,9 +28,9 @@ const HomePage = ({ }) => {
   return (
     <>
       <NavBar selectedTab='home' />
-      <div className="bg-white flex flex-col justify-center" style={{ height: '100%' }}>
+      <div className="min-h-screen bg-white">
 
-        <div className="flex flex-row justify-between flex-wrap">
+        <div className="flex flex-col justify-center" style={{ marginBottom: '0' }}>
           <Card className='m-5'>
             <h5 className="text-xl font-bold tracking-tight text-gray-900 dark:text-white">
               Open Data For Albertans
@@ -78,21 +78,20 @@ const HomePage = ({ }) => {
           <CardT url="/data.png" text="Go To Open Data Portal" href="/open-data" />
           <CardT url="/cameras.png" text="Go To Camera Dashboard" href="/cameras" />
         </div>
-
-
-        <Footer container={true}>
-          <Footer.Copyright
-            href="#"
-            by="ProvinceWatch"
-            year={2023}
-          />
-          <Footer.LinkGroup>
-            <Footer.Link href="https://github.com/ProvinceWatch">
-              Github
-            </Footer.Link>
-          </Footer.LinkGroup>
-        </Footer>
       </div>
+
+      <Footer container={true} className='rounded-none mt-0'>
+        <Footer.Copyright
+          href="#"
+          by="ProvinceWatch"
+          year={2023}
+        />
+        <Footer.LinkGroup>
+          <Footer.Link href="https://github.com/ProvinceWatch">
+            Github
+          </Footer.Link>
+        </Footer.LinkGroup>
+      </Footer>
     </>
   );
 }

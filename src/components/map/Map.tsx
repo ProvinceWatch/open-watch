@@ -14,6 +14,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
   const initMap = async () => {
 
     console.log('INITING MAP: ');
+    console.log(process.env);
     console.log(process.env.HERE_API_KEY);
 
     const platform = new window.H

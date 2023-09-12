@@ -15,7 +15,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
     const platform = new window.H
       .service
       .Platform({
-        apikey: 'MlRC40I9PYNyBKflT02gYpBt0Yxb2qcSUq1cXmNw3MQ',
+        apikey: process.env.HERE_API_KEY,
       });
 
     const defaultLayers = platform.createDefaultLayers();

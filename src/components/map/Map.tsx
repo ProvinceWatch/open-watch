@@ -12,7 +12,6 @@ const Map: FC<MapProps> = ({ zoom }) => {
   const [selectedCamera, setSelectedCamera] = useState({} as CameraData);
 
   const initMap = async () => {
-
     const platform = new window.H
       .service
       .Platform({

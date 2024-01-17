@@ -82,7 +82,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
   };
 
   const getRoadConditonMarkers = async (map: any, ui: any) => {
-    const response = await fetch('/map/road-conditions', { cache: 'no-store' });
+    const response = await fetch('/map/road-conditions', { next: { revalidate: 300 } });
     const roadConditions = await response.json();
 
     const tasks = roadConditions.data.map(async (roadCondition: any) => {

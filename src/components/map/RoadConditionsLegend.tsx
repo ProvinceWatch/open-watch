@@ -11,8 +11,8 @@ const RoadConditionsLegend = ({ }: {}) => {
     setShowLegend(!showLegend);
   }
 
-  const conditions = ['Bare Dry', 'Closed', 'Wet', 'Bare Wet', 'Snow Covered', 'Ice Covered', 'Travel Not Recommended', 'No Report'];
-  const colors = ['green', 'red', 'blue', 'blue', '#ADD8E6', 'aqua', 'orange', 'black'];
+  const conditions = ['Bare Dry', 'Closed', 'Wet', 'Bare Wet', 'Snow Covered', 'Ice Covered', 'No Report'];
+  const colors = ['green', 'red', '#8791E5', '#8791E5', '#ADD8E6', '#FFC000', 'black'];
 
   return (
     <div id="road-conditions-legend" className="text-sm" style={{ zIndex: 1, position: 'absolute', right: 10, top: '60px' }}>

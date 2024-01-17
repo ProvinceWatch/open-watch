@@ -82,7 +82,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
   };
 
   const getRoadConditonMarkers = async (map: any, ui: any) => {
-    const response = await fetch('/map/road-conditions', { cache: 'no-store' });
+    const response = await fetch('/map/road-conditions', { next: { revalidate: 300 } });
     const roadConditions = await response.json();
 
     const tasks = roadConditions.data.map(async (roadCondition: any) => {
@@ -93,6 +93,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
         lineString.pushPoint({ lat: coords[0], lng: coords[1] });
       });
 
+
       let color;
       switch (roadCondition['Primary Condition']) {
         case 'Bare Dry':
@@ -101,16 +102,28 @@ const Map: FC<MapProps> = ({ zoom }) => {
         case 'Closed':
           color = 'red';
         case 'Wet':
-          color = 'blue';
+          color = '#8791E5';
           break;
         case 'Bare Wet':
-          color = 'blue';
+          color = '#8791E5';
+          break;
+        case 'Ptly Cvd Snw':
+          color = '#ADD8E6';
+          break;
+        case 'Cvd Snw':
+          color = '#ADD8E6';
           break;
         case 'Snow Covered':
           color = '#ADD8E6';
           break;
         case 'Ice Covered':
-          color = 'aqua';
+          color = '#FFC000';
+          break;
+        case "Ptly Cvd Ice":
+          color = '#FFC000';
+          break;
+        case "Cvd Ice":
+          color = '#FFC000';
           break;
         case 'Travel Not Recommended':
           color = 'orange';
@@ -122,7 +135,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
           color = 'black';
       }
 
-      const line = new window.H.map.Polyline(lineString, { style: { strokeColor: color, lineWidth: 3 } });
+      const line = new window.H.map.Polyline(lineString, { style: { strokeColor: color, lineWidth: 4 } });
       map.addObject(line);
     });
 

@@ -25,7 +25,7 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
   }, []);
 
   const getWeatherAlerts = async () => {
-    await fetch('/map/emergency-alerts', { next: { revalidate: 300 } })
+    await fetch('/map/emergency-alerts', { cache: 'no-store' })
       .then(async (res) => {
         const json = await res.json();
         const alertsResp = json.data;
@@ -37,7 +37,7 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
   };
 
   const getWeatherWarnings = async () => {
-    await fetch('/map/weather-alerts', { next: { revalidate: 300 } })
+    await fetch('/map/weather-alerts', { cache: 'no-store' })
       .then(async (res) => {
         const json = await res.json();
         const alertsResp = json.data.features;

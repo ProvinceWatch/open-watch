@@ -15,9 +15,9 @@ interface Alert {
 }
 
 const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref) => {
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [weatherAlerts, setWeatherAlerts] = useState([]);
-  const [moreAlerts, setMoreAlerts] = useState([]);
+  const [moreAlerts, setMoreAlerts] = useState<any[]>([]);
 
   useEffect(() => {
     getWeatherAlerts();
@@ -41,10 +41,11 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
       .then(async (res) => {
         const json = await res.json();
         const alertsResp = json.data.features;
-        console.log(alertsResp[0].properties.alerts[0]);
+        const alerts : any[] = [];
 
-        const alerts = alertsResp.map((alert: any, i: Number) => {
-          return <WeatherAlert title={alert.properties.name + " - " + alert.properties.alerts[0].alertBannerText} key={`w-${i}`} infoStr={alert.properties.alerts[0].zoneName} url={"https://weather.gc.ca/airquality/pages/provincial_summary/ab_e.html"} startTime={0} timeText={alert.properties.alerts[0].issueTimeText} />
+        alertsResp.forEach((alert: any, i: Number) => {
+          if (alert.properties.prov !== "AB") { return null; }
+          alerts.push(<WeatherAlert title={alert.properties.name + " - " + alert.properties.alerts[0].alertBannerText} key={`w-${i}`} infoStr={alert.properties.alerts[0].zoneName} url={"https://weather.gc.ca/airquality/pages/provincial_summary/ab_e.html"} startTime={0} timeText={alert.properties.alerts[0].issueTimeText} />);
         });
 
         setMoreAlerts(alerts.reverse());

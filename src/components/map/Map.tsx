@@ -22,7 +22,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
     const map = new window.H
       .Map(
         document.getElementById('mapContainer'),
-        defaultLayers.vector.normal.map,
+        defaultLayers.raster.normal.mapnight,
         {
           center: { lat: 53.9333, lng: -116.5765 },  // Center of Alberta
           zoom: zoom,
@@ -183,7 +183,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
   }, []);
 
   return (
-    <div style={{ overflow: 'hidden' }}>
+    <div style={{ overflow: 'hidden' }} className='flex-grow'>
       <CameraModal open={showCameraModal} selectedCamera={selectedCamera} onClose={() => { setShowCameraModal(false); setSelectedCamera({} as CameraData); }} />
       <MapSideBar />
       <div id="mapContainer" style={{ width: '100%', height: '95%', position: 'fixed' }} />

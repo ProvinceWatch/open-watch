@@ -33,8 +33,8 @@ const RoadConditionsLegend = ({ }: {}) => {
         {showLegend &&
           conditions.map((condition, index) => {
             return (
-              <ListGroup.Item disabled key={condition}>
-                <span id='legend' style={{ backgroundColor: `${colors[index]}`, width: '30px', height: '5px', display: 'inline-block', marginRight: '5px', marginTop: '7.5px' }}></span> <span style={{ color: "black" }}>{condition}</span>
+              <ListGroup.Item key={condition} className='bg-white dark:bg-gray-800'>
+                <span id='legend' style={{ backgroundColor: `${colors[index]}`, width: '30px', height: '5px', display: 'inline-block', marginRight: '5px', marginTop: '7.5px' }}></span> <span className='text-black dark:text-white'>{condition}</span>
               </ListGroup.Item>);
           })
         }

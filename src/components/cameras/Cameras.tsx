@@ -48,7 +48,7 @@ const Cameras: React.FC<CamerasProps> = ({}) => {
   }
 
   return (
-    <div className="flex min-h-screen bg-white">
+    <div className="flex min-h-screen bg-white dark:bg-gray-800">
       <div className="flex">
         <CameraSidebar ref={sidebarRef} onSectionSelect={setSelectedSection} showSideBar={showSidebar} setShowSideBar={setShowSidebar}/>
       </div>

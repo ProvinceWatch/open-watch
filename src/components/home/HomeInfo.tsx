@@ -13,7 +13,9 @@ export default function HomeInfo() {
           <div className="flex flex-col justify-center space-y-4">
             <div className="space-y-2">
               <h1 className="text-3xl font-bold tracking-tighter sm:text-5xl xl:text-6xl/none">
-                Alberta's open source data portal
+                Alberta&apos;s open source data portal
+
+                
               </h1>
               <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
               Welcome to OpenWatchAB, the essential open data portal for Albertans. We provide real-time road conditions, live traffic cameras, weather updates, and emergency alerts.

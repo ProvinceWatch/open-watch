@@ -61,7 +61,7 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
 
   return (
     <SideBar handleToggleSidebar={handleToggleSidebar} isOpen={isOpen} pt={0}>
-      <Sidebar aria-label="Default sidebar example" className="w-100">
+      <Sidebar aria-label="Default sidebar example" className="w-full">
         <Sidebar.Items>
           <Sidebar.ItemGroup>
             <Sidebar.Item

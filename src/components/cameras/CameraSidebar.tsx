@@ -32,7 +32,7 @@ const CameraSidebar = forwardRef(({ onSectionSelect, showSideBar, setShowSideBar
 
   return (
     <SideBar handleToggleSidebar={handleToggleSidebar} isOpen={showSideBar && isOpen} pt={0}>
-      <Sidebar>
+      <Sidebar className="w-full">
         <Sidebar.Items>
           <Sidebar.ItemGroup>
             {sections.map((section, index) => (

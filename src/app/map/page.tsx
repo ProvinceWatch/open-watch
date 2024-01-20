@@ -4,9 +4,9 @@ import Map from '@/components/map/Map';
 
 export default function MapPage() {
   return (
-    <>
-      <NavBar selectedTab='map'/>
+    <div className="flex flex-col min-h-screen">
+      <NavBar selectedTab='map' />
       <Map zoom={7} />
-    </>
+    </div>
   )
 }

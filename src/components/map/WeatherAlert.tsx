@@ -17,7 +17,7 @@ const WeatherAlert: FC<WeatherAlertProps> = ({ title, infoStr, url, startTime, t
     <Alert
       style={{ width: '100%' }}
       className='mt-2'
-      color="warning"
+      color="red"
       icon={GoAlert}
     >
       <h3 className="text-md font-medium text-black-700 dark:text-black-800">

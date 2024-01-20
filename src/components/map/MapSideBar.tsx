@@ -32,7 +32,7 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
         const alerts = alertsResp.map((alert: Alert, i: Number) => {
           return <WeatherAlert title={alert.Message} infoStr={alert.Notes} url={"yes"} key={`e-${i}`} startTime={alert.StartTime} timeText=''/>
         });
-        setWeatherAlerts(alerts);
+        setWeatherAlerts(alerts.reverse());
       });
   };
 
@@ -47,7 +47,7 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
           return <WeatherAlert title={alert.properties.name + " - " + alert.properties.alerts[0].alertBannerText} key={`w-${i}`} infoStr={alert.properties.alerts[0].zoneName} url={"https://weather.gc.ca/airquality/pages/provincial_summary/ab_e.html"} startTime={0} timeText={alert.properties.alerts[0].issueTimeText} />
         });
 
-        setMoreAlerts(alerts);
+        setMoreAlerts(alerts.reverse());
       });
   };
 
@@ -61,48 +61,19 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
 
   return (
     <SideBar handleToggleSidebar={handleToggleSidebar} isOpen={isOpen} pt={0}>
-      <Sidebar aria-label="Default sidebar example">
+      <Sidebar aria-label="Default sidebar example" className="w-full">
         <Sidebar.Items>
           <Sidebar.ItemGroup>
-            <Sidebar.Item
-              href="#"
-              icon={TbRoad}
-              active
-            >
-              Road Conditions
-            </Sidebar.Item>
-            <Sidebar.Item
-              href="#"
-              icon={TbTrafficLights}
-              active
-              labelColor="alternative"
-            >
-              Traffic
-            </Sidebar.Item>
-            <Sidebar.Item
-              active
-              href="#"
-              icon={TbCamera}
-            >
-              Cameras
-            </Sidebar.Item>
-            <Sidebar.Item
-              href="#"
-              active
-              icon={TbTemperatureCelsius}
-            >
-              Weather
-            </Sidebar.Item>
             <Sidebar.Item
               href="#"
               icon={FiAlertCircle}
               label={moreAlerts.length + weatherAlerts.length}
             >
-              Emergency Alerts
+              Alerts
             </Sidebar.Item>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
-        <div style={{ height: '70%', overflowY: 'scroll' }}>
+        <div style={{ height: '90%', overflowY: 'scroll', scrollbarWidth: 'none', scrollbarColor: 'lightgray darkgray' }}>
           {weatherAlerts}
           {moreAlerts}
         </div>

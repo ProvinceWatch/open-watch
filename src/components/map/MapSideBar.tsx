@@ -25,7 +25,11 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
   }, []);
 
   const getWeatherAlerts = async () => {
-    await fetch('/map/emergency-alerts', { cache: 'no-store' })
+    await fetch('/map/emergency-alerts', {
+      headers: {
+        'Cache-Control': 'max-age=0'
+      },
+    })
       .then(async (res) => {
         const json = await res.json();
         const alertsResp = json.data;
@@ -45,7 +49,7 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
 
         alertsResp.forEach((alert: any, i: Number) => {
           if (alert.properties.prov !== "AB") { return null; }
-          alerts.push(<WeatherAlert title={alert.properties.name + " - " + alert.properties.alerts[0].alertBannerText} key={`w-${i}`} infoStr={alert.properties.alerts[0].zoneName} url={"https://weather.gc.ca/airquality/pages/provincial_summary/ab_e.html"} startTime={0} timeText={alert.properties.alerts[0].issueTimeText} />);
+          alerts.push(<WeatherAlert infoStr={alert.properties.alerts[0].text} title={alert.properties.name + " - " + alert.properties.alerts[0].alertBannerText} key={`w-${i}`} url={"https://weather.gc.ca/airquality/pages/provincial_summary/ab_e.html"} startTime={0} timeText={alert.properties.alerts[0].issueTimeText} />);
         });
 
         setMoreAlerts(alerts.reverse());

@@ -15,7 +15,7 @@ const RoadConditionsLegend = ({ }: {}) => {
   const colors = ['green', 'red', '#8791E5', '#8791E5', '#ADD8E6', '#FFC000', 'black'];
 
   return (
-    <div id="road-conditions-legend" className="text-sm" style={{ zIndex: 1, position: 'absolute', right: 10, top: '60px' }}>
+    <div id="road-conditions-legend" className="text-sm mt-2" style={{ zIndex: 1, position: 'absolute', right: 10, top: '60px' }}>
       <ListGroup>
         <ListGroup.Item key="road-conditions-dropdown" className='text-center' onClick={handleShow}>
           <div className='flex flex-row'>

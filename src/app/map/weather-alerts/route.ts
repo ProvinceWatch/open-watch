@@ -8,8 +8,6 @@ export async function GET() {
       },
     });
     const data = await res.json();
-    console.log('DATA FROM WEATHER ALERTS HERE');
-    console.log(data);
     return NextResponse.json({ data });
   } catch (error) {
     console.log(error);

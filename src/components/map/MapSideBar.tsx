@@ -25,7 +25,11 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
   }, []);
 
   const getWeatherAlerts = async () => {
-    await fetch('/map/emergency-alerts', { cache: 'no-store' })
+    await fetch('/map/emergency-alerts', {
+      headers: {
+        'Cache-Control': 'max-age=0'
+      },
+    })
       .then(async (res) => {
         const json = await res.json();
         const alertsResp = json.data;

@@ -24,11 +24,11 @@ const NavBar: FC<NavBarProps> = ({ selectedTab }) => {
           <Link href="/map" className={`${selectedTab == 'map' ? 'text-blue dark:text-white' : 'text-black dark: text-gray-400'}`}>
             Map
           </Link>
-          <Link href="/open-data" className={`${selectedTab == 'open-data' ? 'text-blue dark:text-white' : 'text-black dark: text-gray-400'}`}>
-            Open Data
-          </Link>
           <Link href="/cameras" className={`${selectedTab == 'cameras' ? 'text-blue dark:text-white' : 'text-black dark: text-gray-400'}`}>
             Traffic Cameras
+          </Link>
+          <Link href="/open-data" className={`${selectedTab == 'open-data' ? 'text-blue dark:text-white' : 'text-black dark: text-gray-400'}`}>
+            Open Data
           </Link>
         </Navbar.Collapse>
       </Navbar>

@@ -8,17 +8,13 @@ import { Spinner } from 'flowbite-react';
 import CameraCard from './CameraCard'; // Adjust the import path based on your actual file structure
 
 interface CameraGridProps {
+  cameras: Record<Section, CameraData[]>;
   section: Section;
   gridSize: string;
+  setCameras: React.Dispatch<React.SetStateAction<Record<Section, CameraData[]>>>;
 }
 
-const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
-  const [cameras, setCameras] = useState<Record<Section, CameraData[]>>({
-    'calgary-cameras': [],
-    'edmonton-cameras': [],
-    'banff-cameras': [],
-    'alberta-highways': [],
-  });
+const CameraGrid: React.FC<CameraGridProps> = ({ cameras, section, gridSize, setCameras }) => {
   const [selectedCamera, setSelectedCamera] = useState<CameraData | null>(null);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
   const [currentPage, setCurrentPage] = useState(1);
@@ -31,23 +27,8 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
     if (gridRef.current) {
       gridRef.current.scrollTo(0, 0);
     }
+    setCurrentPage(1);
   }, [section]);
-
-  useEffect(() => {
-    const fetchAndSortCameras = async () => {
-      try {
-        const res: any = await fetch('/map/cameras');
-        const cameraResponse = await res.json();
-        const cameraData: CameraData[] = (cameraResponse.data as any) as CameraData[];
-        const sortedCameras = sortCameras(cameraData);
-        setLoadedImages({});
-        setCameras(sortedCameras);
-      } catch (error) {
-        console.error('Failed to fetch and sort camera data:', error);
-      }
-    };
-    fetchAndSortCameras();
-  }, []);
 
   // Function to get the cameras for the current page
   const getCurrentPageCameras = (): CameraData[] => {

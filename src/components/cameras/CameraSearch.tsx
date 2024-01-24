@@ -18,12 +18,20 @@ const CameraSearch: React.FC<CameraSearchProps> = ({ currentCameras, onSearchRes
   };
 
   const resetSearch = () => {
-    setSearchQuery(''); 
+    setSearchQuery('');
     onSearchResult(currentCameras);
   };
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchQuery(event.target.value);
+  };
+
+  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSearch();
+    } else if (event.key === 'Escape') {
+      resetSearch();
+    }
   };
 
   return (
@@ -33,6 +41,7 @@ const CameraSearch: React.FC<CameraSearchProps> = ({ currentCameras, onSearchRes
         placeholder="Search cameras..."
         value={searchQuery}
         onChange={handleChange}
+        onKeyDown={handleKeyDown}
         className="p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder:text-gray-400"
       />
       <Button onClick={handleSearch} className='bg-black enabled:hover:bg-gray-600 dark:bg-white dark:enabled:hover:bg-gray-600 dark:enabled:hover:text-white dark:text-black'>

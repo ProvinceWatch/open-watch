@@ -19,7 +19,7 @@ const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onNext
       <Button onClick={onPrevPage} disabled={currentPage === 1} className='bg-black enabled:hover:bg-gray-600 dark:bg-white dark:enabled:hover:bg-gray-600 dark:enabled:hover:text-white dark:text-black'>
         Previous
       </Button>
-      <span>{`Page ${currentPage} of ${totalPages}`}</span>
+      <span className="text-black dark:text-white">{`Page ${currentPage} of ${totalPages}`}</span>
       <Button onClick={onNextPage} disabled={currentPage === totalPages} className='bg-black enabled:hover:bg-gray-600 dark:bg-white dark:enabled:hover:bg-gray-600 dark:enabled:hover:text-white dark:text-black'>
         Next
       </Button>

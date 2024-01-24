@@ -97,7 +97,7 @@ const Cameras: React.FC<CamerasProps> = ({ }) => {
       </div>
       <div className="flex-1 overflow-auto min-h-screen p-1" onClick={() => setShowSidebar(false)}>
         <div className='ml-10 flex flex-col sm:flex-row justify-between gap-4'>
-          <h1 className='text-lg'>
+          <h1 className='text-lg dark:text-white'>
             Viewing {formatSectionName(selectedSection)}
           </h1>
           <CameraSearch

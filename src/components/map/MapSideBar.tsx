@@ -1,6 +1,6 @@
 import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'react';
-import { TextInput, ListGroup, Toast, Button, Sidebar } from "flowbite-react";
-import { FiAlertCircle } from "react-icons/fi";
+import { TextInput, ListGroup, Toast, Button, Sidebar, Card } from "flowbite-react";
+import { FiAlertCircle, FiSun } from "react-icons/fi";
 import { TbRoad, TbTrafficLights, TbCamera, TbTemperatureCelsius } from "react-icons/tb";
 import WeatherAlert from "@/components/map/WeatherAlert";
 import { SideBar } from '@/components/SideBar';
@@ -18,10 +18,12 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
   const [isOpen, setIsOpen] = useState(false);
   const [weatherAlerts, setWeatherAlerts] = useState([]);
   const [moreAlerts, setMoreAlerts] = useState<any[]>([]);
+  const [weatherData, setWeatherData] = useState({});
 
   useEffect(() => {
     getWeatherAlerts();
     getWeatherWarnings();
+    getWeatherData();
   }, []);
 
   const getWeatherAlerts = async () => {
@@ -34,18 +36,30 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
         const json = await res.json();
         const alertsResp = json.data;
         const alerts = alertsResp.map((alert: Alert, i: Number) => {
-          return <WeatherAlert title={alert.Message} infoStr={alert.Notes} url={"yes"} key={`e-${i}`} startTime={alert.StartTime} timeText=''/>
+          return <WeatherAlert title={alert.Message} infoStr={alert.Notes} url={"yes"} key={`e-${i}`} startTime={alert.StartTime} timeText='' />
         });
         setWeatherAlerts(alerts.reverse());
       });
   };
+
+  const getWeatherData = async () => {
+    await fetch('/api/weather',  {
+      headers: {
+        'Cache-Control': 'max-age=0'
+      },
+    }).then(async (res) => {
+      const json = await res.json();
+      const resp = json.data;
+      setWeatherData(resp);
+    });
+  }
 
   const getWeatherWarnings = async () => {
     await fetch('/map/weather-alerts', { cache: 'no-store' })
       .then(async (res) => {
         const json = await res.json();
         const alertsResp = json.data.features;
-        const alerts : any[] = [];
+        const alerts: any[] = [];
 
         alertsResp.forEach((alert: any, i: Number) => {
           if (alert.properties.prov !== "AB") { return null; }
@@ -67,7 +81,7 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
   return (
     <SideBar handleToggleSidebar={handleToggleSidebar} isOpen={isOpen} pt={0}>
       <Sidebar aria-label="Default sidebar example" className="w-full">
-        <Sidebar.Items>
+      <Sidebar.Items>
           <Sidebar.ItemGroup>
             <Sidebar.Item
               href="#"
@@ -78,10 +92,49 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
             </Sidebar.Item>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
-        <div style={{ height: '90%', overflowY: 'scroll', scrollbarWidth: 'none', scrollbarColor: 'lightgray darkgray' }}>
+        <div style={{ overflowY: 'scroll', scrollbarWidth: 'none', scrollbarColor: 'lightgray darkgray', maxHeight: '40%' }}>
           {weatherAlerts}
           {moreAlerts}
         </div>
+        <Sidebar.Items className='mt-5'>
+          <Sidebar.ItemGroup>
+            <Sidebar.Item
+              href="#"
+              icon={FiSun}
+            >
+              Weather
+            </Sidebar.Item>
+          </Sidebar.ItemGroup>
+        </Sidebar.Items>
+        {
+          Object.keys(weatherData).map((city: string, index: number) => {
+            // Check if the current index is even (to group pairs of cards)
+            return (
+              <div key={index} className={`mb-4 flex`}>
+                {/* First card in the row */}
+                <div className={`w-full`}>
+                  <Card className="p-0 m-0 h-20">
+                    <div className="flex items-center justify-between">
+                      <div className='w-3/4'>
+                        <h5 className="text-lg font-bold tracking-tight text-gray-900 dark:text-white">
+                          {city}
+                        </h5>
+                        <h5 className="text-lg font-bold tracking-tight text-gray-900 dark:text-white">
+                          {((weatherData as any)[city] as any)['main'].temp} °C
+                        </h5>
+                      </div>
+                      {/* Weather icon */}
+                      <div className='w-1/4'>
+                        <img src={`https://openweathermap.org/img/wn/${(weatherData as any)[city].weather[0].icon}@2x.png`} />
+                      </div>
+                    </div>
+                  </Card>
+                </div>
+              </div>
+            );
+          })
+        }
+     
       </Sidebar>
     </SideBar>
   );

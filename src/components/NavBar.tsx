@@ -15,7 +15,7 @@ const NavBar: FC<NavBarProps> = ({ selectedTab }) => {
             OpenWatchAB
           </span>
         </Navbar.Brand>
-        <DarkThemeToggle className="ml-auto"/>
+        {/* <DarkThemeToggle className="ml-auto"/> */}
         <Navbar.Toggle />
         <Navbar.Collapse className='ml-4'>
           <Link href="/home-page" className={`${selectedTab == 'home' ? 'text-blue dark:text-white' : 'text-black dark: text-gray-400'}`}>

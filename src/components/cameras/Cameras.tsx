@@ -9,7 +9,7 @@ interface CamerasProps {}
 const Cameras: React.FC<CamerasProps> = ({}) => {
   const [selectedSection, setSelectedSection] = useState('alberta-highways');
   const [gridSize, setGridSize] = useState(getInitialGridSize());
-  const [showSidebar, setShowSidebar] = useState(true);
+  const [showSidebar, setShowSidebar] = useState(false);
   const sidebarRef = useRef();
 
   const reduceColumns = useCallback(() => {

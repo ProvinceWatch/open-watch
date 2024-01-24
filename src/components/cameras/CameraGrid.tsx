@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import Pagination from '../Pagination'; // Adjust the import path based on your actual file structure
 import { CameraData } from '@/app/map/defs';
 import { sortCameras } from '@/app/cameras/sort';
 import { Section } from '@/app/cameras/defs';
@@ -19,8 +20,11 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
   });
   const [selectedCamera, setSelectedCamera] = useState<CameraData | null>(null);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
+  const [currentPage, setCurrentPage] = useState(1);
+  const itemsPerPage = 12; 
 
   const gridRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
     setLoadedImages({});
     if (gridRef.current) {
@@ -43,6 +47,26 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
     };
     fetchAndSortCameras();
   }, []);
+
+  // Function to get the cameras for the current page
+  const getCurrentPageCameras = (): CameraData[] => {
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
+    return cameras[section].slice(startIndex, endIndex);
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage((prevPage) => prevPage - 1);
+    }
+  };
+
+  const handleNextPage = () => {
+    const totalPages = Math.ceil(cameras[section].length / itemsPerPage);
+    if (currentPage < totalPages) {
+      setCurrentPage((prevPage) => prevPage + 1);
+    }
+  };
 
   const cameraName = (camera: CameraData) => {
     if (camera.Name && camera.Name !== 'N/A') {
@@ -77,8 +101,9 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
   }, [selectedCamera, cameras, section]);
 
   return (
-    <div ref={gridRef} className={`grid ${gridSize} gap-4 pl-10 text-black overflow-auto max-h-screen`}>
-      {cameras[section].map((camera, index) => (
+  <div className='flex flex-col'>
+    <div ref={gridRef} className={`grid ${gridSize} gap-4 pl-10 text-black overflow-auto flex-grow`}>
+      {getCurrentPageCameras().map((camera, index) => (
         <div
           key={index}
           className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
@@ -109,7 +134,14 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
       ))}
       {selectedCamera && <CameraModal open={!!selectedCamera} onClose={() => setSelectedCamera(null)} selectedCamera={selectedCamera} />}
     </div>
-  );
+    {Math.ceil(cameras[section].length) !== 0 && (
+      <div className="sticky bottom-0 z-5">
+        <Pagination currentPage={currentPage} totalPages={Math.ceil(cameras[section].length / itemsPerPage)} onPrevPage={handlePrevPage} onNextPage={handleNextPage} />
+      </div>
+    )}
+  </div>
+);
+
 };
 
 export default CameraGrid;

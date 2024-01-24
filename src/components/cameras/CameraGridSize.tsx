@@ -31,10 +31,10 @@ const CameraGridSize = ({ onAddColumns, onReduceColumns, gridSize }: CameraGridS
 
   return (
     <div className="p-4 gap-2 fixed bottom-5 right-0 z-index-1001 flex">
-      <Button onClick={handleAdd} disabled={columns >= 5}>
+      <Button onClick={handleAdd} disabled={columns >= 5} className='bg-black dark:bg-white dark:text-black'>
         -
       </Button>
-      <Button onClick={handleReduce} disabled={columns <= 1}>
+      <Button onClick={handleReduce} disabled={columns <= 1} className='bg-black dark:bg-white dark:text-black'>
         +
       </Button>
     </div>

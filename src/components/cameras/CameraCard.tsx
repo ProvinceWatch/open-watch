@@ -46,7 +46,7 @@ const CameraCard: React.FC<CameraCardProps> = ({ camera, onSelect }) => {
       {loadedImage && (
         <div className="p-2">
           <a href="#">
-            <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{cameraName()}</h5>
+            <h5 className="mb-2 text-xl lg:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{cameraName()}</h5>
           </a>
         </div>
       )}

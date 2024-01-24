@@ -1,31 +1,43 @@
 import { NextResponse } from 'next/server';
 
-const headers =  {
+const headers = {
   headers: {
-    'Cache-Control': 'max-age=0'
+    'Cache-Control': 'max-age=0',
   },
 };
 
-export async function GET() {
-  const calgaryWeather = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=51.0447&lon=114.0719&appid=${process.env.OWM_API_KEY}&units=metric`, headers);
-  const calgaryData = await calgaryWeather.json();
+const LAT_LONGS: LatLongs = {
+  'Calgary': {
+    lat: 51.0447,
+    lon: 14.0719,
+  },
+  'Edmonton': {
+    lat: 53.54617,
+    lon: -113.4937,
+  },
+  'Lethbridge': {
+    lat: 49.6956,
+    lon: -112.8451,
+  },
+  'Medicine Hat': {
+    lat: 50.0290,
+    lon: -110.7032,
+  },
+};
 
-  const edmontonWeather = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=53.54617&lon=113.4937&appid=${process.env.OWM_API_KEY}&units=metric`, headers);
-  const edmontonData = await edmontonWeather.json();
+export async function GET(): Promise<NextResponse> {
+  const res: Record<string, WeatherData> = {};
 
-
-  const lethbridgeWeather = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=49.6956&lon=112.8451&appid=${process.env.OWM_API_KEY}&units=metric`, headers);
-  const lethbridgeData = await lethbridgeWeather.json();
-
-  const medicineHatWeather = await fetch(`https://api.openweathermap.org/data/2.5/weather?lat=50.0290&lon=110.7032&appid=${process.env.OWM_API_KEY}&units=metric`, headers);
-  const medicineHatData = await medicineHatWeather.json();
+  for (const [city, loc] of Object.entries(LAT_LONGS)) {
+    const cityWeather = await fetch(
+      `https://api.openweathermap.org/data/2.5/weather?lat=${loc.lat}&lon=${loc.lon}&appid=${process.env.OWM_API_KEY}&units=metric`,
+      headers
+    );
+    const weatherData: WeatherData = await cityWeather.json();
+    res[city] = weatherData;
+  }
 
   return NextResponse.json({
-    data: {
-      Calgary: calgaryData,
-      Edmonton: edmontonData,
-      Lethbridge: lethbridgeData,
-      'Medicine Hat': medicineHatData
-    }
+    data: res,
   });
 }

@@ -86,11 +86,23 @@ const CameraGrid: React.FC<CameraGridProps> = ({ cameras, section, gridSize, set
     };
   }, [selectedCamera, cameras, section]);
 
+  const getTotalColumns = (): number => {
+  
+    const columns = parseInt(gridSize.replace("grid-cols-", ""), 10);
+  
+    if (!isNaN(columns)) {
+      return columns;
+    } else {
+      return 1; // Defaulting to 3 columns if parsing fails
+    }
+  };
+  
+
   return (
     <div className='flex flex-col'>
       <div ref={gridRef} className={`grid ${gridSize} gap-4 pl-10 text-black overflow-auto flex-grow`}>
         {getCurrentPageCameras().map((camera, index) => (
-          <CameraCard key={index} camera={camera} onSelect={handleCardSelect} />
+          <CameraCard key={index} camera={camera} onSelect={handleCardSelect} totalColumns={getTotalColumns} />
         ))}
         {selectedCamera && <CameraModal open={!!selectedCamera} onClose={() => setSelectedCamera(null)} selectedCamera={selectedCamera} />}
       </div>

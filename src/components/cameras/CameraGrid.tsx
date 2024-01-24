@@ -49,6 +49,16 @@ const CameraGrid: React.FC<CameraGridProps> = ({ cameras, section, gridSize, set
       setCurrentPage((prevPage) => prevPage + 1);
     }
   };
+  
+  const handleGoToBeginning = () => {
+    setCurrentPage(1);
+  };
+
+  const handleGoToLast = () => {
+    const totalPages = Math.ceil(cameras[section].length / itemsPerPage);
+    setCurrentPage(totalPages);
+  };
+
 
   const handleCardSelect = (camera: CameraData) => {
     setSelectedCamera(camera);
@@ -86,7 +96,13 @@ const CameraGrid: React.FC<CameraGridProps> = ({ cameras, section, gridSize, set
       </div>
       {Math.ceil(cameras[section].length) !== 0 && (
         <div className="sticky bottom-0 z-5">
-          <Pagination currentPage={currentPage} totalPages={Math.ceil(cameras[section].length / itemsPerPage)} onPrevPage={handlePrevPage} onNextPage={handleNextPage} />
+          <Pagination 
+          currentPage={currentPage} 
+          totalPages={Math.ceil(cameras[section].length / itemsPerPage)} 
+          onPrevPage={handlePrevPage} 
+          onNextPage={handleNextPage} 
+          onGoToBeginning={handleGoToBeginning}
+          onGoToLast={handleGoToLast} />
         </div>
       )}
     </div>

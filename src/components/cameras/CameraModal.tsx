@@ -36,7 +36,7 @@ const CameraModal: React.FC<ModalProps> = ({ open, onClose, selectedCamera }) =>
         dismissible
         show={open}
         onClose={onClose}
-        style={{ color: 'black' }}
+        className='rounded'
       >
         <div tabIndex={-1}>
 
@@ -44,7 +44,7 @@ const CameraModal: React.FC<ModalProps> = ({ open, onClose, selectedCamera }) =>
             {selectedCamera.Name || "N/A"}
           </Modal.Header>
           <Modal.Body style={{ color: 'black' }}>
-            <img src={selectedCamera.Url} alt="Camera Snapshot" style={{ borderRadius: '10px' }} />
+            <img src={selectedCamera.Url} alt="Camera Snapshot" className='rounded'/>
             <div className="flex">
               <Toast className='ml-2 mt-2'>
                 <FaLocationArrow className="h-5 w-5 text-blue-600 dark:text-blue-500" />

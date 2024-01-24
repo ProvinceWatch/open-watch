@@ -5,6 +5,7 @@ import { sortCameras } from '@/app/cameras/sort';
 import { Section } from '@/app/cameras/defs';
 import CameraModal from '@/components/cameras/CameraModal';
 import { Spinner } from 'flowbite-react';
+import CameraCard from './CameraCard'; // Adjust the import path based on your actual file structure
 
 interface CameraGridProps {
   section: Section;
@@ -21,7 +22,7 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
   const [selectedCamera, setSelectedCamera] = useState<CameraData | null>(null);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12; 
+  const itemsPerPage = 12;
 
   const gridRef = useRef<HTMLDivElement | null>(null);
 
@@ -68,14 +69,8 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
     }
   };
 
-  const cameraName = (camera: CameraData) => {
-    if (camera.Name && camera.Name !== 'N/A') {
-      return camera.Name;
-    } else if (camera.RoadwayName) {
-      return camera.RoadwayName;
-    } else {
-      return 'N/A';
-    }
+  const handleCardSelect = (camera: CameraData) => {
+    setSelectedCamera(camera);
   };
 
   useEffect(() => {
@@ -101,47 +96,20 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
   }, [selectedCamera, cameras, section]);
 
   return (
-  <div className='flex flex-col'>
-    <div ref={gridRef} className={`grid ${gridSize} gap-4 pl-10 text-black overflow-auto flex-grow`}>
-      {getCurrentPageCameras().map((camera, index) => (
-        <div
-          key={index}
-          className="w-full bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
-          onClick={() => setSelectedCamera(camera)}
-        >
-          {!loadedImages[camera.Url] ? (
-            <div role="status" className="relative w-full aspect-[1/1]">
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Spinner size="xl" />
-              </div>
-            </div>
-          ) : null}
-          <img
-            style={{ display: loadedImages[camera.Url] ? 'block' : 'none' }}
-            className="rounded-t-lg w-full h-auto"
-            src={camera.Url}
-            alt="Camera Snapshot"
-            onLoad={() => setLoadedImages((prev) => ({ ...prev, [camera.Url]: true }))}
-          />
-          {loadedImages[camera.Url] && (
-            <div className="p-5">
-              <a href="#">
-                <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{cameraName(camera)}</h5>
-              </a>
-            </div>
-          )}
-        </div>
-      ))}
-      {selectedCamera && <CameraModal open={!!selectedCamera} onClose={() => setSelectedCamera(null)} selectedCamera={selectedCamera} />}
-    </div>
-    {Math.ceil(cameras[section].length) !== 0 && (
-      <div className="sticky bottom-0 z-5">
-        <Pagination currentPage={currentPage} totalPages={Math.ceil(cameras[section].length / itemsPerPage)} onPrevPage={handlePrevPage} onNextPage={handleNextPage} />
+    <div className='flex flex-col'>
+      <div ref={gridRef} className={`grid ${gridSize} gap-4 pl-10 text-black overflow-auto flex-grow`}>
+        {getCurrentPageCameras().map((camera, index) => (
+          <CameraCard key={index} camera={camera} onSelect={handleCardSelect} />
+        ))}
+        {selectedCamera && <CameraModal open={!!selectedCamera} onClose={() => setSelectedCamera(null)} selectedCamera={selectedCamera} />}
       </div>
-    )}
-  </div>
-);
-
+      {Math.ceil(cameras[section].length) !== 0 && (
+        <div className="sticky bottom-0 z-5">
+          <Pagination currentPage={currentPage} totalPages={Math.ceil(cameras[section].length / itemsPerPage)} onPrevPage={handlePrevPage} onNextPage={handleNextPage} />
+        </div>
+      )}
+    </div>
+  );
 };
 
 export default CameraGrid;

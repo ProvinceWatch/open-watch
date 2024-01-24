@@ -33,7 +33,7 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
       try {
         const res: any = await fetch('/map/cameras');
         const cameraResponse = await res.json();
-        let cameraData: CameraData[] = (cameraResponse.data as any) as CameraData[];
+        const cameraData: CameraData[] = (cameraResponse.data as any) as CameraData[];
         const sortedCameras = sortCameras(cameraData);
         setLoadedImages({});
         setCameras(sortedCameras);
@@ -42,10 +42,6 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
       }
     };
     fetchAndSortCameras();
-    const intervalId = setInterval(fetchAndSortCameras, 10 * 60 * 1000);
-    return () => {
-      clearInterval(intervalId);
-    };
   }, []);
 
   const cameraName = (camera: CameraData) => {
@@ -100,7 +96,6 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
             className="rounded-t-lg w-full h-auto"
             src={camera.Url}
             alt="Camera Snapshot"
-            height="100"
             onLoad={() => setLoadedImages((prev) => ({ ...prev, [camera.Url]: true }))}
           />
           {loadedImages[camera.Url] && (
@@ -108,7 +103,6 @@ const CameraGrid: React.FC<CameraGridProps> = ({ section, gridSize }) => {
               <a href="#">
                 <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{cameraName(camera)}</h5>
               </a>
-              <p className="mb-3 font-normal text-gray-700 dark:text-gray-400">Click for details...</p>
             </div>
           )}
         </div>

@@ -42,7 +42,7 @@ const CameraModal: React.FC<ModalProps> = ({ open, onClose, selectedCamera }) =>
           {selectedCamera.Name || "N/A"}
         </Modal.Header>
         <Modal.Body style={{ color: 'black' }}>
-          <img src={selectedCamera.Url} alt="Camera Snapshot" style={{ borderRadius: '10px', boxShadow: '2px 2px 2px 2px lightgrey' }} />
+          <img src={selectedCamera.Url} alt="Camera Snapshot" style={{ borderRadius: '10px' }} />
           <div className="flex">
             <Toast className='ml-2 mt-2'>
               <FaLocationArrow className="h-5 w-5 text-blue-600 dark:text-blue-500" />

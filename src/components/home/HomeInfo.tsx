@@ -16,7 +16,7 @@ export default function HomeInfo() {
                 Alberta&apos;s open source data portal
               </h1>
               <p className="max-w-[600px] text-gray-500 md:text-xl dark:text-gray-400">
-              Welcome to OpenWatchAB, the essential open data portal for Albertans. We provide real-time road conditions, live traffic cameras, weather updates, and emergency alerts.
+                Welcome to OpenWatchAB, the essential open data portal for Albertans. We provide real-time road conditions, live traffic cameras, weather updates, and emergency alerts.
               </p>
             </div>
             <div className="flex flex-col gap-2 min-[400px]:flex-row">
@@ -41,13 +41,15 @@ export default function HomeInfo() {
             </div>
           </div>
 
-          <img
-            alt="Hero"
-            className="mx-auto aspect-square overflow-hidden rounded-xl object-bottom sm:w-full lg:order-last lg:aspect-square"
-            height="550"
-            src="https://media.nomadicmatt.com/2020/alberta1a.jpg"
-            width="550"
-          />
+          <div className="my-20">
+            <img
+              alt="Hero"
+              className="mx-auto my-auto overflow-hidden rounded-xl object-bottom  "
+              src="/openwatch.png"
+              width="950"
+            />
+          </div>
+
         </div>
       </div>
     </section>

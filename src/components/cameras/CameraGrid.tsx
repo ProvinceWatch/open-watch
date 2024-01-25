@@ -27,8 +27,9 @@ const CameraGrid: React.FC<CameraGridProps> = ({ cameras, section, gridSize, set
     if (gridRef.current) {
       gridRef.current.scrollTo(0, 0);
     }
-    setCurrentPage(1);
-  }, [section]);
+    const totalPages = Math.ceil(cameras[section].length / itemsPerPage);
+    setCurrentPage(prevPage => (prevPage <= totalPages ? prevPage : 1));
+  }, [section, cameras]);
 
   // Function to get the cameras for the current page
   const getCurrentPageCameras = (): CameraData[] => {
@@ -85,8 +86,6 @@ const CameraGrid: React.FC<CameraGridProps> = ({ cameras, section, gridSize, set
       document.removeEventListener('keydown', handleKeyDown);
     };
   }, [selectedCamera, cameras, section]);
-
-
 
   return (
     <div className='flex flex-col items-center'>

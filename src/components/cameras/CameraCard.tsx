@@ -60,7 +60,7 @@ const CameraCard: React.FC<CameraCardProps> = ({ camera, onSelect, columns }) =>
       onClick={handleSelect}
     >
       {loading && ( 
-        <div role="status" className="relative w-full h-full aspect-[1/1]">
+        <div role="status" className="relative w-full h-full aspect-[20/17]">
           <div className="absolute inset-0 flex items-center justify-center">
             <Spinner size="xl" />
           </div>

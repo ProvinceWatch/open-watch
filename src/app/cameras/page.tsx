@@ -6,9 +6,11 @@ import NavBar from '@/components/NavBar';
 
 export default function CamerasPage() {
   return (
-    <>
+    <div>
+      <div className='sticky top-0'>
       <NavBar selectedTab='cameras'/>
+      </div>
       <Cameras />
-    </>
+    </div>
   );
 }

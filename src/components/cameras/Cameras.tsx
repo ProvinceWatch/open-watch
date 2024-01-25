@@ -91,13 +91,13 @@ const Cameras: React.FC<CamerasProps> = ({ }) => {
   };
 
   return (
-    <div className="flex min-h-screen bg-white dark:bg-gray-800">
+    <div className="flex bg-white dark:bg-gray-800">
       <div className="flex">
         <CameraSidebar ref={sidebarRef} onSectionSelect={setSelectedSection} showSideBar={showSidebar} setShowSideBar={setShowSidebar} />
       </div>
-      <div className="flex-1 overflow-auto min-h-screen p-1" onClick={() => setShowSidebar(false)}>
+      <div className="flex-1 p-1" onClick={() => setShowSidebar(false)}>
         <div className='ml-10 flex flex-col sm:flex-row justify-between gap-4'>
-          <h1 className='text-lg dark:text-white'>
+          <h1 className='text-lg dark:text-white mt-2'>
             Viewing {formatSectionName(selectedSection)}
           </h1>
           <CameraSearch

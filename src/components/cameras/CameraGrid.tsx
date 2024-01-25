@@ -18,7 +18,7 @@ const CameraGrid: React.FC<CameraGridProps> = ({ cameras, section, gridSize, set
   const [selectedCamera, setSelectedCamera] = useState<CameraData | null>(null);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 12;
+  const itemsPerPage = 6;
 
   const gridRef = useRef<HTMLDivElement | null>(null);
 
@@ -86,28 +86,12 @@ const CameraGrid: React.FC<CameraGridProps> = ({ cameras, section, gridSize, set
     };
   }, [selectedCamera, cameras, section]);
 
-  const getTotalColumns = (): number => {
-  
-    const columns = parseInt(gridSize.replace("grid-cols-", ""), 10);
-  
-    if (!isNaN(columns)) {
-      return columns;
-    } else {
-      return 1; // Defaulting to 3 columns if parsing fails
-    }
-  };
-  
+
 
   return (
-    <div className='flex flex-col'>
-      <div ref={gridRef} className={`grid ${gridSize} gap-4 pl-10 text-black overflow-auto flex-grow`}>
-        {getCurrentPageCameras().map((camera, index) => (
-          <CameraCard key={index} camera={camera} onSelect={handleCardSelect} totalColumns={getTotalColumns} />
-        ))}
-        {selectedCamera && <CameraModal open={!!selectedCamera} onClose={() => setSelectedCamera(null)} selectedCamera={selectedCamera} />}
-      </div>
-      {Math.ceil(cameras[section].length) !== 0 && (
-        <div className="sticky bottom-0 z-5">
+    <div className='flex flex-col items-center'>
+      {Math.ceil(cameras[section].length / itemsPerPage) >= 1 && (
+        <div className="ml-10 md:ml-0 mb-4">
           <Pagination
             currentPage={currentPage}
             totalPages={Math.ceil(cameras[section].length / itemsPerPage)}
@@ -117,6 +101,12 @@ const CameraGrid: React.FC<CameraGridProps> = ({ cameras, section, gridSize, set
             onGoToLast={handleGoToLast} />
         </div>
       )}
+      <div ref={gridRef} className={`grid ${gridSize} gap-4 pl-10 text-black flex-grow w-full max-w-screen-lg`}>
+        {getCurrentPageCameras().map((camera, index) => (
+          <CameraCard key={index} camera={camera} onSelect={handleCardSelect} />
+        ))}
+        {selectedCamera && <CameraModal open={!!selectedCamera} onClose={() => setSelectedCamera(null)} selectedCamera={selectedCamera} />}
+      </div>
     </div>
   );
 };

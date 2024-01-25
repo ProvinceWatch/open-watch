@@ -12,7 +12,7 @@ interface PaginationProps {
 
 const Pagination: React.FC<PaginationProps> = ({ currentPage, totalPages, onNextPage, onPrevPage, onGoToBeginning, onGoToLast }) => {
   return (
-    <div className="flex items-center justify-center my-2 gap-2">
+    <div className="flex items-center justify-center mb-2 gap-2">
       <div className="flex items-center justify-center gap-2">
         <Button onClick={onGoToBeginning} disabled={currentPage === 1} className="bg-black enabled:hover:bg-gray-600 dark:bg-white dark:enabled:hover:bg-gray-600 dark:enabled:hover:text-white dark:text-black">
           First

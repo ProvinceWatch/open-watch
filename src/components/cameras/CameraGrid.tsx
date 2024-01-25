@@ -89,25 +89,32 @@ const CameraGrid: React.FC<CameraGridProps> = ({ cameras, section, gridSize, set
 
   return (
     <div className='flex flex-col items-center'>
-      {Math.ceil(cameras[section].length / itemsPerPage) >= 1 && (
-        <div className="ml-10 md:ml-0 mb-4">
-          <Pagination
-            currentPage={currentPage}
-            totalPages={Math.ceil(cameras[section].length / itemsPerPage)}
-            onPrevPage={handlePrevPage}
-            onNextPage={handleNextPage}
-            onGoToBeginning={handleGoToBeginning}
-            onGoToLast={handleGoToLast} />
+      <div className='bg-white dark:bg-gray-800 w-full sticky top-60 md:top-32 z-10'>
+        {Math.ceil(cameras[section].length / itemsPerPage) >= 1 && (
+          <div className="my-2 ">
+            <Pagination
+              currentPage={currentPage}
+              totalPages={Math.ceil(cameras[section].length / itemsPerPage)}
+              onPrevPage={handlePrevPage}
+              onNextPage={handleNextPage}
+              onGoToBeginning={handleGoToBeginning}
+              onGoToLast={handleGoToLast}
+            />
+          </div>
+        )}
+      </div>
+
+      <div className="flex items-center justify-center overflow-y-auto flex-grow w-full">
+        <div ref={gridRef} className={`grid ${gridSize} gap-4 w-full max-w-screen-lg mt-2`}>
+          {getCurrentPageCameras().map((camera, index) => (
+            <CameraCard key={index} camera={camera} onSelect={handleCardSelect} />
+          ))}
+          {selectedCamera && <CameraModal open={!!selectedCamera} onClose={() => setSelectedCamera(null)} selectedCamera={selectedCamera} />}
         </div>
-      )}
-      <div ref={gridRef} className={`grid ${gridSize} gap-4 pl-10 text-black flex-grow w-full max-w-screen-lg`}>
-        {getCurrentPageCameras().map((camera, index) => (
-          <CameraCard key={index} camera={camera} onSelect={handleCardSelect} />
-        ))}
-        {selectedCamera && <CameraModal open={!!selectedCamera} onClose={() => setSelectedCamera(null)} selectedCamera={selectedCamera} />}
       </div>
     </div>
   );
+
 };
 
 export default CameraGrid;

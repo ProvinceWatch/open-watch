@@ -35,7 +35,7 @@ const CameraSearch: React.FC<CameraSearchProps> = ({ currentCameras, onSearchRes
   };
 
   return (
-    <div className="mb-4 flex flex-col sm:flex-row gap-4 mt-2">
+    <div className="mb-4 flex flex-col sm:flex-row gap-4 pt-2">
       <input
         type="text"
         placeholder="Search cameras..."

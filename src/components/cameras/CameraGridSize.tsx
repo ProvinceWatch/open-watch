@@ -30,7 +30,7 @@ const CameraGridSize = ({ onAddColumns, onReduceColumns, gridSize }: CameraGridS
   }
 
   return (
-    <div className="p-4 fixed hidden sm:block bottom-5 right-0 z-index-1001">
+    <div className="p-4 fixed hidden sm:block bottom-5 right-0 z-100">
       <div className='flex gap-2'>
         <Button
           onClick={handleAdd}

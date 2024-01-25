@@ -10,7 +10,7 @@ export default function CamerasPage() {
       <div className='sticky w-full top-0 z-50'>
         <NavBar selectedTab='cameras' />
       </div>
-      <div>
+      <div className='min-h-screen bg-white dark:bg-gray-800'>
         <Cameras />
       </div>
     </div>

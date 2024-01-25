@@ -103,7 +103,7 @@ const CameraGrid: React.FC<CameraGridProps> = ({ cameras, section, gridSize, set
         )}
       </div>
 
-      <div className="flex items-center justify-center overflow-y-auto flex-grow w-full">
+      <div className="flex items-center flex-col overflow-y-auto flex-grow w-full">
         <div ref={gridRef} className={`grid ${gridSize} gap-4 w-full max-w-screen-lg mt-2`}>
           {getCurrentPageCameras().map((camera, index) => (
             <CameraCard key={index} camera={camera} onSelect={handleCardSelect} columns={columns} />

@@ -18,7 +18,7 @@ const NavBar: FC<NavBarProps> = ({ selectedTab }) => {
         <DarkThemeToggle className="ml-auto"/>
         <Navbar.Toggle />
         <Navbar.Collapse className='ml-4'>
-          <Link href="/home-page" className={`${selectedTab == 'home' ? 'text-blue dark:text-white' : 'text-black dark: text-gray-400'}`}>
+          <Link href="/home" className={`${selectedTab == 'home' ? 'text-blue dark:text-white' : 'text-black dark: text-gray-400'}`}>
             Home
           </Link>
           <Link href="/map" className={`${selectedTab == 'map' ? 'text-blue dark:text-white' : 'text-black dark: text-gray-400'}`}>

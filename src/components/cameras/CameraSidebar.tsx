@@ -1,5 +1,5 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
-import { ListGroup, Sidebar } from 'flowbite-react';
+import { Sidebar } from 'flowbite-react';
 import { TbLetterC, TbLetterA, TbLetterE, TbLetterB } from 'react-icons/tb';
 import { Section } from '@/app/cameras/defs'
 import { SideBar } from '@/components/SideBar';

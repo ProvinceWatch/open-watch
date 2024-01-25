@@ -1,11 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
-import Pagination from '../Pagination'; // Adjust the import path based on your actual file structure
+import Pagination from '../Pagination'; 
 import { CameraData } from '@/app/map/defs';
-import { sortCameras } from '@/app/cameras/sort';
 import { Section } from '@/app/cameras/defs';
 import CameraModal from '@/components/cameras/CameraModal';
-import { Spinner } from 'flowbite-react';
-import CameraCard from './CameraCard'; // Adjust the import path based on your actual file structure
+import CameraCard from './CameraCard'; 
 
 interface CameraGridProps {
   cameras: Record<Section, CameraData[]>;

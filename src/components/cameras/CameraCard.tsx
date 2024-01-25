@@ -8,7 +8,7 @@ interface CameraCardProps {
 }
 
 const CameraCard: React.FC<CameraCardProps> = ({ camera, onSelect }) => {
-  const [loading, setLoading] = useState(true); // Combine both loading states into one
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
     setLoading(true);
@@ -41,7 +41,7 @@ const CameraCard: React.FC<CameraCardProps> = ({ camera, onSelect }) => {
       className={`w-full 'h-screen' bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700`}
       onClick={handleSelect}
     >
-      {loading && ( // Use the combined loading state here
+      {loading && ( 
         <div role="status" className="relative w-full h-full aspect-[1/1]">
           <div className="absolute inset-0 flex items-center justify-center">
             <Spinner size="xl" />
@@ -49,13 +49,13 @@ const CameraCard: React.FC<CameraCardProps> = ({ camera, onSelect }) => {
         </div>
       )}
       <img
-        style={{ display: loading ? 'none' : 'block' }} // Use the combined loading state here
+        style={{ display: loading ? 'none' : 'block' }} 
         className={`rounded-t-lg w-full h-full transition-opacity duration-300 ${loading ? 'opacity-0' : 'opacity-100'}`} // Inverted opacity values
         src={camera.Url}
         alt="Camera Snapshot"
-        onLoad={() => setLoading(false)} // Set loading to false on image load
+        onLoad={() => setLoading(false)} 
       />
-      {!loading && ( // Use the combined loading state here
+      {!loading && ( 
         <div className={`p-2 opacity-100`}>
           <a href="#">
             <h5 className="mb-2 text-xl lg:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{cameraName()}</h5>

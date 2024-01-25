@@ -1,4 +1,4 @@
-import React, { useState, useCallback, FC, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import CameraSidebar from '@/components/cameras/CameraSidebar';
 import CameraGrid from '@/components/cameras/CameraGrid';
 import CameraGridSize from '@/components/cameras/CameraGridSize';

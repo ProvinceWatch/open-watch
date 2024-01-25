@@ -1,13 +1,7 @@
 "use client"
 
-import NavBar from '@/components/NavBar';
-import Map from '@/components/map/Map';
+import Home from "@/components/home/Home"
 
-export default function Home() {
-  return (
-    <>
-      <NavBar selectedTab='map' />
-      <Map zoom={7} />
-    </>
-  )
+export default function page() {
+  return <Home />
 }

@@ -35,7 +35,7 @@ const CameraSearch: React.FC<CameraSearchProps> = ({ currentCameras, onSearchRes
   };
 
   return (
-    <div className="mb-4 flex flex-col sm:flex-row gap-4">
+    <div className="mb-4 flex flex-col sm:flex-row gap-4 pt-2">
       <input
         type="text"
         placeholder="Search cameras..."
@@ -44,12 +44,14 @@ const CameraSearch: React.FC<CameraSearchProps> = ({ currentCameras, onSearchRes
         onKeyDown={handleKeyDown}
         className="p-2 border border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-700 dark:text-white dark:placeholder:text-gray-400"
       />
-      <Button onClick={handleSearch} className='bg-black enabled:hover:bg-gray-600 dark:bg-white dark:enabled:hover:bg-gray-600 dark:enabled:hover:text-white dark:text-black'>
-        Search
-      </Button>
-      <Button onClick={resetSearch} className='bg-black enabled:hover:bg-gray-600 dark:bg-white dark:enabled:hover:bg-gray-600 dark:enabled:hover:text-white dark:text-black'>
-        Reset
-      </Button>
+      <div className='flex gap-4'>
+        <Button onClick={handleSearch} className='w-1/2 bg-black enabled:hover:bg-gray-600 dark:bg-white dark:enabled:hover:bg-gray-600 dark:enabled:hover:text-white dark:text-black'>
+          Search
+        </Button>
+        <Button onClick={resetSearch} className='w-1/2 bg-black enabled:hover:bg-gray-600 dark:bg-white dark:enabled:hover:bg-gray-600 dark:enabled:hover:text-white dark:text-black'>
+          Reset
+        </Button>
+      </div>
     </div>
   );
 };

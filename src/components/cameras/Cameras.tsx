@@ -1,4 +1,4 @@
-import React, { useState, useCallback, FC, useRef, useEffect } from 'react';
+import React, { useState, useCallback, useRef, useEffect } from 'react';
 import CameraSidebar from '@/components/cameras/CameraSidebar';
 import CameraGrid from '@/components/cameras/CameraGrid';
 import CameraGridSize from '@/components/cameras/CameraGridSize';
@@ -91,13 +91,13 @@ const Cameras: React.FC<CamerasProps> = ({ }) => {
   };
 
   return (
-    <div className="flex min-h-screen bg-white dark:bg-gray-800">
-      <div className="flex">
-        <CameraSidebar ref={sidebarRef} onSectionSelect={setSelectedSection} showSideBar={showSidebar} setShowSideBar={setShowSidebar} />
-      </div>
-      <div className="flex-1 overflow-auto min-h-screen p-1" onClick={() => setShowSidebar(false)}>
-        <div className='ml-10 flex flex-col sm:flex-row justify-between gap-4'>
-          <h1 className='text-lg dark:text-white'>
+    <div className="flex flex-col bg-white dark:bg-gray-800">
+      <div className="flex flex-col sticky w-full top-16 bg-white dark:bg-gray-800 z-20">
+        <div className="flex z-50">
+          <CameraSidebar ref={sidebarRef} onSectionSelect={setSelectedSection} showSideBar={showSidebar} setShowSideBar={setShowSidebar} />
+        </div>
+        <div className='flex flex-col sm:flex-row justify-between gap-4 px-2'>
+          <h1 className='ml-10 text-lg dark:text-white mt-2'>
             Viewing {formatSectionName(selectedSection)}
           </h1>
           <CameraSearch
@@ -105,7 +105,11 @@ const Cameras: React.FC<CamerasProps> = ({ }) => {
             onSearchResult={(filteredCameras) => setFilteredCameras({ ...cameras, [selectedSection]: filteredCameras })}
           />
         </div>
-        {loading ? (
+        
+      </div>
+      
+      <div>
+      {loading ? (
           <div className='flex items-center justify-center h-screen'>
             <Spinner size="xl" />
           </div>
@@ -116,7 +120,6 @@ const Cameras: React.FC<CamerasProps> = ({ }) => {
             gridSize={gridSize}
             setCameras={setCameras}
           />
-
         )}
       </div>
       <CameraGridSize onReduceColumns={reduceColumns} onAddColumns={addColumns} gridSize={gridSize} />

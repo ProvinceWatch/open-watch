@@ -1,5 +1,5 @@
 import React, { forwardRef, useImperativeHandle, useState } from 'react';
-import { ListGroup, Sidebar } from 'flowbite-react';
+import { Sidebar } from 'flowbite-react';
 import { TbLetterC, TbLetterA, TbLetterE, TbLetterB } from 'react-icons/tb';
 import { Section } from '@/app/cameras/defs'
 import { SideBar } from '@/components/SideBar';
@@ -12,7 +12,7 @@ interface CameraSidebarProps {
 
 const CameraSidebar = forwardRef(({ onSectionSelect, showSideBar, setShowSideBar }: CameraSidebarProps, ref) => {
   const sections: Section[] = ['alberta-highways', 'calgary-cameras', 'edmonton-cameras', 'banff-cameras'];
-  const icons: any[] = [TbLetterA, TbLetterC, TbLetterE, TbLetterB  ];
+  const icons: any[] = [TbLetterA, TbLetterC, TbLetterE, TbLetterB];
   const [isOpen, setIsOpen] = useState(false);
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
 
@@ -31,24 +31,27 @@ const CameraSidebar = forwardRef(({ onSectionSelect, showSideBar, setShowSideBar
   }));
 
   return (
-    <SideBar handleToggleSidebar={handleToggleSidebar} isOpen={showSideBar && isOpen} pt={0}>
-      <Sidebar className="w-full">
-        <Sidebar.Items>
-          <Sidebar.ItemGroup>
-            {sections.map((section, index) => (
-              <Sidebar.Item
-                key={section}
-                onClick={() => handleSelect(index)}
-                active={index === activeSectionIndex}
-                icon={icons[index]}
-              >
-                {section.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
-              </Sidebar.Item>
-            ))}
-          </Sidebar.ItemGroup>
-        </Sidebar.Items>
-      </Sidebar>
-    </SideBar>
+    <div>
+      <SideBar handleToggleSidebar={handleToggleSidebar} isOpen={showSideBar && isOpen} pt={0}>
+        <Sidebar className="w-full">
+          <Sidebar.Items>
+            <Sidebar.ItemGroup>
+              {sections.map((section, index) => (
+                <Sidebar.Item
+                  key={section}
+                  onClick={() => handleSelect(index)}
+                  active={index === activeSectionIndex}
+                  icon={icons[index]}
+                >
+                  {section.split('-').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ')}
+                </Sidebar.Item>
+              ))}
+            </Sidebar.ItemGroup>
+          </Sidebar.Items>
+        </Sidebar>
+      </SideBar>
+    </div>
+
   );
 });
 

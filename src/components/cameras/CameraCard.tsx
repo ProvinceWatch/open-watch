@@ -5,27 +5,23 @@ import { CameraData } from '@/app/map/defs';
 interface CameraCardProps {
   camera: CameraData;
   onSelect: (camera: CameraData) => void;
-  totalColumns: () => number; // Add the totalColumns prop
+  columns: number;
 }
 
-const CameraCard: React.FC<CameraCardProps> = ({ camera, onSelect, totalColumns }) => {
-  const [loadedImage, setLoadedImage] = useState(false);
-  const [loadingImage, setLoadingImage] = useState(true);
-  const [cardHeight, setCardHeight] = useState<number | undefined>(undefined);
+const CameraCard: React.FC<CameraCardProps> = ({ camera, onSelect, columns }) => {
+  const [loading, setLoading] = useState(true); 
 
   useEffect(() => {
-    setLoadedImage(false);
-    setLoadingImage(true);
-    calculateCardHeight();
+    setLoading(true);
+
+    // timeout to stop infinite spinners
+    const timer = setTimeout(() => {
+      setLoading(false); 
+    }, 3000); 
+    
+    return () => clearTimeout(timer); 
   }, [camera.Url]);
 
-  const calculateCardHeight = () => {
-    if (typeof window !== 'undefined') {
-      const viewportHeight = window.innerHeight;
-      const cardHeight = viewportHeight / totalColumns(); // Adjust as needed
-      setCardHeight(cardHeight);
-    }
-  };
 
   const handleSelect = () => {
     onSelect(camera);
@@ -41,32 +37,46 @@ const CameraCard: React.FC<CameraCardProps> = ({ camera, onSelect, totalColumns 
     }
   };
 
+  const calculateTextSize = () => {
+    switch (columns) {
+      case 1:
+        return 'text-3xl lg:text-4xl';
+      case 2:
+        return 'text-2xl';
+      case 3:
+        return 'text-xl';
+      case 4: 
+        return 'text-lg';
+      case 5:
+        return 'text-md';
+      default:
+        return 'text-lg lg:text-xl';
+    }
+  };
+
   return (
     <Card
-      className={`w-full ${cardHeight ? `h-${cardHeight}` : 'h-full'} bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700`}
+      className={`w-full 'h-screen' bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700`}
       onClick={handleSelect}
     >
-      {loadingImage && (
-        <div role="status" className="relative w-full h-full aspect-[1/1]">
+      {loading && ( 
+        <div role="status" className="relative w-full h-full aspect-[20/17]">
           <div className="absolute inset-0 flex items-center justify-center">
             <Spinner size="xl" />
           </div>
         </div>
       )}
       <img
-        style={{ display: loadedImage ? 'block' : 'none' }}
-        className={`rounded-t-lg w-full h-full transition-opacity duration-300 ${loadedImage ? 'opacity-100' : 'opacity-0'}`}
+        style={{ display: loading ? 'none' : 'block' }} 
+        className={`rounded-t-lg w-full h-full transition-opacity duration-300 ${loading ? 'opacity-0' : 'opacity-100'}`} // Inverted opacity values
         src={camera.Url}
         alt="Camera Snapshot"
-        onLoad={() => {
-          setLoadedImage(true);
-          setLoadingImage(false);
-        }}
+        onLoad={() => setLoading(false)} 
       />
-      {loadedImage && (
-        <div className={`p-2 ${loadedImage ? 'opacity-100' : 'opacity-0'}`}>
+      {!loading && (
+        <div className={`p-2 opacity-100 ${calculateTextSize()}`}>
           <a href="#">
-            <h5 className="mb-2 text-xl lg:text-2xl font-bold tracking-tight text-gray-900 dark:text-white">{cameraName()}</h5>
+            <h5 className="mb-2 font-bold tracking-tight text-gray-900 dark:text-white">{cameraName()}</h5>
           </a>
         </div>
       )}

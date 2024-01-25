@@ -16,7 +16,8 @@ const CameraGrid: React.FC<CameraGridProps> = ({ cameras, section, gridSize, set
   const [selectedCamera, setSelectedCamera] = useState<CameraData | null>(null);
   const [loadedImages, setLoadedImages] = useState<Record<string, boolean>>({});
   const [currentPage, setCurrentPage] = useState(1);
-  const itemsPerPage = 6;
+  const columns = gridSize.includes('grid-cols-') ? parseInt(gridSize.split('-')[2]) : 3;
+  const itemsPerPage = columns === 1 ? 6 : columns * 2;
 
   const gridRef = useRef<HTMLDivElement | null>(null);
 
@@ -105,7 +106,7 @@ const CameraGrid: React.FC<CameraGridProps> = ({ cameras, section, gridSize, set
       <div className="flex items-center justify-center overflow-y-auto flex-grow w-full">
         <div ref={gridRef} className={`grid ${gridSize} gap-4 w-full max-w-screen-lg mt-2`}>
           {getCurrentPageCameras().map((camera, index) => (
-            <CameraCard key={index} camera={camera} onSelect={handleCardSelect} />
+            <CameraCard key={index} camera={camera} onSelect={handleCardSelect} columns={columns} />
           ))}
           {selectedCamera && <CameraModal open={!!selectedCamera} onClose={() => setSelectedCamera(null)} selectedCamera={selectedCamera} />}
         </div>

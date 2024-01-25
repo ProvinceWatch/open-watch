@@ -13,7 +13,7 @@ interface CameraSidebarProps {
 const CameraSidebar = forwardRef(({ onSectionSelect, showSideBar, setShowSideBar }: CameraSidebarProps, ref) => {
   const sections: Section[] = ['alberta-highways', 'calgary-cameras', 'edmonton-cameras', 'banff-cameras'];
   const icons: any[] = [TbLetterA, TbLetterC, TbLetterE, TbLetterB  ];
-  const [isOpen, setIsOpen] = useState(true);
+  const [isOpen, setIsOpen] = useState(false);
   const [activeSectionIndex, setActiveSectionIndex] = useState(0);
 
   const handleSelect = (index: number) => {

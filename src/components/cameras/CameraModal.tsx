@@ -36,63 +36,66 @@ const CameraModal: React.FC<ModalProps> = ({ open, onClose, selectedCamera }) =>
         dismissible
         show={open}
         onClose={onClose}
-        style={{ color: 'black' }}
+        className='rounded'
       >
-        <Modal.Header className='text-center'>
-          {selectedCamera.Name || "N/A"}
-        </Modal.Header>
-        <Modal.Body style={{ color: 'black' }}>
-          <img src={selectedCamera.Url} alt="Camera Snapshot" style={{ borderRadius: '10px' }} />
-          <div className="flex">
-            <Toast className='ml-2 mt-2'>
-              <FaLocationArrow className="h-5 w-5 text-blue-600 dark:text-blue-500" />
-              <div className="pl-4 text-sm font-bold">
-                {selectedCamera.Description || "N/A"}
-              </div>
-            </Toast>
-            <Toast className='mr-2 mt-2'>
-              <FaDirections className="h-7 w-7 text-blue-600 dark:text-blue-500" />
-              <div className="pl-4 text-sm font-bold">
-                {selectedCamera.DirectionOfTravel || "N/A"}
-              </div>
-            </Toast>
-          </div>
+        <div tabIndex={-1}>
+
+          <Modal.Header className='text-center'>
+            {selectedCamera.Name || "N/A"}
+          </Modal.Header>
+          <Modal.Body style={{ color: 'black' }}>
+            <img src={selectedCamera.Url} alt="Camera Snapshot" className='rounded'/>
+            <div className="flex">
+              <Toast className='ml-2 mt-2'>
+                <FaLocationArrow className="h-5 w-5 text-blue-600 dark:text-blue-500" />
+                <div className="pl-4 text-sm font-bold">
+                  {selectedCamera.Description || "N/A"}
+                </div>
+              </Toast>
+              <Toast className='mr-2 mt-2'>
+                <FaDirections className="h-7 w-7 text-blue-600 dark:text-blue-500" />
+                <div className="pl-4 text-sm font-bold">
+                  {selectedCamera.DirectionOfTravel || "N/A"}
+                </div>
+              </Toast>
+            </div>
 
 
-          <div className="flex">
-            <Toast className='ml-2 mt-2'>
-              <FaRoad className="h-7 w-7 text-blue-600 dark:text-blue-500" />
-              <div className="pl-4 text-sm font-bold">
-                {selectedCamera.RoadwayName || "N/A"}
-              </div>
-            </Toast>
-            <Toast className='mr-2 mt-2'>
-              <FaWind className="h-6 w-6 text-blue-600 dark:text-blue-500" />
-              <div className="pl-4 text-sm font-bold">
-                {
-                  selectedCamera.WindDirection && selectedCamera.WindSpeed ?
-                    `${selectedCamera.WindSpeed} ${selectedCamera.WindDirection}`
-                    : "N/A"
-                }
-              </div>
-            </Toast>
-          </div>
+            <div className="flex">
+              <Toast className='ml-2 mt-2'>
+                <FaRoad className="h-7 w-7 text-blue-600 dark:text-blue-500" />
+                <div className="pl-4 text-sm font-bold">
+                  {selectedCamera.RoadwayName || "N/A"}
+                </div>
+              </Toast>
+              <Toast className='mr-2 mt-2'>
+                <FaWind className="h-6 w-6 text-blue-600 dark:text-blue-500" />
+                <div className="pl-4 text-sm font-bold">
+                  {
+                    selectedCamera.WindDirection && selectedCamera.WindSpeed ?
+                      `${selectedCamera.WindSpeed} ${selectedCamera.WindDirection}`
+                      : "N/A"
+                  }
+                </div>
+              </Toast>
+            </div>
 
-          <div className="flex">
-            <Toast className='ml-2 mt-2'>
-              <FaTemperatureHigh className="h-6 w-6 text-blue-600 dark:text-blue-500" />
-              <div className="pl-4 text-sm font-bold">
-                {selectedCamera.AirTemperature || "N/A"}
-              </div>
-            </Toast>
-            <Toast className='mr-2 mt-2'>
-              <WiHumidity className="h-7 w-7 text-blue-600 dark:text-blue-500" />
-              <div className="pl-4 text-sm font-bold">
-                {selectedCamera.RelativeHumidity || "N/A"}
-              </div>
-            </Toast>
-          </div>
-        </Modal.Body>
+            <div className="flex">
+              <Toast className='ml-2 mt-2'>
+                <FaTemperatureHigh className="h-6 w-6 text-blue-600 dark:text-blue-500" />
+                <div className="pl-4 text-sm font-bold">
+                  {selectedCamera.AirTemperature || "N/A"}
+                </div>
+              </Toast>
+              <Toast className='mr-2 mt-2'>
+                <WiHumidity className="h-7 w-7 text-blue-600 dark:text-blue-500" />
+                <div className="pl-4 text-sm font-bold">
+                  {selectedCamera.RelativeHumidity || "N/A"}
+                </div>
+              </Toast>
+            </div>
+          </Modal.Body>
+        </div>
       </Modal>
     );
   }

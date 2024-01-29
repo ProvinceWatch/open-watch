@@ -8,8 +8,8 @@ interface NavBarProps {
 
 const NavBar: FC<NavBarProps> = ({ selectedTab }) => {
   return (
-    <div className="shadow-md z-50">
-      <Navbar fluid={true} className="sticky top-0 z-50" style={{ overflow: 'hidden' }}>
+    <div className="shadow-md z-50 sticky top-0 z-50">
+      <Navbar fluid={true} style={{ overflow: 'hidden' }}>
         <Navbar.Brand href="/">
           <span className="self-center whitespace-nowrap text-xl font-semibold dark:text-white">
             OpenWatchAB

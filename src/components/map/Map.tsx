@@ -44,7 +44,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
 
 
   const getCameraMarkers = async (map: any, ui: any) => {
-    const res: any = await fetch('/map/cameras');
+    const res: any = await fetch('/api/cameras');
     const cameraResponse = await res.json();
     console.log(cameraResponse);
     const cameras: CameraData[] = (cameraResponse.data as any) as CameraData[];
@@ -82,7 +82,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
   };
 
   const getRoadConditonMarkers = async (map: any, ui: any) => {
-    const response = await fetch('/map/road-conditions', { cache: 'no-store' });
+    const response = await fetch('/api/road-conditions', { cache: 'no-store' });
     const roadConditions = await response.json();
 
     const tasks = roadConditions.data.map(async (roadCondition: any) => {

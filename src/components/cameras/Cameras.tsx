@@ -47,7 +47,7 @@ const Cameras: React.FC<CamerasProps> = ({ }) => {
     const fetchAndSortCameras = async () => {
       try {
         setLoading(true);
-        const res: any = await fetch('/map/cameras');
+        const res: any = await fetch('/api/cameras');
         const cameraResponse = await res.json();
         const cameraData: CameraData[] = (cameraResponse.data as any) as CameraData[];
         const sortedCameras = sortCameras(cameraData);

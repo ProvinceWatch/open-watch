@@ -1,8 +1,8 @@
 import { Card } from "flowbite-react";
 
 interface WeatherCardProps {
-  temp: number,
-  city: String,
+  temp: number
+  city: String
   icon: String
 }
 

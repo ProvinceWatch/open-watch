@@ -81,8 +81,8 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
           </Sidebar.ItemGroup>
         </Sidebar.Items>
         {weatherData &&
-          Object.keys(weatherData).map((city: string) =>
-            <WeatherCard city={city} temp={weatherData[city].main.temp} icon={weatherData[city].weather[0].icon} />)
+          Object.keys(weatherData).map((city: string, i: Number) =>
+            <WeatherCard city={city} temp={weatherData[city].main.temp} icon={weatherData[city].weather[0].icon} key={`w-${i}`}/>)
         }
       </Sidebar>
     </SideBar>

@@ -1,9 +1,17 @@
 import { NextResponse } from 'next/server';
 
 const LAT_LONGS: LatLongs = {
+  'Banff': {
+    lat: 51.1784,
+    lon: -115.5708
+  },
   'Calgary': {
     lat: 51.0447,
     lon: 14.0719,
+  },
+  'Canmore': {
+    lat: 51.0884,
+    lon: -115.3479
   },
   'Edmonton': {
     lat: 53.54617,

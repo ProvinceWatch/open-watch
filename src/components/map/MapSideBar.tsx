@@ -1,4 +1,4 @@
-import React, { forwardRef, useImperativeHandle, useState, useEffect } from 'react';
+import React, { forwardRef, useImperativeHandle, useState } from 'react';
 import { FiAlertCircle, FiSun } from "react-icons/fi";
 import { Sidebar } from "flowbite-react";
 import { useQuery } from '@tanstack/react-query'
@@ -7,8 +7,7 @@ import WeatherAlert from "@/components/map/WeatherAlert";
 import { SideBar } from '@/components/SideBar';
 import WeatherCard from '@/components/map/WeatherCard';
 
-interface MapSideBarProps {
-}
+interface MapSideBarProps {}
 
 interface Alert {
   Message: string,

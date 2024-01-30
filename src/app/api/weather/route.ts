@@ -1,15 +1,17 @@
 import { NextResponse } from 'next/server';
 
-const headers = {
-  headers: {
-    'Cache-Control': 'max-age=0',
-  },
-};
-
 const LAT_LONGS: LatLongs = {
+  'Banff': {
+    lat: 51.1784,
+    lon: -115.5708
+  },
   'Calgary': {
     lat: 51.0447,
     lon: 14.0719,
+  },
+  'Canmore': {
+    lat: 51.0884,
+    lon: -115.3479
   },
   'Edmonton': {
     lat: 53.54617,
@@ -29,15 +31,14 @@ export async function GET(): Promise<NextResponse> {
   const res: Record<string, WeatherData> = {};
 
   for (const [city, loc] of Object.entries(LAT_LONGS)) {
+    console.log(`https://api.openweathermap.org/data/2.5/weather?lat=${loc.lat}&lon=${loc.lon}&appid=${process.env.OWM_API_KEY}&units=metric`);
     const cityWeather = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?lat=${loc.lat}&lon=${loc.lon}&appid=${process.env.OWM_API_KEY}&units=metric`,
-      headers
+      { cache: 'no-store' }
     );
     const weatherData: WeatherData = await cityWeather.json();
     res[city] = weatherData;
   }
 
-  return NextResponse.json({
-    data: res,
-  });
+  return NextResponse.json(res);
 }

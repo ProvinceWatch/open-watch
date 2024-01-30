@@ -8,9 +8,9 @@ export async function GET() {
       },
     });
     const data = await res.json();
-    return NextResponse.json({ data });
+    return NextResponse.json((data as any).features.filter((alert: any) => alert.properties.prov == 'AB'));
   } catch (error) {
     console.log(error);
-    return NextResponse.json({ data: [] })
+    return NextResponse.json([])
   }
 }

@@ -1,75 +1,59 @@
-import React, { forwardRef, useImperativeHandle, useState } from 'react';
+import { forwardRef, useImperativeHandle, useState } from 'react';
 import { FiAlertCircle, FiSun } from "react-icons/fi";
 import { Sidebar } from "flowbite-react";
 import { useQuery } from '@tanstack/react-query'
 
-import WeatherAlert from "@/components/map/WeatherAlert";
+import { fetchWeather, fetchAlbertaAlerts, fetchCanadaWeatherAlerts } from '@/app/api';
+import { ABAlert } from '@/app/api/ab-alerts/types';
+import { Feature } from '@/app/api/can-weather-alerts/types';
 import { SideBar } from '@/components/SideBar';
+import WeatherAlert from "@/components/map/WeatherAlert";
 import WeatherCard from '@/components/map/WeatherCard';
 
-interface MapSideBarProps {}
-
-interface Alert {
-  Message: string,
-  Notes: string,
-  StartTime: number
-}
+interface MapSideBarProps { }
 
 const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const { data: weatherData } = useQuery({
     queryKey: ['weatherData'],
-    queryFn: () =>
-      fetch('/api/weather').then(async (res) => res.json())
+    queryFn: fetchWeather,
   });
 
-  const { data: weatherAlerts } = useQuery({
-    queryKey: ['weatherAlerts'],
-    queryFn: () =>
-      fetch('/api/emergency-alerts').then(async (res) => res.json()),
+  const { data: albertaAlerts } = useQuery({
+    queryKey: ['albertaAlerts'],
+    queryFn: fetchAlbertaAlerts,
     initialData: []
   });
 
-  const { data: moreAlerts } = useQuery({
-    queryKey: ['moreAlerts'],
-    queryFn: () =>
-      fetch('/api/weather-alerts').then(async (res) => res.json()),
+  const { data: canadaWeatherAlerts } = useQuery({
+    queryKey: ['canadaWeatherAlerts'],
+    queryFn: fetchCanadaWeatherAlerts,
     initialData: []
-  })
+  });
 
-
-  const handleToggleSidebar = () => {
-    setIsOpen(!isOpen);
-  };
-
-  useImperativeHandle(ref, () => ({
-    handleToggleSidebar,
-  }));
+  const handleToggleSidebar = () => setIsOpen(!isOpen);
+  useImperativeHandle(ref, () => ({ handleToggleSidebar }));
 
   return (
     <SideBar handleToggleSidebar={handleToggleSidebar} isOpen={isOpen} pt={0}>
       <Sidebar aria-label="Default sidebar example" className="w-full">
         <Sidebar.Items>
           <Sidebar.ItemGroup>
-            <Sidebar.Item
-              href="#"
-              icon={FiAlertCircle}
-              label={moreAlerts.length + weatherAlerts.length}
-            >
+            <Sidebar.Item icon={FiAlertCircle} label={canadaWeatherAlerts.length + albertaAlerts.length}>
               Alerts
             </Sidebar.Item>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
         <div style={{ overflowY: 'scroll', scrollbarWidth: 'none', scrollbarColor: 'lightgray darkgray', maxHeight: '40%' }}>
-          {weatherAlerts &&
-            weatherAlerts.map((alert: Alert, i: Number) => {
+          {albertaAlerts &&
+            albertaAlerts.map((alert: ABAlert, i: Number) => {
               return <WeatherAlert title={alert.Message} infoStr={alert.Notes} url={"yes"} key={`e-${i}`} startTime={alert.StartTime} timeText='' />
             })
           }
-          {moreAlerts &&
-            moreAlerts.map((alert: any, i: Number) => {
-              return <WeatherAlert infoStr={alert.properties.alerts[0].text} title={alert.properties.name + " - " + alert.properties.alerts[0].alertBannerText} key={`w-${i}`} url={"https://weather.gc.ca/airquality/pages/provincial_summary/ab_e.html"} startTime={0} timeText={alert.properties.alerts[0].issueTimeText} />
+          {canadaWeatherAlerts &&
+            canadaWeatherAlerts.map((feature: Feature, i: Number) => {
+              return <WeatherAlert infoStr={feature.properties.alerts[0].text} title={feature.properties.name + " - " + feature.properties.alerts[0].alertBannerText} key={`w-${i}`} url={"https://weather.gc.ca/airquality/pages/provincial_summary/ab_e.html"} startTime={0} timeText={feature.properties.alerts[0].issueTimeText} />
             })
           }
         </div>
@@ -79,10 +63,12 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
             <Sidebar.Item icon={FiSun}> Weather </Sidebar.Item>
           </Sidebar.ItemGroup>
         </Sidebar.Items>
+        <div style={{ overflowY: 'scroll', scrollbarWidth: 'none', scrollbarColor: 'lightgray darkgray', maxHeight: `${(canadaWeatherAlerts.length + albertaAlerts.length) > 3 ?  '40%' :''}` }}>
         {weatherData &&
           Object.keys(weatherData).map((city: string, i: Number) =>
-            <WeatherCard city={city} temp={weatherData[city].main.temp} icon={weatherData[city].weather[0].icon} key={`w-${i}`}/>)
+            <WeatherCard city={city} temp={weatherData[city].main.temp} icon={weatherData[city].weather[0].icon} key={`w-${i}`} />)
         }
+        </div>
       </Sidebar>
     </SideBar>
   );

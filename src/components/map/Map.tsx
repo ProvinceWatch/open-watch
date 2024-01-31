@@ -37,7 +37,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
     getCameraMarkers(map, ui);
 
     // Add border to alberta
-    let reader = new window.H.data.geojson.Reader('https://gist.githubusercontent.com/oscj/4b1fdf0369692586968582e0fb218960/raw/3061793c473f94c573c7141e1a68f3cd1fa52ab4/alberta.json');
+    const reader = new window.H.data.geojson.Reader('https://gist.githubusercontent.com/oscj/4b1fdf0369692586968582e0fb218960/raw/3061793c473f94c573c7141e1a68f3cd1fa52ab4/alberta.json');
     reader.parse();
     map.addLayer(reader.getLayer());
   };

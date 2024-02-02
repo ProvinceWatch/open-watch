@@ -3,13 +3,14 @@
 import './globals.css'
 import { Inter } from 'next/font/google'
 import { ThemeModeScript } from 'flowbite-react';
-const inter = Inter({ subsets: ['latin'] })
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 import {
   QueryClient,
   QueryClientProvider,
 } from '@tanstack/react-query';
 
+const inter = Inter({ subsets: ['latin'] });
 const queryClient = new QueryClient();
 
 export default function RootLayout({
@@ -25,6 +26,7 @@ export default function RootLayout({
       <QueryClientProvider client={queryClient}>
         <body className={inter.className}>
           {children}
+          <SpeedInsights />
         </body>
       </QueryClientProvider>
     </html>

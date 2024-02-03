@@ -36,7 +36,7 @@ const WeatherAlert: FC<WeatherAlertProps> = ({ title, infoStr, url, startTime, t
         <h3 className="text-md font-medium text-black-700 dark:text-black-800">
           <span className="font-bold">{title}</span> <br /> {startTime > 0 ? new Date(startTime * 1000).toDateString() : timeText}
         </h3>
-        <HiEye size={20} onClick={() => { setModalOpen(true) }} className="mt-2 ml-auto"/>
+        <HiEye size={20} onClick={() => { setModalOpen(true) }} className="mt-2"/>
       </Alert>
     </>
   );

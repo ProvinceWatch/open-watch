@@ -34,7 +34,7 @@ export async function GET(): Promise<NextResponse> {
     console.log(`https://api.openweathermap.org/data/2.5/weather?lat=${loc.lat}&lon=${loc.lon}&appid=${process.env.OWM_API_KEY}&units=metric`);
     const cityWeather = await fetch(
       `https://api.openweathermap.org/data/2.5/weather?lat=${loc.lat}&lon=${loc.lon}&appid=${process.env.OWM_API_KEY}&units=metric`,
-      { cache: 'no-store' }
+      { next: { revalidate: 60 } }
     );
     const weatherData: WeatherData = await cityWeather.json();
     res[city] = weatherData;

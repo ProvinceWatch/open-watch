@@ -1,3 +1,5 @@
+"use client"
+
 import { forwardRef, useImperativeHandle, useState } from 'react';
 import { FiAlertCircle, FiSun } from "react-icons/fi";
 import { Sidebar } from "flowbite-react";

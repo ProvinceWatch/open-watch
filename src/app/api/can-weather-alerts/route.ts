@@ -5,7 +5,7 @@ export async function GET(): Promise<NextResponse> {
   try {
     const res = await fetch(
       'https://weather.gc.ca/data/dms/alert_geojson/alerts.en.geojson',
-      { next: { revalidate: 0 } }
+      { next: { revalidate: 0 }, cache: 'no-store' }
     );
     
     const alerts: CanadaWeatherAlerts = await res.json();

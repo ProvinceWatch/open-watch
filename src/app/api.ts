@@ -1,5 +1,5 @@
 const fetchfn = (endpoint: string) => {
-  return () => fetch(endpoint).then((res) => res.json());
+  return () => fetch(endpoint, {cache: 'no-cache'}).then((res) => res.json());
 }
 
 export const fetchWeather             = fetchfn('/api/weather');

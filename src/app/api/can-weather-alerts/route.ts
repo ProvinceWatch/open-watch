@@ -7,7 +7,6 @@ export async function GET(): Promise<NextResponse> {
     const alerts: CanadaWeatherAlerts = await res.json();
     const abAlerts: Feature[] = alerts.features.filter((alert: Feature) => alert.properties.prov == 'AB');
     const response = NextResponse.json(abAlerts);
-    response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate');
     return response;
   } catch (error) {
     console.log(error);

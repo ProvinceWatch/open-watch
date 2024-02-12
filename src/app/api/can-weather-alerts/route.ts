@@ -3,14 +3,12 @@ import { CanadaWeatherAlerts, Feature } from './types';
 
 export async function GET(): Promise<NextResponse> {
   try {
-    const res = await fetch(
-      'https://weather.gc.ca/data/dms/alert_geojson/alerts.en.geojson',
-      { next: { revalidate: 60 } }
-    );
-    
+    const res = await fetch('https://weather.gc.ca/data/dms/alert_geojson/alerts.en.geojson');
     const alerts: CanadaWeatherAlerts = await res.json();
     const abAlerts: Feature[] = alerts.features.filter((alert: Feature) => alert.properties.prov == 'AB');
-    return NextResponse.json(abAlerts);
+    const response = NextResponse.json(abAlerts);
+    response.headers.set('Cache-Control', 'public, max-age=0, must-revalidate');
+    return response;
   } catch (error) {
     console.log(error);
     return NextResponse.json([]);

@@ -25,13 +25,15 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
   const { data: albertaAlerts } = useQuery({
     queryKey: ['albertaAlerts'],
     queryFn: fetchAlbertaAlerts,
-    initialData: []
+    initialData: [],
+    refetchInterval: 30000,
   });
 
   const { data: canadaWeatherAlerts } = useQuery({
     queryKey: ['canadaWeatherAlerts'],
     queryFn: fetchCanadaWeatherAlerts,
-    initialData: []
+    initialData: [],
+    refetchInterval: 30000,
   });
 
   const handleToggleSidebar = () => setIsOpen(!isOpen);

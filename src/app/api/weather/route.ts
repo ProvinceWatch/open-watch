@@ -42,3 +42,6 @@ export async function GET(): Promise<NextResponse> {
 
   return NextResponse.json(res);
 }
+
+export const dynamic = "force-dynamic";
+export const revalidate = 10;

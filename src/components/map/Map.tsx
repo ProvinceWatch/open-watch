@@ -46,39 +46,24 @@ const Map: FC<MapProps> = ({ zoom }) => {
   const getCameraMarkers = async (map: any, ui: any) => {
     const res: any = await fetch('/api/cameras');
     const cameraResponse = await res.json();
-    console.log(cameraResponse);
     const cameras: CameraData[] = (cameraResponse.data as any) as CameraData[];
-    const dataPoints: any[] = [];
 
     cameras.forEach((camera: CameraData) => {
       const cameraLatLng = { lat: camera.Latitude, lng: camera.Longitude };
-      dataPoints.push(new window.H.clustering.DataPoint(cameraLatLng.lat, cameraLatLng.lng, null, camera));
-    });
-
-    startClustering(map, dataPoints, ui);
-  };
-
-  const startClustering = (map: any, data: any, ui: any) => {
-    const clusteredDataProvider = new window.H.clustering.Provider(data, {
-      clusteringOptions: {
-        eps: 4,
-        minWeight: 10
-      }
-    });
-
-    const clusteringLayer = new window.H.map.layer.ObjectLayer(clusteredDataProvider);
-    map.addLayer(clusteringLayer);
-
-    map.addEventListener('tap', function (evt: any) {
-      const target = evt.target;
-      if (target instanceof window.H.map.Marker) {
-        const camera = target.getData().a.data;
-        if (camera) {
-          setSelectedCamera(camera);
-          setShowCameraModal(true);
+      var icon = new window.H.map.Icon('/camera-light.png', { size: { w: 64, h: 64 } });
+      var marker = new window.H.map.Marker(cameraLatLng, { icon: icon });
+      // Add an onClick event listener to the marker
+      marker.addEventListener('tap', function (evt: any) {
+        const target = evt.target;
+        if (target instanceof window.H.map.Marker) {
+          if (camera) {
+            setSelectedCamera(camera);
+            setShowCameraModal(true);
+          }
         }
-      }
-    }, false);
+      }, false);
+      map.addObject(marker);
+    });
   };
 
   const getRoadConditonMarkers = async (map: any, ui: any) => {

@@ -1,25 +1,29 @@
-"use client"
-
-import { forwardRef, useImperativeHandle, useState } from 'react';
-import { FiAlertCircle, FiSun } from "react-icons/fi";
+import { useState, FC } from 'react';
 import { Sidebar } from "flowbite-react";
-import { useQuery } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query';
+import { SideBar } from '@/components/SideBar';
+
+import AlertsPanel from '@/components/map/sidebar/AlertsPanel';
+import SettingsPanel from '@/components/map/sidebar/SettingsPanel';
+import WeatherPanel from '@/components/map/sidebar/WeatherPanel';
 
 import { fetchWeather, fetchAlbertaAlerts, fetchCanadaWeatherAlerts } from '@/app/api';
-import { ABAlert } from '@/app/api/ab-alerts/types';
-import { Feature } from '@/app/api/can-weather-alerts/types';
-import { SideBar } from '@/components/SideBar';
-import WeatherAlert from "@/components/map/WeatherAlert";
-import WeatherCard from '@/components/map/WeatherCard';
 
 interface MapSideBarProps { }
 
-const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref) => {
+const MapSideBar: FC<MapSideBarProps> = ({}) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [showAlerts, setshowAlerts] = useState(true);
+  const [showRoadConditions, setShowRoadConditions] = useState(true);
+  const [showCameras, setShowCameras] = useState(true);
+  const [showConstruction, setShowConstruction] = useState(true);
+  const [showPOIs, setShowPOIs] = useState(true);
 
-  const { data: weatherData } = useQuery({
+  const { data: weatherData = {} } = useQuery({
     queryKey: ['weatherData'],
     queryFn: fetchWeather,
+    initialData: {},
+    refetchInterval: 30000,
   });
 
   const { data: albertaAlerts } = useQuery({
@@ -37,46 +41,29 @@ const MapSideBar = forwardRef<{}, MapSideBarProps>((props: MapSideBarProps, ref)
   });
 
   const handleToggleSidebar = () => setIsOpen(!isOpen);
-  useImperativeHandle(ref, () => ({ handleToggleSidebar }));
 
   return (
     <SideBar handleToggleSidebar={handleToggleSidebar} isOpen={isOpen} pt={0}>
       <Sidebar aria-label="Default sidebar example" className="w-full">
-        <Sidebar.Items>
-          <Sidebar.ItemGroup>
-            <Sidebar.Item icon={FiAlertCircle} label={canadaWeatherAlerts.length + albertaAlerts.length}>
-              Alerts
-            </Sidebar.Item>
-          </Sidebar.ItemGroup>
-        </Sidebar.Items>
-        <div style={{ overflowY: 'scroll', scrollbarWidth: 'none', scrollbarColor: 'lightgray darkgray', maxHeight: '40%' }}>
-          {albertaAlerts &&
-            albertaAlerts.map((alert: ABAlert, i: Number) => {
-              return <WeatherAlert title={alert.Message} infoStr={alert.Notes} url={"yes"} key={`e-${i}`} startTime={alert.StartTime} timeText='' />
-            })
-          }
-          {canadaWeatherAlerts &&
-            canadaWeatherAlerts.map((feature: Feature, i: Number) => {
-              return <WeatherAlert infoStr={feature.properties.alerts[0].text} title={feature.properties.name + " - " + feature.properties.alerts[0].alertBannerText} key={`w-${i}`} url={"https://weather.gc.ca/airquality/pages/provincial_summary/ab_e.html"} startTime={0} timeText={feature.properties.alerts[0].issueTimeText} />
-            })
-          }
-        </div>
-
-        <Sidebar.Items className='mt-5'>
-          <Sidebar.ItemGroup>
-            <Sidebar.Item icon={FiSun}> Weather </Sidebar.Item>
-          </Sidebar.ItemGroup>
-        </Sidebar.Items>
-        <div style={{ overflowY: 'scroll', scrollbarWidth: 'none', scrollbarColor: 'lightgray darkgray', maxHeight: `${(canadaWeatherAlerts.length + albertaAlerts.length) > 3 ?  '40%' :''}` }}>
-        {weatherData &&
-          Object.keys(weatherData).map((city: string, i: Number) =>
-            <WeatherCard city={city} temp={weatherData[city].main.temp} icon={weatherData[city].weather[0].icon} key={`w-${i}`} />)
-        }
-        </div>
+        <AlertsPanel albertaAlerts={albertaAlerts} canadaWeatherAlerts={canadaWeatherAlerts}/>
+        <SettingsPanel
+          showAlerts={showAlerts}
+          setshowAlerts={setshowAlerts}
+          showRoadConditions={showRoadConditions}
+          setShowRoadConditions={setShowRoadConditions}
+          showCameras={showCameras}
+          setShowCameras={setShowCameras}
+          showConstruction={showConstruction}
+          setShowConstruction={setShowConstruction}
+          showPOIs={showPOIs}
+          setShowPOIs={setShowPOIs}
+        />
+        <WeatherPanel weatherData={weatherData}/>
       </Sidebar>
+
     </SideBar>
   );
-});
+};
 
 MapSideBar.displayName = "Map Sidebar";
 export default MapSideBar;

@@ -1,6 +1,6 @@
 "use client"
 
-import { useEffect, FC, useState } from 'react';
+import { useEffect, FC, useState, useRef } from 'react';
 import { MapProps, CameraData } from '@/app/map/defs';
 import polyline from '@mapbox/polyline';
 import MapSideBar from '@/components/map/MapSideBar';
@@ -10,8 +10,18 @@ import RoadConditionsLegend from '@/components/map/RoadConditionsLegend';
 const Map: FC<MapProps> = ({ zoom }) => {
   const [showCameraModal, setShowCameraModal] = useState(false);
   const [selectedCamera, setSelectedCamera] = useState({} as CameraData);
+  const [isMapInitialized, setIsMapInitialized] = useState(false);
+  const [showCameras, setShowCameras] = useState(true);
+  const [showRoadConditions, setShowRoadConditions] = useState(true);
+  const cameraMarkersRef = useRef([]);
+  const roadConditionMarkersRef = useRef([]);
 
   const initMap = async () => {
+    if (document.querySelector('.H_imprint')) {
+      console.log('Element with class H_imprint exists. Exiting initMap early.');
+      return;
+    }
+    console.log('initMap');
     const platform = new window.H
       .service
       .Platform({
@@ -29,41 +39,43 @@ const Map: FC<MapProps> = ({ zoom }) => {
           pixelRatio: window.devicePixelRatio || 1,
         }
       );
-
+    
+    
     new window.H.mapevents.Behavior(new window.H.mapevents.MapEvents(map));
     const ui = window.H.ui.UI.createDefault(map, defaultLayers);
     window.addEventListener('resize', () => map.getViewPort().resize());
     getRoadConditonMarkers(map, ui);
-    getCameraMarkers(map, ui);
+    await getCameraMarkers(map, ui);
 
     // Add border to alberta
     const reader = new window.H.data.geojson.Reader('https://gist.githubusercontent.com/oscj/4b1fdf0369692586968582e0fb218960/raw/3061793c473f94c573c7141e1a68f3cd1fa52ab4/alberta.json');
     reader.parse();
     map.addLayer(reader.getLayer());
+    setIsMapInitialized(true);
   };
 
 
   const getCameraMarkers = async (map: any, ui: any) => {
-    const res: any = await fetch('/api/cameras');
+    const res = await fetch('/api/cameras');
     const cameraResponse = await res.json();
-    const cameras: CameraData[] = (cameraResponse.data as any) as CameraData[];
-
-    cameras.forEach((camera: CameraData) => {
+    const cameras = cameraResponse.data as CameraData[];
+    
+    /*@ts-ignore*/
+    cameraMarkersRef.current = cameras.map((camera) => {
       const cameraLatLng = { lat: camera.Latitude, lng: camera.Longitude };
-      var icon = new window.H.map.Icon('/camera-light.png', { size: { w: 64, h: 64 } });
-      var marker = new window.H.map.Marker(cameraLatLng, { icon: icon });
-      // Add an onClick event listener to the marker
-      marker.addEventListener('tap', function (evt: any) {
-        const target = evt.target;
-        if (target instanceof window.H.map.Marker) {
-          if (camera) {
-            setSelectedCamera(camera);
-            setShowCameraModal(true);
-          }
-        }
-      }, false);
+      const icon = new window.H.map.Icon('/camera-light.png', { size: { w: 64, h: 64 } });
+      const marker = new window.H.map.Marker(cameraLatLng, { icon: icon });
+      
+      marker.addEventListener('tap', () => {
+        setSelectedCamera(camera);
+        setShowCameraModal(true);
+      });
+      
       map.addObject(marker);
+      return marker;
     });
+  
+    return cameraMarkersRef.current;
   };
 
   const getRoadConditonMarkers = async (map: any, ui: any) => {
@@ -122,6 +134,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
 
       const line = new window.H.map.Polyline(lineString, { style: { strokeColor: color, lineWidth: 4 } });
       map.addObject(line);
+      roadConditionMarkersRef.current.push(line as never);
     });
 
     await Promise.all(tasks);
@@ -160,17 +173,33 @@ const Map: FC<MapProps> = ({ zoom }) => {
       }
     };
 
-    if (!window.H) {
-      loadScriptsInOrder().then(() => initMap())
-    } else {
-      initMap();
-    }
+    if (!isMapInitialized) { loadScriptsInOrder().then(() => initMap()) }
+    return () => { };
   }, []);
 
   return (
     <div style={{ overflow: 'hidden' }} className='flex-grow'>
       <CameraModal open={showCameraModal} selectedCamera={selectedCamera} onClose={() => { setShowCameraModal(false); setSelectedCamera({} as CameraData); }} />
-      <MapSideBar />
+      <MapSideBar showCameras={showCameras} setShowCameras={() => {
+        setShowCameras(currentShowCameras => {
+          cameraMarkersRef.current.forEach(marker => {
+            /**@ts-ignore */
+            marker.setVisibility(!currentShowCameras);
+          });
+          return !currentShowCameras;
+        });
+      }}
+      showRoadConditions={showRoadConditions}
+      setShowRoadConditions={() => {
+        setShowRoadConditions(currentShowRoadConditions => {
+          roadConditionMarkersRef.current.forEach(marker => {
+            /**@ts-ignore */
+            marker.setVisibility(!currentShowRoadConditions);
+          });
+          return !currentShowRoadConditions;
+        });
+      }}
+      />
       <div id="mapContainer" style={{ width: '100%', height: '95%', position: 'fixed' }} />
       <RoadConditionsLegend />
       <link rel="stylesheet" type="text/css" href="https://js.api.here.com/v3/3.1/mapsjs-ui.css" />

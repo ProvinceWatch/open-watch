@@ -22,7 +22,7 @@ const WeatherPanel: FC<WeatherPanelProps> = ({ weatherData}) => {
           </Sidebar.Item>
         </Sidebar.ItemGroup>
       </Sidebar.Items>
-      <div style={{ overflowY: 'scroll', scrollbarWidth: 'none', scrollbarColor: 'lightgray darkgray', maxHeight: '40%' }} className='mb-2'>
+      <div style={{ overflowY: 'scroll', scrollbarWidth: 'none', scrollbarColor: 'lightgray darkgray', maxHeight: '50%' }} className='mb-2'>
         {Object.keys(weatherData).map((city: string, i) => (
           <WeatherCard city={city} temp={weatherData[city].main.temp} icon={weatherData[city].weather[0].icon} key={`w-${i}`} />
         ))}

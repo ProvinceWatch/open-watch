@@ -9,13 +9,16 @@ import WeatherPanel from '@/components/map/sidebar/WeatherPanel';
 
 import { fetchWeather, fetchAlbertaAlerts, fetchCanadaWeatherAlerts } from '@/app/api';
 
-interface MapSideBarProps { }
+interface MapSideBarProps {
+  showCameras: boolean,
+  setShowCameras: (checked: boolean) => void,
+  showRoadConditions: boolean,
+  setShowRoadConditions: (checked: boolean) => void
+}
 
-const MapSideBar: FC<MapSideBarProps> = ({}) => {
+const MapSideBar: FC<MapSideBarProps> = ({showCameras, setShowCameras, showRoadConditions, setShowRoadConditions}) => {
   const [isOpen, setIsOpen] = useState(false);
   const [showAlerts, setshowAlerts] = useState(true);
-  const [showRoadConditions, setShowRoadConditions] = useState(true);
-  const [showCameras, setShowCameras] = useState(true);
   const [showConstruction, setShowConstruction] = useState(true);
   const [showPOIs, setShowPOIs] = useState(true);
 

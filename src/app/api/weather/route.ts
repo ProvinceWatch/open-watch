@@ -1,4 +1,5 @@
 import { NextResponse } from 'next/server';
+import { LatLongs, WeatherData } from './types';
 
 const LAT_LONGS: LatLongs = {
   'Banff': {
@@ -7,7 +8,7 @@ const LAT_LONGS: LatLongs = {
   },
   'Calgary': {
     lat: 51.0447,
-    lon: 14.0719,
+    lon: -114.0719,
   },
   'Canmore': {
     lat: 51.0884,

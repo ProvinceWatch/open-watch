@@ -8,38 +8,38 @@ import SettingsPanel from '@/components/map/sidebar/SettingsPanel';
 import WeatherPanel from '@/components/map/sidebar/WeatherPanel';
 
 import { fetchWeather, fetchAlbertaAlerts, fetchCanadaWeatherAlerts } from '@/app/api';
+import { ABAlert } from '@/app/api/ab-alerts/types';
+import { Feature } from '@/app/api/can-weather-alerts/types';
 
 interface MapSideBarProps {
   showCameras: boolean,
   setShowCameras: (checked: boolean) => void,
   showRoadConditions: boolean,
-  setShowRoadConditions: (checked: boolean) => void
+  setShowRoadConditions: (checked: boolean) => void,
+  showConstruction: boolean,
+  setShowConstruction: (checked: boolean) => void
 }
 
-const MapSideBar: FC<MapSideBarProps> = ({showCameras, setShowCameras, showRoadConditions, setShowRoadConditions}) => {
-  const [isOpen, setIsOpen] = useState(false);
+const MapSideBar: FC<MapSideBarProps> = ({showCameras, setShowCameras, showRoadConditions, setShowRoadConditions, showConstruction, setShowConstruction}) => {
+  const [isOpen, setIsOpen] = useState(true);
   const [showAlerts, setshowAlerts] = useState(true);
-  const [showConstruction, setShowConstruction] = useState(true);
   const [showPOIs, setShowPOIs] = useState(true);
 
   const { data: weatherData = {} } = useQuery({
     queryKey: ['weatherData'],
     queryFn: fetchWeather,
-    initialData: {},
     refetchInterval: 30000,
   });
 
-  const { data: albertaAlerts } = useQuery({
+  const { data: albertaAlerts = [] } = useQuery({
     queryKey: ['albertaAlerts'],
     queryFn: fetchAlbertaAlerts,
-    initialData: [],
     refetchInterval: 30000,
   });
 
-  const { data: canadaWeatherAlerts } = useQuery({
+  const { data: canadaWeatherAlerts = [] } = useQuery({
     queryKey: ['canadaWeatherAlerts'],
     queryFn: fetchCanadaWeatherAlerts,
-    initialData: [],
     refetchInterval: 30000,
   });
 
@@ -48,7 +48,7 @@ const MapSideBar: FC<MapSideBarProps> = ({showCameras, setShowCameras, showRoadC
   return (
     <SideBar handleToggleSidebar={handleToggleSidebar} isOpen={isOpen} pt={0}>
       <Sidebar aria-label="Default sidebar example" className="w-full">
-        <AlertsPanel albertaAlerts={albertaAlerts} canadaWeatherAlerts={canadaWeatherAlerts}/>
+        <AlertsPanel albertaAlerts={albertaAlerts as ABAlert[]} canadaWeatherAlerts={canadaWeatherAlerts as Feature[]}/>
         <SettingsPanel
           showAlerts={showAlerts}
           setshowAlerts={setshowAlerts}

@@ -6,6 +6,7 @@ import polyline from '@mapbox/polyline';
 import MapSideBar from '@/components/map/MapSideBar';
 import CameraModal from '@/components/cameras/CameraModal';
 import RoadConditionsLegend from '@/components/map/RoadConditionsLegend';
+import { ConstructionData } from '@/app/api/construction/types';
 
 const Map: FC<MapProps> = ({ zoom }) => {
   const [showCameraModal, setShowCameraModal] = useState(false);
@@ -13,8 +14,11 @@ const Map: FC<MapProps> = ({ zoom }) => {
   const [isMapInitialized, setIsMapInitialized] = useState(false);
   const [showCameras, setShowCameras] = useState(true);
   const [showRoadConditions, setShowRoadConditions] = useState(true);
+  const [showConstruction, setShowConstruction] = useState(false);
+
   const cameraMarkersRef = useRef([]);
   const roadConditionMarkersRef = useRef([]);
+  const constructionMarkersRef = useRef([]);
 
   const initMap = async () => {
     if (document.querySelector('.H_imprint')) {
@@ -46,6 +50,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
     window.addEventListener('resize', () => map.getViewPort().resize());
     getRoadConditonMarkers(map, ui);
     await getCameraMarkers(map, ui);
+    await getConstructionMarkers(map, ui);
 
     // Add border to alberta
     const reader = new window.H.data.geojson.Reader('https://gist.githubusercontent.com/oscj/4b1fdf0369692586968582e0fb218960/raw/3061793c473f94c573c7141e1a68f3cd1fa52ab4/alberta.json');
@@ -53,6 +58,25 @@ const Map: FC<MapProps> = ({ zoom }) => {
     map.addLayer(reader.getLayer());
     setIsMapInitialized(true);
   };
+
+  const getConstructionMarkers = async (map: any, ui: any) => {
+    const res = await fetch('/api/construction');
+    const constructionData = await res.json() as ConstructionData[];
+
+    /*@ts-ignore*/
+    constructionMarkersRef.current = constructionData.map((event) => {
+      const latlng = { lat: event.Latitude, lng: event.Longitude };
+      const icon = new window.H.map.Icon('/construction.png', { size: { w: 60, h: 60 } });
+      const marker = new window.H.map.Marker(latlng, { icon: icon });
+
+      marker.addEventListener('tap', () => {
+        // TODO
+      });
+
+      map.addObject(marker);
+      return marker;
+    });
+  }
 
 
   const getCameraMarkers = async (map: any, ui: any) => {
@@ -197,6 +221,16 @@ const Map: FC<MapProps> = ({ zoom }) => {
             marker.setVisibility(!currentShowRoadConditions);
           });
           return !currentShowRoadConditions;
+        });
+      }}
+      showConstruction={showConstruction}
+      setShowConstruction={() => {
+        setShowConstruction(current => {
+          constructionMarkersRef.current.forEach(marker => {
+            /**@ts-ignore */
+            marker.setVisibility(!current);
+          });
+          return !current;
         });
       }}
       />

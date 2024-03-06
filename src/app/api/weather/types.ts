@@ -40,11 +40,11 @@ export interface WeatherData {
   cod: number;
 }
 
-interface CityLocation {
+export interface CityLocation {
   lat: number;
   lon: number;
 }
 
-interface LatLongs {
+export interface LatLongs {
   [city: string]: CityLocation;
 }

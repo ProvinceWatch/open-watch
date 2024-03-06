@@ -1,4 +1,4 @@
-const fetchfn = (endpoint: string) => {
+const fetchfn = (endpoint: string) : () => Promise<Response> => {
   return () => fetch(endpoint, {cache: 'no-cache'}).then((res) => res.json());
 }
 

@@ -73,6 +73,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
         // TODO
       });
 
+      marker.setVisibility(showConstruction);
       map.addObject(marker);
       return marker;
     });

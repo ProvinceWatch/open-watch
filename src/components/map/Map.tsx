@@ -66,7 +66,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
     /*@ts-ignore*/
     constructionMarkersRef.current = constructionData.map((event) => {
       const latlng = { lat: event.Latitude, lng: event.Longitude };
-      const icon = new window.H.map.Icon('/construction.png', { size: { w: 60, h: 60 } });
+      const icon = new window.H.map.Icon('/construction.png', { size: { w: 50, h: 50 } });
       const marker = new window.H.map.Marker(latlng, { icon: icon });
 
       marker.addEventListener('tap', () => {

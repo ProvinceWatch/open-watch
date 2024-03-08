@@ -28,5 +28,8 @@ export const getColourForRoadCondition = (roadCondition: RoadConditionsData) => 
       break;
     default:
       color = 'black';
+      break;
   }
+
+  return color;
 }

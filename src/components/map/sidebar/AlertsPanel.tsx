@@ -25,21 +25,23 @@ const AlertsPanel: FC<AlertsPanelProps> = ({ canadaWeatherAlerts, albertaAlerts 
           </Sidebar.Item>
         </Sidebar.ItemGroup>
       </Sidebar.Items>
-      <Carousel
-        style={{ overflowY: 'scroll', scrollbarWidth: 'none', scrollbarColor: 'lightgray darkgray', maxHeight: '14.5%' }}
-        slideInterval={2500}
-        pauseOnHover
-        leftControl=" "
-        rightControl=" "
-        indicators={false}
-      >
-        {albertaAlerts.map((alert: ABAlert, i: any) => (
-          <WeatherAlert title={alert.Message} infoStr={alert.Notes} url={"yes"} key={`e-${i}`} startTime={alert.StartTime} timeText='' />
-        ))}
-        {canadaWeatherAlerts.map((feature: Feature, i: any) => (
-          <WeatherAlert infoStr={feature.properties.alerts[0].text} title={feature.properties.name + " - " + feature.properties.alerts[0].alertBannerText} key={`w-${i}`} url={"https://weather.gc.ca/airquality/pages/provincial_summary/ab_e.html"} startTime={0} timeText={feature.properties.alerts[0].issueTimeText} />
-        ))}
-      </Carousel>
+      {(canadaWeatherAlerts.length > 0 || albertaAlerts.length > 0) &&
+        <Carousel
+          style={{ overflowY: 'scroll', scrollbarWidth: 'none', scrollbarColor: 'lightgray darkgray', maxHeight: '14.5%' }}
+          slideInterval={2500}
+          pauseOnHover
+          leftControl=" "
+          rightControl=" "
+          indicators={false}
+        >
+          {albertaAlerts.map((alert: ABAlert, i: any) => (
+            <WeatherAlert title={alert.Message} infoStr={alert.Notes} url={"yes"} key={`e-${i}`} startTime={alert.StartTime} timeText='' />
+          ))}
+          {canadaWeatherAlerts.map((feature: Feature, i: any) => (
+            <WeatherAlert infoStr={feature.properties.alerts[0].text} title={feature.properties.name + " - " + feature.properties.alerts[0].alertBannerText} key={`w-${i}`} url={"https://weather.gc.ca/airquality/pages/provincial_summary/ab_e.html"} startTime={0} timeText={feature.properties.alerts[0].issueTimeText} />
+          ))}
+        </Carousel>
+      }
     </>
   );
 };

@@ -36,7 +36,7 @@ const SettingsPanel: FC<SettingsPanelProps> = ({
         {/* <ToggleSwitch checked={showAlerts} label="Alerts" onChange={setshowAlerts} /> */}
         <ToggleSwitch checked={showRoadConditions} label="Road Conditions" onChange={setShowRoadConditions} className='mt-3' />
         <ToggleSwitch checked={showCameras} label="Cameras" onChange={setShowCameras} className='mt-3' />
-        <ToggleSwitch checked={showConstruction} label="Construction Sites" onChange={setShowConstruction} className='mt-3' />
+        <ToggleSwitch checked={showConstruction} label="Construction & Road Events" onChange={setShowConstruction} className='mt-3' />
         {/* <ToggleSwitch checked={showPOIs} label="Points of Interest" onChange={setShowPOIs} className='mt-3' /> */}
       </div>
     </>

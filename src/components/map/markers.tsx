@@ -5,7 +5,13 @@ import { CameraData } from '@/app/map/defs';
 import { RoadConditionsData } from '@/app/api/road-conditions/types';
 import polyline from '@mapbox/polyline';
 
-export const getConstructionMarkers = async (map: any, constructionMarkersRef: any, showConstruction: boolean) => {
+export const getConstructionMarkers = async (
+    map: any,
+    constructionMarkersRef: any,
+    showConstruction: boolean,
+    setSelectedConstructionEvent: (checked: any) => void,
+    setShowConstructionModal: (checked: any) => void
+) => {
   const res = await fetch('/api/construction');
   const constructionData = await res.json() as ConstructionData[];
 
@@ -15,7 +21,9 @@ export const getConstructionMarkers = async (map: any, constructionMarkersRef: a
     const marker = new window.H.map.Marker(latlng, { icon: icon });
 
     marker.addEventListener('tap', () => {
-      // TODO
+      console.log(event);
+      setSelectedConstructionEvent(event);
+      setShowConstructionModal(true);
     });
 
     marker.setVisibility(showConstruction);

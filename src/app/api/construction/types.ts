@@ -7,7 +7,7 @@ export interface ConstructionData {
   Reported:            number;
   LastUpdated:         number;
   StartDate:           number;
-  PlannedEndDate:      number | null;
+  PlannedEndDate:      number;
   LanesAffected:       LanesAffected;
   Latitude:            number;
   Longitude:           number;

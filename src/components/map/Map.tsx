@@ -4,6 +4,7 @@ import { useEffect, FC, useState, useRef } from 'react';
 import { MapProps, CameraData } from '@/app/map/defs';
 import MapSideBar from '@/components/map/MapSideBar';
 import CameraModal from '@/components/cameras/CameraModal';
+import ConstructionInfoModal from './ConstructionInfoModal';
 import RoadConditionsLegend from '@/components/map/RoadConditionsLegend';
 import { loadScript } from '@/components/map/util';
 import {
@@ -13,12 +14,14 @@ import {
   addAlbertaBorder,
   handleMarkerVisibility
 } from '@/components/map/markers';
+import { ConstructionData } from '@/app/api/construction/types';
 
 const Map: FC<MapProps> = ({ zoom }) => {
   // map states
   const [showCameraModal, setShowCameraModal] = useState(false);
-  const [showConstructionInfo, setShowConstructionInfo] = useState(false);
+  const [showConstructionModal, setShowConstructionModal] = useState(false);
   const [selectedCamera, setSelectedCamera] = useState({} as CameraData);
+  const [selectedConstructionEvent, setSelectedConstructionEvent] = useState({} as ConstructionData)
   const [isMapInitialized, setIsMapInitialized] = useState(false);
   const [showCameras, setShowCameras] = useState(true);
   const [showRoadConditions, setShowRoadConditions] = useState(true);
@@ -54,7 +57,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
     // initialize markers
     await getRoadConditonMarkers(map, roadConditionMarkersRef);
     await getCameraMarkers(map, cameraMarkersRef, setSelectedCamera, setShowCameraModal);
-    await getConstructionMarkers(map, constructionMarkersRef, showConstruction);
+    await getConstructionMarkers(map, constructionMarkersRef, showConstruction, setSelectedConstructionEvent, setShowConstructionModal);
     addAlbertaBorder(map);
     setIsMapInitialized(true);
   };
@@ -80,6 +83,7 @@ const Map: FC<MapProps> = ({ zoom }) => {
   return (
     <div style={{ overflow: 'hidden' }} className='flex-grow'>
       <CameraModal open={showCameraModal} selectedCamera={selectedCamera} onClose={() => { setShowCameraModal(false); setSelectedCamera({} as CameraData); }} />
+      <ConstructionInfoModal open={showConstructionModal} constructionEvent={selectedConstructionEvent} onClose={() => {setShowConstructionModal(false); setSelectedConstructionEvent({} as ConstructionData)}}/>
       <MapSideBar
         showCameras={showCameras}
         showRoadConditions={showRoadConditions}
